@@ -5,25 +5,27 @@
 This repository contains a couple of different but closely related, projects.  It is derived from a mix of the [Phoenix v2](https://www.thingiverse.com/thing:1453190), the [Unlimbited Phoenix v3](https://www.thingiverse.com/thing:1674320), and the [Phoenix Reborn](https://www.thingiverse.com/thing:2217431) hands.
 
 
-1. A new design for supports for the big arch on all three of these palms.  I am providing a completed STL file for these, along with the OpenSCAD code which converts the basic palm into the supported palm.  These supports are flying supports; they do not touch the baseplate.  They are bridged under the top of the arch, and require very little material or time to print.  They break off easily after printing, and remaining nubs can be sanded off.  
-1. Repaired meshes for the v2 and Reborn palms.  The meshes were run through [Meshmixer](http://www.meshmixer.com) to remove the support box, and then the remaining holes in the mesh were (mostly) closed up.  The Reborn palm, which is derived from the v2 palm, is rederived using OpenSCAD to make the modifications required.
-2. The big part:  fully parameterized scaling of the v2 and Reborn palms, using OpenSCAD.  
-	3. 	This allows the palms to be scaled independently of the hinges, so that commercial steel pins or nails can be used to make precision, smooth-operating joints.  
-	4. The parameters allow selection of different options for both hinge pins and for plastic tubing bearings, which make even better joints.  
-	5. The clearance on the tongue-and-groove joints is set independently of the scale of the hand.  This way, hands do not become floppier as they scale up to larger size.
+* A new design for supports for the big arch on all three of these palms.  I am providing a completed STL file for these, along with the OpenSCAD code which converts the basic palm into the supported palm.  These supports are flying supports; they do not touch the baseplate.  They are bridged under the top of the arch, and require very little material or time to print.  They break off easily after printing, and remaining nubs can be sanded off.  
+* Repaired meshes for the v2 and Reborn palms.  The meshes were run through [Meshmixer](http://www.meshmixer.com) to remove the support box, and then the remaining holes in the mesh were (mostly) closed up.  The Reborn palm, which is derived from the v2 palm, is rederived using OpenSCAD to make the modifications required.
+* The big part:  fully parameterized scaling of the v2 and Reborn palms, using OpenSCAD.  
+	* 	This allows the palms to be scaled independently of the hinges, so that commercial steel pins or nails can be used to make precision, smooth-operating joints.  
+	* The parameters allow selection of different options for both hinge pins and for plastic tubing bearings, which make even better joints.  
+	* The clearance on the tongue-and-groove joints is set independently of the scale of the hand.  This way, hands do not become floppier as they scale up to larger size.
 
 ## New support system
 
 This support system looks like:
-![this](./files/Unlimbited_v3_with_supports/left_better_supp.png)  The goal is a print which is walk-away safe, which can be started, and expected to just work without any close monitoring to make sure the arch finishes safely. It should be printed with quite a lot of cooling, since there is still a significant overhang, but the supports start just low enough that the overhang never becomes dangerous. 
+![Rendered image of support system](./files/Unlimbited_v3_with_supports/left_better_supp.png)  The goal is a print which is walk-away safe, which can be started, and expected to just work without any close monitoring to make sure the arch finishes safely. If you can print a half-decent bridge, these will work.  It should be printed with quite a lot of cooling, since there is still a significant overhang, but the supports start just low enough that the overhang never becomes dangerous. 
+
+After printing, these supports snap off quite easily.  They leave small 'nubs' on the inside, which sand off very well with a rotary tool such as a Dremel tool with a flap wheel.  They can be removed by hand-sanding, too.
 
 STL Files are provided for left-hand palm of the Unlimbited Phoenix v3, the Phoenix v2, and the regenerated Phoenix Reborn.  Just mirror these in the slicer to get the right-hand version.  Also, an OpenSCAD file for each of these is provided, to allow the supports to be adapted as needed.  The mesh for the Unlimbited palm was regenerated directly from the online Fusion360 source file, to get a higher-resolution mesh.  All of these are designed to be printed flat on the printer bed, with no supports and no raft.
 
-## Parametric Scaling
+## Parametric Scaling and modification
 
 This is a parametric adaptation of the Phoenix Reborn hand, that allows the primary components (palm and fingers) to be scaled while holding the sizes of the connecting components (finger pins) constant,  so a standard kit of metal connectors can be used, instead of printing plastic pins to connect everything.  The OpenSCAD files allow one to select sizes for whatever connectors are to be used, and then independently scale the palm and fingers.  The connectors can be metal pins of nails, or 3mm screws.  They can have plastic tubing (Delrin or PTFE) wrapping them inside the holes in the phalanx, resulting in a very smooth-operating bearing.
 
-The palm design is a combination of the Phoenix Reborn palm with the fused-in mesh from the Unlimbited V3 palm. This greatly reduces the number of screws required to assemble the hand.  The palm also has new 'flying supports' which solve the problem of the overhang at the top of the palm arch, without printing large support structures.  The I-beams that hold up the top break off easily, and remaining nubs of plastic sand off easily with e rotary tool (Dremel with flap-wheel, for example), or even by hand.
+The palm design is a combination of the Phoenix Reborn palm with the fused-in mesh from the Unlimbited V3 palm. This greatly reduces the number of screws required to assemble the hand.  The palm also has new 'flying supports' which solve the problem of the overhang at the top of the palm arch, without printing large support structures. If the integrated mesh is not needed, it can be disabled in OpenSCAD. 
 
 The whole design here is to provide a flexible toolkit to create locally-appropriate variations of the hand, while letting OpenSCAD handle the scaling issues.  Many things can be commented out of the OpenSCAD code to make variations.  For example, if the fused palm mesh isn't desired, the line which fuses it in can be preceded with an asterisk ('*') which tells OpenSCAD to ignore it.  Also, if the new support structure is desired but conventional printed pins are still being used, all the fancy parametric drilling can be turned off, resulting in a (nearly) conventional Reborn hand.
 
