@@ -29,7 +29,16 @@ The palm design is a combination of the Phoenix Reborn palm with the fused-in me
 
 The whole design here is to provide a flexible toolkit to create locally-appropriate variations of the hand, while letting OpenSCAD handle the scaling issues.  Many things can be commented out of the OpenSCAD code to make variations.  For example, if the fused palm mesh isn't desired, the line which fuses it in can be preceded with an asterisk ('*') which tells OpenSCAD to ignore it.  Also, if the new support structure is desired but conventional printed pins are still being used, all the fancy parametric drilling can be turned off, resulting in a (nearly) conventional Reborn hand.
 
-The Reborn-style hand is being recreated in OpenSCAD from the Phoenix v2 palm, by redrilling the tunnels and slots, since it was possible to repair the mesh for the v2 palm to the point where OpenSCAD considered it valid (after removing the support box in MeshMixer).  It has not been possible to date to repair the Reborn palm mesh to the point at which the OpenSCAD openCGAL geometry libraries consider it valid. The file "palm_left_v2_nobox.stl" contains this modified mesh.  
+The Reborn-style hand is being recreated in OpenSCAD from the Phoenix v2 palm, by redrilling the tunnels and slots, since it was possible to repair the mesh for the v2 palm to the point where OpenSCAD considered it valid (after removing the support box in MeshMixer).  It has not been possible to date to repair the Reborn palm mesh to the point at which the OpenSCAD openCGAL geometry libraries consider it valid. The file "palm\_left\_v2\_nobox.stl" contains this modified mesh.  
+
+**NOTE**:  any parts not present in the OpenSCAD files are assumed to be obtained from the Phoenix Reborn repository or the Raptor Reloaded repository, which have the gauntlet and other bits.
+
+### Generating the parametric results
+You need to run the fingerator.scad to get an STL of a set of fingers at a specific size.  Then run paraglider\_palm\_left.scad to get a hand of the same size, with the same pin specification.  In OpenSCAD, you will unhide the (normally hidden) Customizer window, which will bring up drop-down menus to set the sizes.  I usually start with 130% scale (1.3 size), which is a medium-sized hand.
+
+The fingerator only generates one of each size finger, so for a real hand, these would be duplicated in the slicer to get appropriate numbers.  I would start just by printing one of everything, and experimenting with the parts.  The fingers are much smaller than the palm, of course, so it is not a big issue to print variations on them. Note that if the parts do not fit well, you only have to change the clearance and reprint the phalanges, since they are where the clearances are calculated in.
+
+You also need to run gripper\_box\_pieces.scad to generate the tensioning box scaled for the thermoformed gauntlet.  This result is compatible with simply scaling whippletree\_JD3.stl to the appropriate size in the slicer.
 
 # Notes from Phoenix Reborn README.txt
 *Rest of the text blatantly copied from the Phoenix Reborn file*
