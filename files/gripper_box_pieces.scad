@@ -1,12 +1,17 @@
 // parts for flexible-flyer parametric variant of Phoenix Reborn
 
-slide_clearance=0.2;
+// this should match the scale of the hand and gauntlet
+global_scale=1.3; // [1:0.02:2]
 
-//%translate ([0,0,-16]) import("gripper_box_left.stl", convexity=10);
+// this sets how much clearance is on the dovetail.  It shouldn't depend on the scale
+slide_clearance=0.2; // [0:0.01:0.5]
 
+// The (approximately) root diameter of the screw thread for a nice fit
 screw_thread_dia=2.8; // seems to work for m3
 screw_clearance_dia=screw_thread_dia+0.5;
-    screw_head_dia=5.5; // m3 screw
+// diameter of screw head
+screw_head_dia=5.5; // m3 screw
+// distance between edge of screw heads and slider rail
 screw_head_clearance=1.0; // minimum distance of screw heads above slider rail
 
 module slide(grow) {
@@ -83,8 +88,6 @@ module pivot() {
         }
     }
 }
-
-global_scale=1.;
 
 scale(global_scale) translate([0,-15,0]) rotate(90) pivot();
 
