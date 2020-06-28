@@ -1,0 +1,10 @@
+{
+    "parameterSets": {
+        "design default values": {
+            "include_mesh": "1",
+            "overall_scale": "1.3",
+            "pivot_size": "1.5875"
+        }
+    },
+    "fileFormatVersion": "1"
+}
