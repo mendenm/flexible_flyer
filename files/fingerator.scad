@@ -36,6 +36,54 @@ Marcus Mendenhall, 5 June, 2020, Germantown, Maryland, USA
 
 */
 
+// size of fingers. should match scale of hand they are being printed for.
+global_scale=1.3; // [1.0:0.02:2.0]
+// clearance on sides of tabs.  increase for looser fit.
+nominal_clearance=0.6;
+
+/* [Hidden] */
+// 3mm screws with 3/16" OD delrin rod
+pivot_dia_3mm_screw=25.4*(3/16)+0.25; // 3/16" OD delrin tubing with a little clearance since they were too small otherwise
+pivot_pin_dia_3mm_screw=3+0.1; // 3 mm screws
+
+// 1/16" pins with 1/8" OD delrin rod
+pivot_dia_8th_delrin=25.4*(1/8)+0.25; // 1/8" OD delrin tubing with a little clearance since they were too small otherwise
+pivot_pin_dia_16th_pin=25.4*(1/16); // 1/16" steel pin
+
+// 13-gauge nails
+// https://www.fastenerusa.com/nails/hand-drive-nails/finishing/2-x-13-gauge-304-stainless-6d-finishing-nails-1lb.html
+// and 3/32" ID/ 5/32" OD PTFE tubing
+// https://fluorostore.com/products/fractional-metric-ptfe-fluoropolymer-tubing
+// part number F015137
+pivot_dia_13ga_nail=25.4*(5/32)+0.25; // 5/32"" OD PTFE tubing with a little clearance since they were too small otherwise
+pivot_pin_dia_13ga_nail=25.4*0.095; // 13 ga nail
+
+pivot_array=[pivot_dia_3mm_screw, pivot_dia_8th_delrin, pivot_dia_13ga_nail, ];
+pin_array=[pivot_pin_dia_3mm_screw, pivot_pin_dia_16th_pin, pivot_pin_dia_13ga_nail, ];
+
+/* [Pin Style Selection -- select one] */
+// design for 3mm screws
+screws=false;
+// design for 1/16" pins
+pins_16th=false;
+// design for 13 ga stainless steel finishing nails
+nails_13ga=true;
+
+pivot_size_index=screws?0:pins_16th?1:nails_13ga?2:undef;
+
+pivot_dia= pivot_array[pivot_size_index];
+pivot_pin_dia=pin_array[pivot_size_index];
+
+/* [Misc] */
+// size fo m3 standard nut across flats
+nut_size=5.5; // m3 nut across flats, fairly tight fit
+bolt_head_dia=5.5+0.3; // loose clearance for m3 bolt head
+nominal_slotwidth=6+0; // make an equation to hide from customizer
+adjusted_tabwidth=nominal_slotwidth-nominal_clearance/global_scale;
+adjusted_slotwidth=nominal_slotwidth;
+
+
+
 module finger_long(slotwidth=6) {
     // the back half of the fingers is defective, slice, project, and reassemble
     // to get a perfect mesh with the original fingertip shape
@@ -145,42 +193,6 @@ module cut_phalanx(tab_thickness=5.5, palm_pivot_size=3, knuckle_pivot_size=3, s
     }
 }
 
-global_scale=1.3;
-
-// 3mm screws with 3/16" OD delrin rod
-pivot_dia_3mm_screw=25.4*(3/16)+0.25; // 3/16" OD delrin tubing with a little clearance since they were too small otherwise
-pivot_pin_dia_3mm_screw=3+0.1; // 3 mm screws
-
-// 1/16" pins with 1/8" OD delrin rod
-pivot_dia_8th_delrin=25.4*(1/8)+0.25; // 1/8" OD delrin tubing with a little clearance since they were too small otherwise
-pivot_pin_dia_16th_pin=25.4*(1/16); // 1/16" steel pin
-
-// 13-gauge nails
-// https://www.fastenerusa.com/nails/hand-drive-nails/finishing/2-x-13-gauge-304-stainless-6d-finishing-nails-1lb.html
-// and 3/32" ID/ 5/32" OD PTFE tubing
-// https://fluorostore.com/products/fractional-metric-ptfe-fluoropolymer-tubing
-// part number F015137
-pivot_dia_13ga_nail=25.4*(5/32)+0.25; // 5/32"" OD PTFE tubing with a little clearance since they were too small otherwise
-pivot_pin_dia_13ga_nail=25.4*0.095; // 13 ga nail
-
-pivot_array=[pivot_dia_3mm_screw, pivot_dia_8th_delrin, pivot_dia_13ga_nail, ];
-pin_array=[pivot_pin_dia_3mm_screw, pivot_pin_dia_16th_pin, pivot_pin_dia_13ga_nail, ];
-
-screws=false;
-pins_16th=true;
-nails_13ga=true;
-
-pivot_size_index=screws?0:pins_16th?1:nails_13ga?2:undef;
-
-pivot_dia= pivot_array[pivot_size_index];
-pivot_pin_dia=pin_array[pivot_size_index];
-
-nut_size=5.5; // m3 nut across flats, fairly tight fit
-bolt_head_dia=5.5+0.3; // loose clearance for m3 bolt head
-nominal_slotwidth=6;
-nominal_clearance=0.6;
-adjusted_tabwidth=nominal_slotwidth-nominal_clearance/global_scale;
-adjusted_slotwidth=nominal_slotwidth;
 
 // finger phalanx, may use different attachment to palm and knuckle, two separate sizes.
 translate([0,0,0]) cut_phalanx(
