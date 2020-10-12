@@ -89,9 +89,9 @@ module pivot() {
     }
 }
 
-scale(global_scale) translate([0,-15,0]) rotate(90) pivot();
+scale(global_scale) translate([-5,-15,0]) rotate(0) pivot();
 
-scale(global_scale) translate([0,15,0]) rotate(90) thumb_tensioner();
+scale(global_scale) translate([5,-15,0]) rotate(0) thumb_tensioner();
 
 scale(global_scale) box();
 
