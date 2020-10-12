@@ -15,7 +15,7 @@ This repository contains a couple of different but closely related, projects.  I
 ## New support system
 
 This support system looks like:
-![Rendered image of support system](./files/Unlimbited_v3_with_supports/left_better_supp.png)  The goal is a print which is walk-away safe, which can be started, and expected to just work without any close monitoring to make sure the arch finishes safely. If you can print a half-decent bridge, these will work.  It should be printed with quite a lot of cooling, since there is still a significant overhang, but the supports start just low enough that the overhang never becomes dangerous. 
+![Rendered image of support system](images/left_better_supp.png)  The goal is a print which is walk-away safe, which can be started, and expected to just work without any close monitoring to make sure the arch finishes safely. If you can print a half-decent bridge, these will work.  It should be printed with quite a lot of cooling, since there is still a significant overhang, but the supports start just low enough that the overhang never becomes dangerous. 
 
 After printing, these supports snap off quite easily.  They leave small 'nubs' on the inside, which sand off very well with a rotary tool such as a Dremel tool with a flap wheel.  They can be removed by hand-sanding, too.
 
@@ -39,6 +39,14 @@ You need to run the fingerator.scad to get an STL of a set of fingers at a speci
 The fingerator only generates one of each size finger, so for a real hand, these would be duplicated in the slicer to get appropriate numbers.  I would start just by printing one of everything, and experimenting with the parts.  The fingers are much smaller than the palm, of course, so it is not a big issue to print variations on them. Note that if the parts do not fit well, you only have to change the clearance and reprint the phalanges, since they are where the clearances are calculated in.
 
 You also need to run gripper\_box\_pieces.scad to generate the tensioning box scaled for the thermoformed gauntlet.  This result is compatible with simply scaling whippletree\_JD3.stl to the appropriate size in the slicer.
+
+## Progress Log
+### October, 2020 update
+There is a new OpenSCAD file, paraglider_palm_new_channels.scad.  This file has a better mechanism for filling in the old string channels to get rid if various voids, etc.  It then implements an entirely new system for the channels.  There are two channels for each digit (except the thumb): one for the string and one for the elastic return band.  This should make it easier to thread, using a piece of wire as a leader to puller the strings through. It should also eliminate drag bwtween the tewo lines.
+
+With a bit of further testing, I think it will be possible to insert the string inside a piece of thin-walled PTFE tubing, such as electronic sheathing.  This should greatly reduce the friction on the strin. To go along with this, I have changed the printed string/elastic guides in the digit slots to have steel pins insteasd, which shold be much slipperier.
+
+The goal of these efforts is to produce a hand which gives as stronger grip with less effort from the user, to assist people who do not have a lot of wrist strength.
 
 # Notes from Phoenix Reborn README.txt
 *Rest of the text blatantly copied from the Phoenix Reborn file*
