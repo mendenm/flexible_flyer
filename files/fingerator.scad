@@ -41,6 +41,9 @@ global_scale=1.3; // [1.0:0.02:2.0]
 // clearance on sides of tabs.  increase for looser fit.
 nominal_clearance=0.6;
 
+// make fingertips with covered stringing.  They are harder to string, but look nicer.
+pretty_fingers=true; // [1:prettier, 0:original]
+
 /* [Hidden] */
 // 3mm screws with 3/16" OD delrin rod
 pivot_dia_3mm_screw=25.4*(3/16)+0.25; // 3/16" OD delrin tubing with a little clearance since they were too small otherwise
@@ -77,6 +80,7 @@ pivot_pin_dia=pin_array[pivot_size_index];
 /* [Misc] */
 // size fo m3 standard nut across flats
 nut_size=5.5; // m3 nut across flats, fairly tight fit
+
 bolt_head_dia=5.5+0.3; // loose clearance for m3 bolt head
 nominal_slotwidth=6+0; // make an equation to hide from customizer
 adjusted_tabwidth=nominal_slotwidth-nominal_clearance/global_scale;
@@ -97,8 +101,8 @@ module finger_long(slotwidth=6) {
                             translate([0,0,2.0]) rotate([90,0,0]) import("reborn_fingertip_long_front.3mf", convexity=10);
                         union() {
                             hull() {
-                                translate([0,-15,2]) rotate([0,90,0]) cylinder(d=14, h=50, center=true, $fn=50);
-                                translate([0,  0,2]) rotate([0,90,0]) cylinder(d=12, h=50, center=true);
+                                translate([0,-15,2]) rotate([0,90,0]) cylinder(d=14, h=15, center=true, $fn=50);
+                                translate([0,  0,2]) rotate([0,90,0]) cylinder(d=12, h=15, center=true);
                             }
                             translate([0,4,30]) cube([50,50,50], center=true);
                         }
@@ -115,6 +119,51 @@ module finger_long(slotwidth=6) {
         translate([0,0,10]) cube([50,50,20], center=true); // slice flat, smooth bottom for printing
     }   
 }
+
+module pretty_finger_long(slotwidth=6) {
+    // the back half of the fingers is defective, slice, project, and reassemble
+    // to get a perfect mesh with the original fingertip shape
+    intersection() {
+        translate([0,0,7.7]) union() {
+            difference() {
+                rotate([0,180,0]) union() {
+                    import("reborn_fingertip_long_front.3mf", convexity=10);
+                    intersection() {
+                        translate([0,-24.3,0]) rotate([-90,0,0]) linear_extrude(height=22) projection(cut=true) 
+                            translate([0,0,2.0]) rotate([90,0,0]) import("reborn_fingertip_long_front.3mf", convexity=10);
+                        union() {
+                            hull() {
+                                translate([0,-15,2]) rotate([0,90,0]) cylinder(d=14, h=15, center=true, $fn=50);
+                                translate([0,  0,2]) rotate([0,90,0]) cylinder(d=12, h=15, center=true);
+                            }
+                            translate([0,4,30]) cube([50,50,50], center=true);
+                        }
+                    }
+                }
+               translate([0,-18,-1]) rotate([0,90,0]) cylinder(d=16, h=slotwidth, center=true, $fn=50);
+               // angled hole for elastic to go through body
+               translate([0,-8,-2]) rotate([-15,0,0]) cylinder(d=2, h=8, $fn=10, center=true);
+            }
+
+            translate([0,-6,3]) intersection() {
+                rotate([0,90,0]) cylinder(d=3, h=7, center=true, $fn=20);
+                cube([10,10,2], center=true);
+            }
+        }
+    }
+    // build nice cap for finger top
+    translate([0,0,1]) intersection() {
+        difference() {
+            union() {
+                translate([0,-10.8,2]) rotate([90,0,0]) cylinder(d=11, h=20.8, $fn=50, center=true);
+                translate([0,0,2]) scale([1,1.4,1]) sphere(d=11, $fn=20); 
+            }
+            translate([0,-13,2]) rotate([90,0,0]) cylinder(d=8, h=18, $fn=20, center=true);
+        } 
+        translate([0,0,-1.5]) cube([20,50,3], center=true);
+    }
+}
+
 
 module pin_plug(pin_style, dia)
 {
@@ -202,23 +251,45 @@ translate([0,0,0]) cut_phalanx(
 translate([30,0,0]) scale([1.1,1,1]) cut_phalanx(
     palm_pivot_size=pivot_dia, knuckle_pivot_size=pivot_dia,
     tab_thickness=adjusted_tabwidth/1.1, scale_size=global_scale);
-    
-//long fingertip, keep tolerances the same with scaling using width correction
-if(screws) translate([-25,0,0]) adjusted_bolt_holes(global_scale, outer_width=13, 
-    offsets=[[[0,-18,6],0],], bolt_dia=pivot_pin_dia, 
-    nut_size=nut_size, bolt_head_dia=bolt_head_dia) finger_long(slotwidth=adjusted_slotwidth);
-else translate([-25,0,0]) adjusted_holes(global_scale, 
-    offsets=[[[0,-18,6],0],], dia=pivot_pin_dia) finger_long(slotwidth=adjusted_slotwidth);
-//short fingertip
-if(screws) translate([-50,0,0]) adjusted_bolt_holes(global_scale, outer_width=13, 
-    offsets=[[[0,-18*0.9,6],0],], bolt_dia=pivot_pin_dia, 
-    nut_size=nut_size, bolt_head_dia=bolt_head_dia) scale([1,0.9,1]) finger_long(slotwidth=adjusted_slotwidth);
-else translate([-50,0,0]) adjusted_holes(global_scale, 
-    offsets=[[[0,-18*0.9,6],0],], dia=pivot_pin_dia) scale([1,0.9,1]) finger_long(slotwidth=adjusted_slotwidth);
-// thumb by scaling regular fingers tips; the native thumb mesh seems unrepairable.
-if(screws) translate([60,0,0]) adjusted_bolt_holes(global_scale, outer_width=13, 
-    offsets=[[[0,-18*0.77,6*0.72],0],], bolt_dia=pivot_pin_dia, 
-    nut_size=nut_size, bolt_head_dia=bolt_head_dia) scale([1.1,0.77,0.72]) finger_long(slotwidth=adjusted_slotwidth);
-else translate([60,0,0]) adjusted_holes(global_scale, 
-    offsets=[[[0,-18*0.77,6*0.72],0],], dia=pivot_pin_dia) scale([1.1,0.77,0.72]) 
-        finger_long(slotwidth=adjusted_slotwidth/1.1);
+
+if(pretty_fingers) {
+    //long fingertip, keep tolerances the same with scaling using width correction
+    if(screws) translate([-25,0,0]) adjusted_bolt_holes(global_scale, outer_width=13, 
+        offsets=[[[0,-18,6],0],], bolt_dia=pivot_pin_dia, 
+        nut_size=nut_size, bolt_head_dia=bolt_head_dia) pretty_finger_long(slotwidth=adjusted_slotwidth);
+    else translate([-25,0,0]) adjusted_holes(global_scale, 
+        offsets=[[[0,-18,6],0],], dia=pivot_pin_dia) pretty_finger_long(slotwidth=adjusted_slotwidth);
+    //short fingertip
+    if(screws) translate([-50,0,0]) adjusted_bolt_holes(global_scale, outer_width=13, 
+        offsets=[[[0,-18*0.9,6],0],], bolt_dia=pivot_pin_dia, 
+        nut_size=nut_size, bolt_head_dia=bolt_head_dia) scale([1,0.9,1]) pretty_finger_long(slotwidth=adjusted_slotwidth);
+    else translate([-50,0,0]) adjusted_holes(global_scale, 
+        offsets=[[[0,-18*0.9,6],0],], dia=pivot_pin_dia) scale([1,0.9,1]) pretty_finger_long(slotwidth=adjusted_slotwidth);
+    // thumb by scaling regular fingers tips; the native thumb mesh seems unrepairable.
+    if(screws) translate([60,0,0]) adjusted_bolt_holes(global_scale, outer_width=13, 
+        offsets=[[[0,-18*0.77,6*0.72],0],], bolt_dia=pivot_pin_dia, 
+        nut_size=nut_size, bolt_head_dia=bolt_head_dia) scale([1.1,0.77,0.72]) pretty_finger_long(slotwidth=adjusted_slotwidth);
+    else translate([60,0,0]) adjusted_holes(global_scale, 
+        offsets=[[[0,-18*0.77,6*0.72],0],], dia=pivot_pin_dia) scale([1.1,0.77,0.72]) 
+            pretty_finger_long(slotwidth=adjusted_slotwidth/1.1);
+} else {
+    //long fingertip, keep tolerances the same with scaling using width correction
+    if(screws) translate([-25,0,0]) adjusted_bolt_holes(global_scale, outer_width=13, 
+        offsets=[[[0,-18,6],0],], bolt_dia=pivot_pin_dia, 
+        nut_size=nut_size, bolt_head_dia=bolt_head_dia) finger_long(slotwidth=adjusted_slotwidth);
+    else translate([-25,0,0]) adjusted_holes(global_scale, 
+        offsets=[[[0,-18,6],0],], dia=pivot_pin_dia) finger_long(slotwidth=adjusted_slotwidth);
+    //short fingertip
+    if(screws) translate([-50,0,0]) adjusted_bolt_holes(global_scale, outer_width=13, 
+        offsets=[[[0,-18*0.9,6],0],], bolt_dia=pivot_pin_dia, 
+        nut_size=nut_size, bolt_head_dia=bolt_head_dia) scale([1,0.9,1]) finger_long(slotwidth=adjusted_slotwidth);
+    else translate([-50,0,0]) adjusted_holes(global_scale, 
+        offsets=[[[0,-18*0.9,6],0],], dia=pivot_pin_dia) scale([1,0.9,1]) finger_long(slotwidth=adjusted_slotwidth);
+    // thumb by scaling regular fingers tips; the native thumb mesh seems unrepairable.
+    if(screws) translate([60,0,0]) adjusted_bolt_holes(global_scale, outer_width=13, 
+        offsets=[[[0,-18*0.77,6*0.72],0],], bolt_dia=pivot_pin_dia, 
+        nut_size=nut_size, bolt_head_dia=bolt_head_dia) scale([1.1,0.77,0.72]) finger_long(slotwidth=adjusted_slotwidth);
+    else translate([60,0,0]) adjusted_holes(global_scale, 
+        offsets=[[[0,-18*0.77,6*0.72],0],], dia=pivot_pin_dia) scale([1.1,0.77,0.72]) 
+            finger_long(slotwidth=adjusted_slotwidth/1.1);
+}
