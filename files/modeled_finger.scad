@@ -66,9 +66,9 @@ pin_array=[pivot_pin_dia_3mm_screw, pivot_pin_dia_16th_pin, pivot_pin_dia_13ga_n
 // design for 3mm screws
 screws=false;
 // design for 1/16" pins
-pins_16th=false;
+pins_16th=true;
 // design for 13 ga stainless steel finishing nails
-nails_13ga=true;
+nails_13ga=false;
 
 pivot_size_index=screws?0:pins_16th?1:nails_13ga?2:undef;
 
@@ -142,7 +142,7 @@ module finger(slotwidth, thumb=false, keel=true) {
         translate([0,-18,8])
             rotate([0,90,0])  intersection() {
                 cylinder(d=16, h=slotwidth, center=true, $fn=50);
-                translate([-3+(thumb?2:0),0,0]) cube([15,30,slotwidth+1], center=true);
+                translate([-3+(thumb?3:0),0,0]) cube([15,30,slotwidth+1], center=true);
             }
         translate([0,-14,16]) cube([20,30,5], center=true);
         // rectangular toroidal elbow for better elastic feeding
@@ -195,13 +195,13 @@ module adjusted_bolt_holes(scale_size, outer_width, offsets, bolt_dia, bolt_head
     }
 }
 
-module phalanx_body() {
+module phalanx_body(thumb) {
     difference() {
         rotate([-90,0,0]) 
-        hull() for(dz=[[[0,0.8,9],0.90],[[0,0,-7],1]]) translate(dz[0]) 
+        hull() for(dz=[[[0,thumb?1.5:0.8,9],thumb?0.80:0.90],[[0,0,-7],1]]) translate(dz[0]) 
             linear_extrude(height=0.1, center=true) scale(dz[1]) hull() {
-                translate([ 3,0,0]) scale([0.4,1]) circle(d=16);    
-                translate([-3,0,0]) scale([0.4,1]) circle(d=16);
+                translate([ 3,0]) scale([0.4,1]) circle(d=16);    
+                translate([-3,0]) scale([0.4,1]) circle(d=16);
                 translate([0,-8]) scale([1,0.2]) circle(d=16*0.4);
         }
         translate([0,-11,-3]) rotate([0,90,0]) 
@@ -210,15 +210,15 @@ module phalanx_body() {
             rotate(10) scale([1,0.75,1]) cylinder(d=17, h=20, center=true);
     }
 }
-module solid_phalanx(tab_thickness) {
+module solid_phalanx(tab_thickness, thumb) {
     $fn=50;
     translate([0,0,8]) intersection() { // bottom of phalanx is at z=0
     translate([0,0,7.0]) cube([50,50,30], center=true); // slice a nice flat bottom for printing
     union() {
-        phalanx_body();
+        phalanx_body(thumb);
         rotate([0,90,0]) linear_extrude(height=tab_thickness, center=true) hull() {
             translate([2, -10]) circle(d=13);
-            translate([2.5,  12]) circle(d=10);
+            translate([(0 && thumb)?3.5:2.5,  12]) circle(d=(0 && thumb)?8:10);
             translate([7,  13]) square(1);
         }
         translate([0,-2.5,4]) intersection() {
@@ -231,11 +231,16 @@ module solid_phalanx(tab_thickness) {
 
 module cut_phalanx(tab_thickness=5.5, palm_pivot_size=3, knuckle_pivot_size=3, scale_size=1, thumb=false) {
     scale(scale_size) difference() {
-        solid_phalanx(tab_thickness=tab_thickness);
-        translate([0,0,5.5+8]) rotate([90-6,0,0]) cylinder(d=2.5,h=50,$fn=20, center=true);
-        translate([0,0,-6.0+8]) rotate([90,0,0]) cylinder(d=2.5,h=50,$fn=20, center=true);
-        translate([0,10,-6.0-3+8]) cube([2.5,12,6],center=true);
-        translate([0,-10,-6.0-3+8]) cube([2.5,12,6],center=true);
+        solid_phalanx(tab_thickness=tab_thickness, thumb=thumb);
+        // main passage through top
+        translate([0,0,5.5+(thumb?7:8)]) rotate([90-(thumb?10:6),0,0]) cylinder(d=2.5,h=50,$fn=20, center=true);
+        if(thumb) { // extra clearance around end for elastic on thumb
+           translate([0,12,5.3]) rotate([60,0,0]) rotate([0,90,0]) 
+            rotate_extrude(angle=110, $fn=60) translate([5,0]) circle(d=2.5, $fn=20); 
+        }
+        translate([0,0,-6.0+7.5]) rotate([90,0,0]) cube([2,1.5,50], center=true); // cylinder(d=2.5,h=50,$fn=20, center=true);
+        translate([0,10,-6.0-3+8]) cube([2,12,6],center=true);
+        translate([0,-10,-6.0-3+8]) cube([2,12,6],center=true);
         translate([0,11.3,5.8]) rotate([0,90,0]) cylinder(d=knuckle_pivot_size/scale_size,h=10,$fn=20, center=true);
         translate([0,-11.8,6.0]) rotate([0,90,0]) cylinder(d=palm_pivot_size/scale_size,h=10,$fn=20, center=true);
     }
@@ -245,11 +250,11 @@ module cut_phalanx(tab_thickness=5.5, palm_pivot_size=3, knuckle_pivot_size=3, s
 // finger phalanx, may use different attachment to palm and knuckle, two separate sizes.
 translate([0,0,0]) cut_phalanx(
     palm_pivot_size=pivot_dia, knuckle_pivot_size=pivot_dia,
-    tab_thickness=adjusted_tabwidth, scale_size=global_scale);
+    tab_thickness=adjusted_tabwidth, scale_size=global_scale, thumb=false);
 // thumb phalanx
 translate([30,0,0]) scale([1.1,1,1]) cut_phalanx(
     palm_pivot_size=pivot_dia, knuckle_pivot_size=pivot_dia,
-    tab_thickness=adjusted_tabwidth/1.1, scale_size=global_scale);
+    tab_thickness=adjusted_tabwidth/1.1, scale_size=global_scale, thumb=true);
 
 //long fingertip, keep tolerances the same with scaling using width correction
 if(screws) translate([-25,0,0]) adjusted_bolt_holes(global_scale, outer_width=13, 
