@@ -121,7 +121,7 @@ module carpal() {
     }
 }
 
-module finger(slotwidth) {
+module finger(slotwidth, thumb=false, keel=true) {
     
     difference() {
         intersection() {
@@ -142,7 +142,7 @@ module finger(slotwidth) {
         translate([0,-18,8])
             rotate([0,90,0])  intersection() {
                 cylinder(d=16, h=slotwidth, center=true, $fn=50);
-                translate([-3,0,0]) cube([15,30,slotwidth+1], center=true);
+                translate([-3+(thumb?2:0),0,0]) cube([15,30,slotwidth+1], center=true);
             }
         translate([0,-14,16]) cube([20,30,5], center=true);
         // rectangular toroidal elbow for better elastic feeding
@@ -154,7 +154,14 @@ module finger(slotwidth) {
     // bars to attach string and elastic
     translate([0,-3,11]) cube([slotwidth+0.5,2,1.5], center=true);
     translate([0,-8,9]) cube([slotwidth+0.5,2,1.5], center=true);
-    
+    if(keel) {
+        // make a support for the bad overhang
+        hull() {
+            translate([0,0,0.25]) cube(0.5, center=true);
+            translate([0,18,0]) linear_extrude(height=15*tan(initial_rotation), scale=0.05) 
+                square(2, center=true); 
+        }
+    }
 }
 
 module pin_plug(pin_style, dia)
@@ -203,7 +210,7 @@ module phalanx_body() {
             rotate(10) scale([1,0.75,1]) cylinder(d=17, h=20, center=true);
     }
 }
-module solid_phalanx(tab_thickness=5.1) {
+module solid_phalanx(tab_thickness) {
     $fn=50;
     translate([0,0,8]) intersection() { // bottom of phalanx is at z=0
     translate([0,0,7.0]) cube([50,50,30], center=true); // slice a nice flat bottom for printing
@@ -246,25 +253,25 @@ translate([30,0,0]) scale([1.1,1,1]) cut_phalanx(
 
 //long fingertip, keep tolerances the same with scaling using width correction
 if(screws) translate([-25,0,0]) adjusted_bolt_holes(global_scale, outer_width=13, 
-    offsets=[[[0,-20,8],0],], bolt_dia=pivot_pin_dia, 
+    offsets=[[[0,-20,9],0],], bolt_dia=pivot_pin_dia, 
     nut_size=nut_size, bolt_head_dia=bolt_head_dia) 
-        finger(slotwidth=nominal_slotwidth);
+        finger(slotwidth=nominal_slotwidth, thumb=false);
 else translate([-25,0,0]) adjusted_holes(global_scale, 
-    offsets=[[[0,-20,8],0],], dia=pivot_pin_dia)  
-        finger(slotwidth=nominal_slotwidth);
+    offsets=[[[0,-20,9],0],], dia=pivot_pin_dia)  
+        finger(slotwidth=nominal_slotwidth, thumb=false);
 //short fingertip
 if(screws) translate([-50,0,0]) adjusted_bolt_holes(global_scale, outer_width=13, 
-    offsets=[[[0,-20*0.9,8],0],], bolt_dia=pivot_pin_dia, 
+    offsets=[[[0,-20*0.9,9],0],], bolt_dia=pivot_pin_dia, 
     nut_size=nut_size, bolt_head_dia=bolt_head_dia) scale([1,0.9,1])  
-        finger(slotwidth=nominal_slotwidth);
+        finger(slotwidth=nominal_slotwidth, thumb=false);
 else translate([-50,0,0]) adjusted_holes(global_scale, 
-    offsets=[[[0,-20*0.9,8],0],], dia=pivot_pin_dia) scale([1,0.9,1])  
-        finger(slotwidth=nominal_slotwidth);
-// thumb by scaling regular fingers tips; the native thumb mesh seems unrepairable.
+    offsets=[[[0,-20*0.9,9],0],], dia=pivot_pin_dia) scale([1,0.9,1])  
+        finger(slotwidth=nominal_slotwidth, thumb=false);
+// thumb by scaling regular fingers tips
 if(screws) translate([60,0,0]) adjusted_bolt_holes(global_scale, outer_width=13, 
-    offsets=[[[0,-20*0.77,8*0.72],0],], bolt_dia=pivot_pin_dia, 
+    offsets=[[[0,-20*0.77,9*0.72],0],], bolt_dia=pivot_pin_dia, 
     nut_size=nut_size, bolt_head_dia=bolt_head_dia) scale([1.1,0.77,0.72])  
-        finger(slotwidth=nominal_slotwidth/1.1);
+        finger(slotwidth=nominal_slotwidth/1.1, thumb=true);
 else translate([60,0,0]) adjusted_holes(global_scale, 
-    offsets=[[[0,-20*0.77,8*0.72],0],], dia=pivot_pin_dia) scale([1.1,0.77,0.72]) 
-        finger(slotwidth=nominal_slotwidth/1.1);
+    offsets=[[[0,-20*0.77,9*0.72],0],], dia=pivot_pin_dia) scale([1.1,0.77,0.72]) 
+        finger(slotwidth=nominal_slotwidth/1.1, thumb=true);
