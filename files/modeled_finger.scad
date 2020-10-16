@@ -6,19 +6,10 @@ in a manner that scales the holes to a chosen size indepenedent of the finger si
 This allows one to use a wide variety of commercial metal fasteners in lieu of 3d printed pins
 to create the pivots for fingers.  
 
-Setting the line 
-  global_scale=1.3;
-to the desired value sets the size of the palm these fingers are adjusted to fit.
-
 The designs in the default version of this files are set up
 to use 3mm screws, 1/16" steel pins, or 13 ga (0.092") (USA) nails, with a plastic tubing
 bearing on the outside to make it move smoothly.  The pins and nails may not need the tubing,
 and parameters can be adjusted to make this the case. 
-These designs can be selected by setting one of the lines
-  screws=false;
-  pins_16th=true;
-  nails_13ga=false;
-to true.
 
 By manually adjusting the lines
   pivot_dia= pivot_array[pivot_size_index];
@@ -31,7 +22,10 @@ only have to reprint the phalanx parts to adjust the joint quality, since they a
 includes the hole for the pivot, and that has a clearance for the slots.  
 The line
   nominal_clearance=0.6;
-sets the looseness of the slots for the joints; making is smaller makes joints tighter.
+sets the looseness of the slots for the joints; making it smaller makes joints tighter.
+Since this is cut parametricall after the scaling is done, once you have found a good value
+for your printing setup, it should work for all sizes of hands, instead of getting looser
+as the hands get bigger.
 
 Marcus Mendenhall, 5 June, 2020, Germantown, Maryland, USA
 
@@ -39,8 +33,10 @@ Marcus Mendenhall, 5 June, 2020, Germantown, Maryland, USA
 
 // size of fingers. should match scale of hand they are being printed for.
 global_scale=1.3; // [1.0:0.02:2.0]
-// clearance on sides of tabs.  increase for looser fit. This only affects the phalanges, so a bad fit does not require reprinting  anything else.
+// Clearance on sides of tabs.  increase for looser fit. This only affects the phalanges, so a bad fit does not require reprinting  anything else.
 nominal_clearance=0.6;
+// Extra clearance for pins to adjust for printer differences to make pins reasonably tight fits. Note that this affects all joints, so it should be pre-tested on something small like a finger in advance.
+pin_diameter_clearance = 0; // [-1:0.01:1]
 
 /* [Hidden] */
 // 3mm screws with 3/16" OD delrin rod
@@ -49,7 +45,7 @@ pivot_pin_dia_3mm_screw=3+0.1; // 3 mm screws
 
 // 1/16" pins with 1/8" OD delrin rod
 pivot_dia_8th_delrin=25.4*(1/8)+0.25; // 1/8" OD delrin tubing with a little clearance since they were too small otherwise
-pivot_pin_dia_16th_pin=25.4*(1/16); // 1/16" steel pin
+pivot_pin_dia_16th_pin=25.4*(1/16)+pin_diameter_clearance; // 1/16" steel pin
 
 // 13-gauge nails
 // https://www.fastenerusa.com/nails/hand-drive-nails/finishing/2-x-13-gauge-304-stainless-6d-finishing-nails-1lb.html
@@ -57,7 +53,7 @@ pivot_pin_dia_16th_pin=25.4*(1/16); // 1/16" steel pin
 // https://fluorostore.com/products/fractional-metric-ptfe-fluoropolymer-tubing
 // part number F015137
 pivot_dia_13ga_nail=25.4*(5/32)+0.25; // 5/32"" OD PTFE tubing with a little clearance since they were too small otherwise
-pivot_pin_dia_13ga_nail=25.4*0.095; // 13 ga nail
+pivot_pin_dia_13ga_nail=25.4*0.095+pin_diameter_clearance; // 13 ga nail
 
 pivot_array=[pivot_dia_3mm_screw, pivot_dia_8th_delrin, pivot_dia_13ga_nail, ];
 pin_array=[pivot_pin_dia_3mm_screw, pivot_pin_dia_16th_pin, pivot_pin_dia_13ga_nail, ];
