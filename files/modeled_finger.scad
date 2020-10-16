@@ -63,14 +63,11 @@ pivot_array=[pivot_dia_3mm_screw, pivot_dia_8th_delrin, pivot_dia_13ga_nail, ];
 pin_array=[pivot_pin_dia_3mm_screw, pivot_pin_dia_16th_pin, pivot_pin_dia_13ga_nail, ];
 
 /* [Pin Style Selection -- select one] */
-// design for 3mm screws
-screws=false;
-// design for 1/16" pins
-pins_16th=true;
-// design for 13 ga stainless steel finishing nails
-nails_13ga=false;
+pin_index=1; // [0: 3mm screws, 1: 1/16 inch pins, 2: 13ga finishing nails] 
 
-pivot_size_index=screws?0:pins_16th?1:nails_13ga?2:undef;
+screws = (pin_index==2);
+
+pivot_size_index=pin_index;
 
 pivot_dia= pivot_array[pivot_size_index];
 pivot_pin_dia=pin_array[pivot_size_index];
@@ -153,7 +150,7 @@ module finger(slotwidth, thumb=false, keel=true) {
     }
     // bars to attach string and elastic
     translate([0,-3,11]) cube([slotwidth+0.5,2,1.5], center=true);
-    translate([0,-8,9]) cube([slotwidth+0.5,2,1.5], center=true);
+    translate([0,-8,10]) cube([slotwidth+0.5,2,1.5], center=true);
     if(keel) {
         // make a support for the bad overhang
         hull() {
