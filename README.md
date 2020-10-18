@@ -42,9 +42,15 @@ You also need to run gripper\_box\_pieces.scad to generate the tensioning box sc
 
 ## Progress Log
 ### October, 2020 update
-There is a new OpenSCAD file, paraglider_palm_new_channels.scad.  This file has a better mechanism for filling in the old string channels to get rid if various voids, etc.  It then implements an entirely new system for the channels.  There are two channels for each digit (except the thumb): one for the string and one for the elastic return band.  This should make it easier to thread, using a piece of wire as a leader to puller the strings through. It should also eliminate drag bwtween the tewo lines.
+There is a new OpenSCAD file, paraglider_palm_new_channels.scad.  This file has a better mechanism for filling in the old string channels to get rid if various voids, etc.  It then implements an entirely new system for the channels.  There are two channels for each digit (except the thumb): one for the string and one for the elastic return band.  This should make it easier to thread, using a piece of wire as a leader to puller the strings through. It should also eliminate drag bwtween the two lines.
 
-With a bit of further testing, I think it will be possible to insert the string inside a piece of thin-walled PTFE tubing, such as electronic sheathing.  This should greatly reduce the friction on the strin. To go along with this, I have changed the printed string/elastic guides in the digit slots to have steel pins insteasd, which shold be much slipperier.
+### Later October, 2020
+The entire 'fingerator' module has been replaced. The original used a slice off of the Phoenix finger meshes to start with, and edited from there.  The new fingers are entirely OpenSCAD objects.  ![Rendered image of new fingers](images/fingerator.png)  They have the following improvements:
+
+* A 'keel' on the overhang to make it _really_ easy to print.  Even without very good cooling,  the distal segment overhang comes out smooth.
+* The entire path for the elastic is convered, resulting in better aesthetics. The elastic now passes through from the top if the finger to the bottom, where it gets tied.
+* There is a channel to guide the elastic so that it can be inserted in most cases without any  sort of leader to push or pull it through.
+* There are two bars under each finger to tie things to, one for the string and one for the elastic.
 
 The goal of these efforts is to produce a hand which gives as stronger grip with less effort from the user, to assist people who do not have a lot of wrist strength.
 
