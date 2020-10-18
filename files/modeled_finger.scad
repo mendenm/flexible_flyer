@@ -32,7 +32,7 @@ Marcus Mendenhall, 5 June, 2020, Germantown, Maryland, USA
 */
 
 // size of fingers. should match scale of hand they are being printed for.
-global_scale=1.3; // [1.0:0.02:2.0]
+global_scale=1.3; // [1.0:0.01:2.0]
 // Clearance on sides of tabs.  increase for looser fit. This only affects the phalanges, so a bad fit does not require reprinting  anything else.
 nominal_clearance=0.6;
 // Extra clearance for pins to adjust for printer differences to make pins reasonably tight fits. Note that this affects all joints, so it should be pre-tested on something small like a finger in advance.
@@ -140,9 +140,12 @@ module finger(slotwidth, thumb=false, keel=true) {
         translate([0,-14,16]) cube([20,30,5], center=true);
         // rectangular toroidal elbow for better elastic feeding
         translate([0,-13,11]) rotate([0,90, 0]) rotate_extrude(angle=90, convexity=5, $fn=40)
-            translate([9,0]) square([1.5,3], center=true);
+            translate([9,0]) square([thumb?2.5:1.5,3], center=true);
         // connect elbow to end 
         translate([0,-20,2]) cube([3,15,1.5], center=true);
+        // hollow the finger out to leave room to stuff ends of string and elastic
+        *rotate([-90+initial_rotation,0,0]) translate([0,-5,7]) 
+            cylinder(d1=7, d2=6, h=12, $fn=20, center=true);
     }
     // bars to attach string and elastic
     translate([0,-3,11]) cube([slotwidth+0.5,2,1.5], center=true);
