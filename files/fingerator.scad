@@ -34,9 +34,20 @@ Marcus Mendenhall, 5 June, 2020, Germantown, Maryland, USA
 // size of fingers. should match scale of hand they are being printed for.
 global_scale=1.3; // [1.0:0.01:2.0]
 // Clearance on sides of tabs.  increase for looser fit. This only affects the phalanges, so a bad fit does not require reprinting  anything else.
-nominal_clearance=0.6;
+nominal_clearance=0.5; // [0.1:0.01:3]
 // Extra clearance for pins to adjust for printer differences to make pins reasonably tight fits. Note that this affects all joints, so it should be pre-tested on something small like a finger in advance.
 pin_diameter_clearance = 0; // [-1:0.01:1]
+
+/* [Items to print] */
+print_long_fingers=true; 
+print_short_fingers=true; 
+print_finger_phalanx=true; 
+print_thumb=true;
+print_thumb_phalanx=true; 
+
+/* [Igus Bearing Material] */
+bearing_pocket_diameter=0; // [0,5,7,9,11,13,15]
+bearing_pocket_depth=0.4; // [0.2:0.05:0.6]
 
 /* [Hidden] */
 // 3mm screws with 3/16" OD delrin rod
@@ -77,7 +88,7 @@ nominal_slotwidth=6+0; // make an equation to hide from customizer
 adjusted_tabwidth=nominal_slotwidth-nominal_clearance/global_scale;
 adjusted_slotwidth=nominal_slotwidth;
 
-initial_rotation=33.5;
+initial_rotation=33.5+0; // hidden from customizer
 
 module fingertip() {
     cyl_1_dia_1=11;
@@ -225,11 +236,15 @@ module solid_phalanx(tab_thickness, thumb) {
 }
 }
 
-module cut_phalanx(tab_thickness=5.5, palm_pivot_size=3, knuckle_pivot_size=3, scale_size=1, thumb=false) {
+module cut_phalanx(tab_thickness=5.5, palm_pivot_size=3, knuckle_pivot_size=3, scale_size=1, 
+    thumb=false) {
+        proximal_pivot_pos=[0,-11.8,6.0];
+        distal_pivot_pos=[0,12.3,5.8]; // positions of pivot holes in phalanges
     scale(scale_size) difference() {
         solid_phalanx(tab_thickness=tab_thickness, thumb=thumb);
         // main passage through top
-        translate([0,0,5.5+(thumb?7:8)]) rotate([90-(thumb?10:6),0,0]) cylinder(d=2.5,h=50,$fn=20, center=true);
+        translate([0,0,5.5+(thumb?7:8)]) rotate([90-(thumb?10:6),0,0]) 
+            cylinder(d=2.5,h=50,$fn=20, center=true);
         if(thumb) { // extra clearance around end for elastic on thumb
            translate([0,12,5.3]) rotate([60,0,0]) rotate([0,90,0]) 
             rotate_extrude(angle=110, $fn=60) translate([5,0]) circle(d=2.5, $fn=20); 
@@ -237,42 +252,48 @@ module cut_phalanx(tab_thickness=5.5, palm_pivot_size=3, knuckle_pivot_size=3, s
         translate([0,0,-6.0+7.5]) rotate([90,0,0]) cube([2,1.5,50], center=true); // cylinder(d=2.5,h=50,$fn=20, center=true);
         translate([0,10,-6.0-3+8]) cube([2,12,6],center=true);
         translate([0,-10,-6.0-3+8]) cube([2,12,6],center=true);
-        translate([0,11.3,5.8]) rotate([0,90,0]) cylinder(d=knuckle_pivot_size/scale_size,h=10,$fn=20, center=true);
-        translate([0,-11.8,6.0]) rotate([0,90,0]) cylinder(d=palm_pivot_size/scale_size,h=10,$fn=20, center=true);
+        translate(distal_pivot_pos) rotate([0,90,0]) cylinder(d=knuckle_pivot_size/scale_size,h=10,$fn=20, center=true);
+        translate(proximal_pivot_pos) rotate([0,90,0]) cylinder(d=palm_pivot_size/scale_size,h=10,$fn=20, center=true);
+    if(bearing_pocket_depth) 
+        // make pockets for Igus bearing material sheets for slipperier joints
+        for(y=[proximal_pivot_pos,distal_pivot_pos], x=[-1,1])
+            translate(y+[x*tab_thickness/2-bearing_pocket_depth,0,0])
+                rotate([0,90,0]) 
+                    cylinder(d=bearing_pocket_diameter, h=2*bearing_pocket_depth, center=true, $fn=20);
     }
 }
 
 
 // finger phalanx, may use different attachment to palm and knuckle, two separate sizes.
-translate([0,0,0]) cut_phalanx(
+if(print_finger_phalanx) translate([0,0,0]) cut_phalanx(
     palm_pivot_size=pivot_dia, knuckle_pivot_size=pivot_dia,
     tab_thickness=adjusted_tabwidth, scale_size=global_scale, thumb=false);
 // thumb phalanx
-translate([30,0,0]) scale([1.1,1,1]) cut_phalanx(
+if(print_thumb_phalanx) translate([30,0,0]) scale([1.1,1,1]) cut_phalanx(
     palm_pivot_size=pivot_dia, knuckle_pivot_size=pivot_dia,
     tab_thickness=adjusted_tabwidth/1.1, scale_size=global_scale, thumb=true);
 
 //long fingertip, keep tolerances the same with scaling using width correction
-if(screws) translate([-25,0,0]) adjusted_bolt_holes(global_scale, outer_width=13, 
+if(screws && print_long_fingers) translate([-25,0,0]) adjusted_bolt_holes(global_scale, outer_width=13, 
     offsets=[[[0,-20,9],0],], bolt_dia=pivot_pin_dia, 
     nut_size=nut_size, bolt_head_dia=bolt_head_dia) 
         finger(slotwidth=nominal_slotwidth, thumb=false);
-else translate([-25,0,0]) adjusted_holes(global_scale, 
+else if (print_long_fingers) translate([-25,0,0]) adjusted_holes(global_scale, 
     offsets=[[[0,-20,9],0],], dia=pivot_pin_dia)  
         finger(slotwidth=nominal_slotwidth, thumb=false);
 //short fingertip
-if(screws) translate([-50,0,0]) adjusted_bolt_holes(global_scale, outer_width=13, 
+if(screws && print_short_fingers) translate([-50,0,0]) adjusted_bolt_holes(global_scale, outer_width=13, 
     offsets=[[[0,-20*0.9,9],0],], bolt_dia=pivot_pin_dia, 
     nut_size=nut_size, bolt_head_dia=bolt_head_dia) scale([1,0.9,1])  
         finger(slotwidth=nominal_slotwidth, thumb=false);
-else translate([-50,0,0]) adjusted_holes(global_scale, 
+else if (print_short_fingers) translate([-50,0,0]) adjusted_holes(global_scale, 
     offsets=[[[0,-20*0.9,9],0],], dia=pivot_pin_dia) scale([1,0.9,1])  
         finger(slotwidth=nominal_slotwidth, thumb=false);
 // thumb by scaling regular fingers tips
-if(screws) translate([60,0,0]) adjusted_bolt_holes(global_scale, outer_width=13, 
+if(screws && print_thumb) translate([60,0,0]) adjusted_bolt_holes(global_scale, outer_width=13, 
     offsets=[[[0,-20*0.77,9*0.72],0],], bolt_dia=pivot_pin_dia, 
     nut_size=nut_size, bolt_head_dia=bolt_head_dia) scale([1.1,0.77,0.72])  
         finger(slotwidth=nominal_slotwidth/1.1, thumb=true);
-else translate([60,0,0]) adjusted_holes(global_scale, 
+else if(print_thumb) translate([60,0,0]) adjusted_holes(global_scale, 
     offsets=[[[0,-20*0.77,9*0.72],0],], dia=pivot_pin_dia) scale([1.1,0.77,0.72]) 
         finger(slotwidth=nominal_slotwidth/1.1, thumb=true);
