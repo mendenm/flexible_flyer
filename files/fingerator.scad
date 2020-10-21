@@ -35,8 +35,6 @@ Marcus Mendenhall, 5 June, 2020, Germantown, Maryland, USA
 global_scale=1.3; // [1.0:0.01:2.0]
 // Clearance on sides of tabs.  increase for looser fit. This only affects the phalanges, so a bad fit does not require reprinting  anything else.
 nominal_clearance=0.5; // [0.1:0.01:3]
-// Extra clearance for pins to adjust for printer differences to make pins reasonably tight fits. Note that this affects all joints, so it should be pre-tested on something small like a finger in advance.
-pin_diameter_clearance = 0; // [-1:0.01:1]
 
 /* [Items to print] */
 print_long_fingers=true; 
@@ -48,6 +46,14 @@ print_thumb_phalanx=true;
 /* [Igus Bearing Material] */
 bearing_pocket_diameter=0; // [0,5,7,9,11,13,15]
 bearing_pocket_depth=0.4; // [0.2:0.05:0.6]
+
+/* [Pin Style Selection -- select one] */
+pin_index=1; // [0: 3mm screws, 1: 1/16 inch pins, 2: 13ga finishing nails] 
+
+// Extra clearance for pins to adjust for printer differences to make pins reasonably tight fits. Note that this affects all joints, so it should be pre-tested on something small like a finger in advance.
+pin_diameter_clearance = 0; // [-1:0.01:1]
+
+screws = (pin_index==0);
 
 /* [Hidden] */
 // 3mm screws with 3/16" OD delrin rod
@@ -69,15 +75,12 @@ pivot_pin_dia_13ga_nail=25.4*0.095+pin_diameter_clearance; // 13 ga nail
 pivot_array=[pivot_dia_3mm_screw, pivot_dia_8th_delrin, pivot_dia_13ga_nail, ];
 pin_array=[pivot_pin_dia_3mm_screw, pivot_pin_dia_16th_pin, pivot_pin_dia_13ga_nail, ];
 
-/* [Pin Style Selection -- select one] */
-pin_index=1; // [0: 3mm screws, 1: 1/16 inch pins, 2: 13ga finishing nails] 
-
-screws = (pin_index==2);
 
 pivot_size_index=pin_index;
 
 pivot_dia= pivot_array[pivot_size_index];
 pivot_pin_dia=pin_array[pivot_size_index];
+
 
 /* [Misc] */
 // size fo m3 standard nut across flats
