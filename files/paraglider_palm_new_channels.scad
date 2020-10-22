@@ -1,12 +1,12 @@
 inch=25.4*1; // hidden from customizer by equation, useful for pins
 // size of hand relative to tiny 100% model
-overall_scale=1.0; // [1.0:0.02:2.0]
+overall_scale=1.25; // [1.0:0.02:2.0]
 // size of pivot pins
 pivot_size=1.5875; // [1.5:metric 1.5, 1.5875:16th inch, 3.0:3mm screw]
 // include fused-in palm mesh?
 include_mesh=1; // [1:mesh included, 0:separate mesh]
 // print in string guides in finger slots, else put holes for steel pin guides
-printed_string_guides=false; // [1:printed guide, 0: steel guide]
+printed_string_guides=true; // [1:printed guide, 0: steel guide]
 // drill holes for steel pins
 pins=true; // [1:steel pins, 0: plastic pins]
 // create plugs for steel pins, or leave old holes for plastic pins 
@@ -51,10 +51,10 @@ module supports() {
     }
 }
 
-module rounded_cutter(width=6, radius=1.5) {
-    linear_extrude(height=100, center=false) 
+module rounded_cutter(width=6, radius=1.5, height=20) {
+    linear_extrude(height=height, center=false) 
     hull() {
-        translate([0,-45]) square([width,50], center=true);
+        translate([0,-20]) square([width,1], center=true);
         translate([-width/2+radius,5]) 
             circle(r=radius, $fn=20);
         translate([ width/2-radius,5]) 
@@ -95,14 +95,13 @@ module plug_old_channels() {
             );
             translate([20,7,25]) rotate([30,-30,0]) translate([-2,-3,-2]) cylinder(d=5,h=12, $fn=20, center=true);
         }
-        translate([9.8,0,12]) rotate([85,0,-5]) cylinder(d=30,h=100, $fn=50, center=true);
+        translate([9.8,0,12]) rotate([85,0,-5]) cylinder(d=30,h=20, $fn=50, center=true);
     }
     translate([23,6.5,0.05]) cylinder(d=3.5, h=19, $fn=20); 
  
     for(v=[[13.5,31,18], [-0.5,31,21.0], [-14.2,27,20],  [-28.5,21,18],
         
         ]) translate([v.x,v.y,0]) cylinder(d=4,h=v.z,$fn=20);
-    
 }
 
 module reborn_channels() {
@@ -143,13 +142,13 @@ module reborn_channels() {
         bendradius=5, bendsteps=10   
     );    
     translate([13.5,-39,23.5]) channel(
-        [ [-13.5,6,3], [-8,30,3], [-5.5,40,2.5], [-2,55,0], [0,70, -6], [0,70,-20] ],
+        [ [-13.5,6,3], [-8,30,3], [-5.5,40,2.5], [-2,55,0], [0,70, -7], [0,70,-20] ],
         cutout_position=[0,0,-1], cutout_angle=[-5,0,-10], cutout_length=0,         
         shapescale=string_channel_scale/overall_scale,
         bendradius=5, bendsteps=10        
     );
     translate([13.5,-39,23.5]) channel(
-        [ [-10.5,6,3], [-5,30,3], [-3,40,2.5], [-1,55,0], [0,71, -5.5], [0,71,-20] ],
+        [ [-10.5,6,3], [-5,30,3], [-3,40,2.5], [-1,55,0], [0,71, -7.5], [0,71,-20] ],
         cutout_position=[0,0,-1], cutout_angle=[-5,0,-10], cutout_length=0,         
         shapescale=string_channel_scale/overall_scale,
         bendradius=5, bendsteps=10        
@@ -207,7 +206,7 @@ pin_coordinates=[
 
 module plugs(size_scale=1, chop=false) {
     // wrist pins, maybe these aren't parametric for now
-    chopper=chop?[13,13,200]:[100,100,200];
+    chopper=[13,13,30];
     
     if(!old_style_wrist) {
         translate(pin_coordinates[0][0]) rotate(pin_coordinates[0][1]) 
@@ -219,25 +218,25 @@ module plugs(size_scale=1, chop=false) {
     translate(pin_coordinates[2][0]) rotate(pin_coordinates[2][1]) 
         scale(size_scale) intersection() {
             chamfered_cylinder(d=8,h=27.5, center=true, $fn=16);
-            translate([6,6,0]) rotate(45) cube(chopper, center=true);
+            if(chop) translate([6,6,0]) rotate(45) cube(chopper, center=true);
         }
     // ring pin
     translate(pin_coordinates[3][0]) rotate(pin_coordinates[3][1]) 
         scale(size_scale) intersection() {
             chamfered_cylinder(d=11,h=11, center=true, $fn=16);
-            translate([6,6,0]) rotate(45) cube(chopper, center=true);
+            if(chop) translate([6,6,0]) rotate(45) cube(chopper, center=true);
         }
     // pinky pin
     translate(pin_coordinates[4][0]) rotate(pin_coordinates[4][1]) 
         scale(size_scale) intersection() {
             chamfered_cylinder(d=11,h=11.5, center=true, $fn=16);
-            translate([6,6,0]) rotate(45) cube(chopper, center=true);
+            if(chop) translate([6,6,0]) rotate(45) cube(chopper, center=true);
         }
     // thumb pin
     translate(pin_coordinates[5][0]) rotate(pin_coordinates[5][1]) 
         scale(size_scale) intersection() {
             chamfered_cylinder(d=11,h=16, center=true, $fn=16);
-            rotate(-45) translate([6,6,0]) cube(chopper, center=true);
+            if(chop) rotate(-45) translate([6,6,0]) cube(chopper, center=true);
         }
  }
 
@@ -276,9 +275,9 @@ module drilling(palm_scale, finger_scale,
     base_slot_width=6;
     base_rotation_offset=6; // distance of nominal pin center from front of hand, half of cylinder diameter of 12 mm
     // cut out finger slots
-    if(!pre_solidified) for(dx=slot_dx) translate(dx[0]+[3.7,43,-20]) 
+    if(!pre_solidified) for(dx=slot_dx) translate(dx[0]+[3.7,43,-10]) 
         rotate(dx[1]+180) translate([0,5,5]) 
-            rounded_cutter(width=base_slot_width*finger_scale/palm_scale);
+            rounded_cutter(width=base_slot_width*finger_scale/palm_scale, height=40);
     // make holes for pins
     center_offset=[0, base_rotation_offset*(palm_scale/finger_scale-1), 0];
     if(pins) {
@@ -294,7 +293,7 @@ module drilling(palm_scale, finger_scale,
     // block to mill out old rubber-band attachment for thumb
     if(!pre_solidified) translate([30,0,-5]) rotate(49.5) {
         translate([0.55,-6,0]) 
-        rounded_cutter(width=base_slot_width*finger_scale/palm_scale);
+        rounded_cutter(width=base_slot_width*finger_scale/palm_scale, height=30);
         translate([0.55,-4,8]) cube([6,20,20], center=true);
     }
     // must shift 'y' coordinates of filled holes forward to keep (6 mm * finger_scale) offset from front
