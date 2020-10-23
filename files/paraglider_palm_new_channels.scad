@@ -1,18 +1,18 @@
 inch=25.4*1; // hidden from customizer by equation, useful for pins
 // size of hand relative to tiny 100% model
-overall_scale=1.25; // [1.0:0.02:2.0]
+overall_scale=1.25; // [1.0:0.01:2.0]
 // size of pivot pins
 pivot_size=1.5875; // [1.5:metric 1.5, 1.5875:16th inch, 3.0:3mm screw]
+// extra clearance for pivots to adjust for printer tolerances
+pivot_extra_clearance=0; // [-0.5:0.01:0.5]
 // include fused-in palm mesh?
 include_mesh=1; // [1:mesh included, 0:separate mesh]
-// print in string guides in finger slots, else put holes for steel pin guides
-printed_string_guides=true; // [1:printed guide, 0: steel guide]
 // drill holes for steel pins
 pins=true; // [1:steel pins, 0: plastic pins]
 // create plugs for steel pins, or leave old holes for plastic pins 
 plugs=true; // [1:steel pins, 0: plastic pins]
 // use pre-solidified palm to save computation
-pre_solidified=""; // ["solidified_palm.stl": pre_solidified, "":recompute]
+pre_solidified=""; // ["solidified_palm.3mf": pre_solidified, "":recompute]
 // make main object a ghost for debugging
 main_ghost=false; // [1:ghost, 0:real]
 // set size of channels for strings
@@ -275,7 +275,7 @@ module drilling(palm_scale, finger_scale,
     base_slot_width=6;
     base_rotation_offset=6; // distance of nominal pin center from front of hand, half of cylinder diameter of 12 mm
     // cut out finger slots
-    if(!pre_solidified) for(dx=slot_dx) translate(dx[0]+[3.7,43,-10]) 
+    for(dx=slot_dx) translate(dx[0]+[3.7,43,-10]) 
         rotate(dx[1]+180) translate([0,5,5]) 
             rounded_cutter(width=base_slot_width*finger_scale/palm_scale, height=40);
     // make holes for pins
@@ -297,10 +297,6 @@ module drilling(palm_scale, finger_scale,
         translate([0.55,-4,8]) cube([6,20,20], center=true);
     }
     // must shift 'y' coordinates of filled holes forward to keep (6 mm * finger_scale) offset from front
-
-    if(!printed_string_guides) for(dx=slot_dx) translate(dx[0]+[3.7,37,13]) 
-        rotate([90,0,-90+dx[1]]) cylinder(d=pin_dia, h=15*overall_scale, $fn=20, center=true);
-
 }
 
 module scaled_palm(palm_scale=1, finger_scale=1, 
@@ -315,7 +311,13 @@ module scaled_palm(palm_scale=1, finger_scale=1,
                 if(plugs) plugs();
             }
             else {
-                import(pre_solidified, convexity=10);
+                if(!main_ghost) difference() {
+                    import(pre_solidified, convexity=10);
+                    reborn_channels();
+                } else { %render() difference() {
+                    import(pre_solidified, convexity=10);
+                    reborn_channels(); }
+                }
             }
             translate([0,-31.5,30]) cube([100,5,20], center=true); // shave end
             drilling(
@@ -325,7 +327,7 @@ module scaled_palm(palm_scale=1, finger_scale=1,
             );
         }
     // re-insert clean finger stops
-        if(printed_string_guides) for(dx=slot_dx) translate(dx[0]+[3.7,38.5,12.5]) 
+        for(dx=slot_dx) translate(dx[0]+[3.7,38.5,12.5]) 
             rotate([90,0,-90+dx[1]]) linear_extrude(height=8, center=true)
                 hull() {
                     translate([5,0]) square([0.1,4]);
