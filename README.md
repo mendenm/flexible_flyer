@@ -11,7 +11,7 @@ This repository contains a couple of different but closely related, projects.  I
 		* 	 3 mm screws with PTÏE tubing for bearings
 		* 	 Stainless steel finishing nails (deck nails) with PTFE tubing
  	 
-		All of these options add between about $0.50 and about $2.00 to the cost of a hand. Materials sources are shown at [Joint Materials] (#Joint-Materials)
+		All of these options add between about $0.50 and about $2.00 to the cost of a hand. Materials sources are shown at [Joint Materials](#Joint-Materials)
 	
 	* The clearance on the tongue-and-groove joints is set independently of the scale of the hand.  This way, hands do not become floppier as they scale up to larger size. Also, by adjusting this spacing, there is room to insert self-lubricating plastics in the joint to lower the friction.  This will improve the grip strength.
 * [A new design for supports](#New-support-system) for the big arch on all three of these palms. I am providing a completed STL file for these, along with the OpenSCAD code which converts the basic palm into the supported palm.  These supports are flying supports; they do not touch the baseplate.  They are bridged under the top of the arch, and require very little material or time to print.  They break off easily after printing, and remaining nubs can be sanded off.  
