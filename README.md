@@ -70,7 +70,7 @@ The entire 'fingerator' module has been replaced. The original used a slice off 
 
 The goal of these efforts is to produce a hand which gives as stronger grip with less effort from the user, to assist people who do not have a lot of wrist strength.
 
-Here is a picture of an assembled finger, showing the blue Igus self-lubricating tape, the off-white bearing tubing insiude a joint, and the assembled joint with a 1/16" steel pin
+Here is a picture of an assembled finger, showing the blue Igus self-lubricating tape, the off-white bearing tubing inside a joint, and the assembled joint with a 1/16" steel pin.
 ![picture](images/assembled_finger.jpg) 
 
 ## New support system
