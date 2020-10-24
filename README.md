@@ -53,7 +53,7 @@ Here is a list of sources I am using for the materials.  Variants of most of the
    * tubing for bearings can be found at (for example) [Fluorostore] (https://fluorostore.com/products/fractional-metric-ptfe-fluoropolymer-tubing).  
 
 * Side-load bearings to insert in joints if extra clearance is left in the phalanges can be obtained from [Igus](http://www.igus.com), part number A160T-5-100G.  This item, for about $13.00, is 1 meter of 100 mm wide, 0.5 mm thick, adhesive-backed self-lubricating plastic tape.  One spool should make between 50 and 100 hands, so it adds no significant cost.
-* 
+ 
 ## Progress Log
 ### October, 2020 update
 There is a new OpenSCAD file, paraglider_palm_new_channels.scad.  This file has a better mechanism for filling in the old string channels to get rid if various voids, etc.  It then implements an entirely new system for the channels.  There are two channels for each digit (except the thumb): one for the string and one for the elastic return band.  This should make it easier to thread, using a piece of wire as a leader to puller the strings through. It should also eliminate drag bwtween the two lines. 
