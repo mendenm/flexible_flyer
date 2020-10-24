@@ -11,7 +11,7 @@ This repository contains a couple of different but closely related, projects.  I
 		* 	 3 mm screws with PTÏE tubing for bearings
 		* 	 Stainless steel finishing nails (deck nails) with PTFE tubing
  	 
-		All of these options add between about $0.50 and about $2.00 to the cost of a hand.
+		All of these options add between about $0.50 and about $2.00 to the cost of a hand. Materials sources are shown at [Joint Materials] (#Joint-Materials)
 	
 	* The clearance on the tongue-and-groove joints is set independently of the scale of the hand.  This way, hands do not become floppier as they scale up to larger size. Also, by adjusting this spacing, there is room to insert self-lubricating plastics in the joint to lower the friction.  This will improve the grip strength.
 * [A new design for supports](#New-support-system) for the big arch on all three of these palms. I am providing a completed STL file for these, along with the OpenSCAD code which converts the basic palm into the supported palm.  These supports are flying supports; they do not touch the baseplate.  They are bridged under the top of the arch, and require very little material or time to print.  They break off easily after printing, and remaining nubs can be sanded off.  
@@ -36,6 +36,24 @@ The fingerator only generates one of each size finger, so for a real hand, these
 
 You also need to run gripper\_box\_pieces.scad to generate the tensioning box scaled for the thermoformed gauntlet.  This result is compatible with simply scaling whippletree\_JD3.stl to the appropriate size in the slicer.
 
+## Joint Materials
+
+Here is a list of sources I am using for the materials.  Variants of most of these should be available from industrial supply houses anywhere in the world. I do not endorse the sources below, but they do have stuff I need.
+
+* 1/16" dowel pins, various lengths
+	* pins [McMaster-Carr](https://www.mcmaster.com) SKUs 90145A421, 90145A422, 90145A423, 90145A425, for example. Needs 10 total, including one of the longer ones (depending on hand size) to pin the combined index and middle finger joint.  If a rotary (Dremel, e.g.) tool is available, pins can be easily cut to length.
+	* 1/16" ID Delrin bearing tube McMaster-Carr SKU 8627K119, need about 2 inches to do a hand. 
+
+* 3 mm screws
+	* Screws are universally available
+	* tubing any metric 3mm ID tubing or Imperial 1/8" ID tubing
+
+* Stainless Steel nails (the cheapest option, by far!)
+	* for example, [Fastener USA](https://www.fastenerusa.com/nails/hand-drive-nails/finishing/1-1-2-x-15-gauge-304-stainless-4d-finishing-nails-1lb.html).  These can be cut to length.
+   * tubing for bearings can be found at (for example) [Fluorostore] (https://fluorostore.com/products/fractional-metric-ptfe-fluoropolymer-tubing).  
+
+* Side-load bearings to insert in joints if extra clearance is left in the phalanges can be obtained from [Igus](http://www.igus.com), part number A160T-5-100G.  This item, for about $13.00, is 1 meter of 100 mm wide, 0.5 mm thick, adhesive-backed self-lubricating plastic tape.  One spool should make between 50 and 100 hands, so it adds no significant cost.
+* 
 ## Progress Log
 ### October, 2020 update
 There is a new OpenSCAD file, paraglider_palm_new_channels.scad.  This file has a better mechanism for filling in the old string channels to get rid if various voids, etc.  It then implements an entirely new system for the channels.  There are two channels for each digit (except the thumb): one for the string and one for the elastic return band.  This should make it easier to thread, using a piece of wire as a leader to puller the strings through. It should also eliminate drag bwtween the two lines. 
