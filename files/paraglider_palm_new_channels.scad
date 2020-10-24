@@ -6,7 +6,7 @@ pivot_size=1.5875; // [1.5:metric 1.5, 1.5875:16th inch, 3.0:3mm screw]
 // extra clearance for pivots to adjust for printer tolerances
 pivot_extra_clearance=0; // [-0.5:0.01:0.5]
 // include fused-in palm mesh?
-include_mesh=1; // [1:mesh included, 0:separate mesh]
+include_mesh=1; // [0:separate mesh, 1:simplified mesh, 2: phoenix mesh]
 // drill holes for steel pins
 pins=true; // [1:steel pins, 0: plastic pins]
 // create plugs for steel pins, or leave old holes for plastic pins 
@@ -176,7 +176,8 @@ module main_palm() {
                 %import("palm_left_v2_nobox.stl", convexity=10);
                 
             if(!main_ghost) supports();
-            if(include_mesh) mesh();
+            if(include_mesh==1) mesh();
+            else if (include_mesh==2) phoenix_mesh();
             if(!main_ghost) plug_old_channels();
         }
         reborn_channels();
@@ -240,7 +241,28 @@ module plugs(size_scale=1, chop=false) {
         }
  }
 
-module mesh() {
+module mesh(mesh_thickness=2) {
+    holes=[ // plug all screw holes
+            [8.7,62.6], [7.7,51.7], [6.5,40.6], [6.9,28.4],
+            [10.1,19.4], [22.7,13], [36.6,7.4], [50.6,6.1], [62.5,10], 
+            [65.6, 17.3], [66.5,26.6], [66.0,47.4], [64.7, 60.2], 
+        ];
+    
+    // convenient aliases
+    m2=mesh_thickness/2;
+    m4=mesh_thickness/4;
+    m1=mesh_thickness;
+    
+    for(dy=[-30:10:20]) translate([-7,dy,(dy==-30)?m2:m4])
+        cube([60,5,(dy==-30)?m1:m2], center=true);
+    for(dx=[-20:10:20]) translate([-7+dx,-1,3*m4])
+        cube([5,62,m2], center=true);
+
+    translate([-43.6,37.1,0]) scale([1,-1,1]) // flip chirality 
+        for(xy=holes) translate([each xy, 0.001]) cylinder(d=3.5, h=13, $fn=16);
+}
+
+module phoenix_mesh() {
     holes=[ // plug all screw holes
             [8.7,62.6], [7.7,51.7], [6.5,40.6], [6.9,28.4],
             [10.1,19.4], [22.7,13], [36.6,7.4], [50.6,6.1], [62.5,10], 
