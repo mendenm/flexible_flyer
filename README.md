@@ -4,22 +4,18 @@
 
 This repository contains a couple of different but closely related, projects.  It is derived from a mix of the [Phoenix v2](https://www.thingiverse.com/thing:1453190), the [Unlimbited Phoenix v3](https://www.thingiverse.com/thing:1674320), and the [Phoenix Reborn](https://www.thingiverse.com/thing:2217431) hands.
 
-
-* A new design for supports for the big arch on all three of these palms.  I am providing a completed STL file for these, along with the OpenSCAD code which converts the basic palm into the supported palm.  These supports are flying supports; they do not touch the baseplate.  They are bridged under the top of the arch, and require very little material or time to print.  They break off easily after printing, and remaining nubs can be sanded off.  
-* Repaired meshes for the v2 and Reborn palms.  The meshes were run through [Meshmixer](http://www.meshmixer.com) to remove the support box, and then the remaining holes in the mesh were (mostly) closed up.  The Reborn palm, which is derived from the v2 palm, is rederived using OpenSCAD to make the modifications required.
 * The big part:  fully parameterized scaling of the v2 and Reborn palms, using OpenSCAD.  
 	* 	This allows the palms to be scaled independently of the hinges, so that commercial steel pins or nails can be used to make precision, smooth-operating joints.  
-	* The parameters allow selection of different options for both hinge pins and for plastic tubing bearings, which make even better joints.  
-	* The clearance on the tongue-and-groove joints is set independently of the scale of the hand.  This way, hands do not become floppier as they scale up to larger size.
-
-## New support system
-
-This support system looks like:
-![Rendered image of support system](images/left_better_supp.png)  The goal is a print which is walk-away safe, which can be started, and expected to just work without any close monitoring to make sure the arch finishes safely. If you can print a half-decent bridge, these will work.  It should be printed with quite a lot of cooling, since there is still a significant overhang, but the supports start just low enough that the overhang never becomes dangerous. 
-
-After printing, these supports snap off quite easily.  They leave small 'nubs' on the inside, which sand off very well with a rotary tool such as a Dremel tool with a flap wheel.  They can be removed by hand-sanding, too.
-
-STL Files are provided for left-hand palm of the Unlimbited Phoenix v3, the Phoenix v2, and the regenerated Phoenix Reborn.  Just mirror these in the slicer to get the right-hand version.  Also, an OpenSCAD file for each of these is provided, to allow the supports to be adapted as needed.  The mesh for the Unlimbited palm was regenerated directly from the online Fusion360 source file, to get a higher-resolution mesh.  All of these are designed to be printed flat on the printer bed, with no supports and no raft.
+	* The parameters allow selection of different options for both hinge pins and for plastic tubing bearings, which make even better joints.  So far, there a designs using:
+		* 	 industrial 1/16" dowel pins with Delrin tubing bearings around them
+		* 	 3 mm screws with PTÏE tubing for bearings
+		* 	 Stainless steel finishing nails (deck nails) with PTFE tubing
+ 	 
+		All of these options add between about $0.50 and about $2.00 to the cost of a hand.
+	
+	* The clearance on the tongue-and-groove joints is set independently of the scale of the hand.  This way, hands do not become floppier as they scale up to larger size. Also, by adjusting this spacing, there is room to insert self-lubricating plastics in the joint to lower the friction.  This will improve the grip strength.
+* [A new design for supports](#New-support-system) for the big arch on all three of these palms. I am providing a completed STL file for these, along with the OpenSCAD code which converts the basic palm into the supported palm.  These supports are flying supports; they do not touch the baseplate.  They are bridged under the top of the arch, and require very little material or time to print.  They break off easily after printing, and remaining nubs can be sanded off.  
+* Repaired meshes for the v2 and Reborn palms.  The meshes were run through [Meshmixer](http://www.meshmixer.com) to remove the support box, and then the remaining holes in the mesh were (mostly) closed up.  The Reborn palm, which is derived from the v2 palm, is rederived using OpenSCAD to make the modifications required.
 
 ## Parametric Scaling and modification
 
@@ -55,6 +51,16 @@ The entire 'fingerator' module has been replaced. The original used a slice off 
 * There are two bars under each finger to tie things to, one for the string and one for the elastic.
 
 The goal of these efforts is to produce a hand which gives as stronger grip with less effort from the user, to assist people who do not have a lot of wrist strength.
+
+## New support system
+
+This support system looks like:
+![Rendered image of support system](images/left_better_supp.png)  The goal is a print which is walk-away safe, which can be started, and expected to just work without any close monitoring to make sure the arch finishes safely. If you can print a half-decent bridge, these will work.  It should be printed with quite a lot of cooling, since there is still a significant overhang, but the supports start just low enough that the overhang never becomes dangerous. 
+
+After printing, these supports snap off quite easily.  They leave small 'nubs' on the inside, which sand off very well with a rotary tool such as a Dremel tool with a flap wheel.  They can be removed by hand-sanding, too.
+
+STL Files are provided for left-hand palm of the Unlimbited Phoenix v3, the Phoenix v2, and the regenerated Phoenix Reborn.  Just mirror these in the slicer to get the right-hand version.  Also, an OpenSCAD file for each of these is provided, to allow the supports to be adapted as needed.  The mesh for the Unlimbited palm was regenerated directly from the online Fusion360 source file, to get a higher-resolution mesh.  All of these are designed to be printed flat on the printer bed, with no supports and no raft.
+
 
 # Notes from Phoenix Reborn README.txt
 *Rest of the text blatantly copied from the Phoenix Reborn file*
