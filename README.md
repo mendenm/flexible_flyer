@@ -1,5 +1,7 @@
 # The Flexible Flyer
 
+See the [progress log](#Progress-Log) to see what is happening.
+
 ## Overview
 
 This repository contains a couple of different but closely related, projects.  It is derived from a mix of the [Phoenix v2](https://www.thingiverse.com/thing:1453190), the [Unlimbited Phoenix v3](https://www.thingiverse.com/thing:1674320), and the [Phoenix Reborn](https://www.thingiverse.com/thing:2217431) hands.
