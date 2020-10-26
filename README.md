@@ -10,7 +10,7 @@ This repository contains a couple of different but closely related, projects.  I
 	* 	This allows the palms to be scaled independently of the hinges, so that commercial steel pins or nails can be used to make precision, smooth-operating joints.  
 	* The parameters allow selection of different options for both hinge pins and for plastic tubing bearings, which make even better joints.  So far, there a designs using:
 		* 	 industrial 1/16" dowel pins with Delrin tubing bearings around them
-		* 	 3 mm screws with PTÏE tubing for bearings
+		* 	 3 mm screws with PTFE tubing for bearings
 		* 	 Stainless steel finishing nails (deck nails) with PTFE tubing
  	 
 		All of these options add between about $0.50 and about $2.00 to the cost of a hand. Materials sources are shown at [Joint Materials](#Joint-Materials)
