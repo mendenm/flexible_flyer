@@ -27,6 +27,8 @@ The whole design here is to provide a flexible toolkit to create locally-appropr
 
 The Reborn-style hand is being recreated in OpenSCAD from the Phoenix v2 palm, by redrilling the tunnels and slots, since it was possible to repair the mesh for the v2 palm to the point where OpenSCAD considered it valid (after removing the support box in MeshMixer).  It has not been possible to date to repair the Reborn palm mesh to the point at which the OpenSCAD openCGAL geometry libraries consider it valid. The file "palm\_left\_v2\_nobox.stl" contains this modified mesh.  
 
+![picture of palm and fingers](images/assembled_hand.jpeg) 
+
 **NOTE**:  any parts not present in the OpenSCAD files are assumed to be obtained from the Phoenix Reborn repository or the Raptor Reloaded repository, which have the gauntlet and other bits.
 
 ### Generating the parametric results
