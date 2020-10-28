@@ -1,5 +1,5 @@
 // flexible flyer short gauntlet
-// based on Phoenix v2 gauntlet
+// based very closely on Phoenix v2 thermo gauntlet
 
 *translate([2.5,-1,0]) import("thermo_gauntlet_two_strap_one_row.stl", convexity=10);
 
@@ -76,7 +76,7 @@ module cut_base() {
         // cut strap slots
         for(s=[1,-1]) scale([s,1]) translate(strap_block_center) rotate(theta1) {
             $fn=20;
-            for(dy=[15,-17]) translate([-6,dy,0]) {
+            for(dy=[15,-17]) translate([-5.5,dy,0]) {
                 translate([0,0,-1]) 
                     racetrack(length=25, bottom_width=4, top_width=4, thickness=10);
                 translate([0,0,2*gauntlet_thickness-1]) 
@@ -114,7 +114,9 @@ module track_block() {
                     square([track_cut_width-2*tan(track_cut_angle)*10,
                         0.01], center=true);
                 }
-
+            translate([0,-6,(track_cut_thickness+track_base_thickness)])
+                cube([track_cut_width-2*tan(track_cut_angle)*(track_cut_thickness+track_base_thickness)+1,track_length-5, 5],
+                center=true);
         }
 }
 
