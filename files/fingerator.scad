@@ -154,10 +154,20 @@ module finger(slotwidth, thumb=false, keel=true) {
         translate([0,-14,16]) cube([20,30,5], center=true);
         // rectangular toroidal elbow for better elastic feeding
         translate([0,-13,11]) rotate([0,90, 0]) rotate_extrude(angle=90, convexity=5, $fn=40)
-            translate([9,0]) square([thumb?2.5:1.5,3], center=true);
+            translate([9,0]) union() {
+                square([thumb?2.5:1.5,3], center=true);
+                translate([(thumb?2.5:1.5)/2,0]) scale([0.5,1]) circle(d=2.99, $fn=16);
+            }
         // connect elbow to end 
-        translate([0,-20,2]) cube([3,15,1.5], center=true);
+        if(!thumb) translate([0,-20,2]) union() {
+            cube([3,15,1.5], center=true);
+            translate([0,0,-1.5/2]) scale([1,1,0.5]) rotate([90,0,0]) 
+                cylinder(d=2.99, h=15, center=true, $fn=16);
+        }
+        
         // hollow the finger out to leave room to stuff ends of string and elastic
+        // this was a bad idea; it made terrible prints since the hanging edge was too thin
+        // may improve it later
         *rotate([-90+initial_rotation,0,0]) translate([0,-5,7]) 
             cylinder(d1=7, d2=6, h=12, $fn=20, center=true);
     }
@@ -168,7 +178,7 @@ module finger(slotwidth, thumb=false, keel=true) {
         // make a support for the bad overhang
         hull() {
             translate([0,0,0.25]) cube(0.5, center=true);
-            translate([0,18,0]) linear_extrude(height=15*tan(initial_rotation), scale=0.05) 
+            translate([0,18,0]) linear_extrude(height=16*tan(initial_rotation), scale=0.05) 
                 square(2, center=true); 
         }
     }
