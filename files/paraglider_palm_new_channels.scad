@@ -31,7 +31,7 @@ module channel(waypoints, cutout_length=20,
     // so we will adjust the coordinates, 
     // and then re-rotate the whole thing
     shape=[[-1.5,-1],[1.5,-1],
-        each 1.5*[for(th=[0:18:179]) [cos(th), sin(th)]]
+        each 1.5*[for(th=[0:30:179]) [cos(th), sin(th)]]
     ]*shapescale;
     path=[for(w = waypoints) 
         [0,[w[1],-w[0],w[2]],1,
@@ -90,6 +90,11 @@ module plug_old_channels() {
         cutout_length=0, shapescale=1.1          
     );
 
+    translate([21.2,-39,22]) channel(
+        [ [-13.5,9.8,4], [-10.5,30,3,5], [-8.4,39,3.1,15], [-1.7,44,0.5,35], [2,46,-5,50]  ],
+        cutout_length=0, shapescale=1.3, bendradius=10          
+    );
+
     // fix ugly bend
     intersection() {
         union() {
@@ -113,7 +118,8 @@ module reborn_channels() {
     translate([-29.6,-48.5,21]) channel(
         [ [7.6,0,6], [4,40,3], [1.8,55,2.4], [1.5,70, -5], [1.5,70,-18] ],
         cutout_position=[0,0,0], cutout_angle=[-5,0,8], cutout_length=0, 
-        shapescale=string_channel_scale/overall_scale
+        shapescale=string_channel_scale/overall_scale,
+        bendradius=5, bendsteps=5
     );
     translate([-26.6,-48.5,22]) channel(
         [ [8.6,0,5.2], [5,30,3.2], [3,45,2.5], [1.8,55,1.5], [-1.5,70, -5], [-1.5,70,-18] ],
@@ -159,9 +165,10 @@ module reborn_channels() {
     );
     //thumb plumbing
     translate([21.2,-39,22]) channel(
-        [ [-13.5,8,4], [-10,30,3], [-7.0,40,2.0], [-2,45,0,30] , [2,46,-3,30] ],
+        [ [-13.5,8,4], [-10,30,3], [-7.0,40,2.0], [-2,45,0,15] , [2,46,-3,30] ],
         cutout_length=0, cutout_position=[1,0,0], cutout_angle=[-5,0,-10],
-        shapescale=1/overall_scale
+        shapescale=1/overall_scale,
+        bendradius=5, bendsteps=3        
     );
     translate([23,6.5,-1]) cylinder(d=2.5, h=30, $fn=20); 
     // horizontal hole for thumb return
