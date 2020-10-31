@@ -1,4 +1,6 @@
 inch=25.4*1; // hidden from customizer by equation, useful for pins
+// quick_view renders an incomplete hand for development.
+quick_view=false; // [0:full model, 1:leave out slow bits]
 // size of hand relative to tiny 100% model
 overall_scale=1.25; // [1.0:0.01:2.0]
 // size of pivot pins
@@ -7,6 +9,8 @@ pivot_size=1.5875; // [1.5:metric 1.5, 1.5875:16th inch, 3.0:3mm screw]
 pivot_extra_clearance=0; // [-0.5:0.01:0.5]
 // include fused-in palm mesh?
 include_mesh=1; // [0:separate mesh, 1:simplified mesh, 2: phoenix mesh]
+// include nice covers for knuckles
+include_knuckle_covers=true;
 // drill holes for steel pins
 pins=true; // [1:steel pins, 0: plastic pins]
 // create plugs for steel pins, or leave old holes for plastic pins 
@@ -166,6 +170,38 @@ module reborn_channels() {
     
 }
 
+module knuckles() {
+    // re-insert clean finger stops
+        for(dx=slot_dx) translate(dx[0]+[3.7,38.5,12.5]) 
+            rotate([90,0,-90+dx[1]]) linear_extrude(height=8, center=true)
+                hull() {
+                    translate([5,0]) square([0.1,4]);
+                    translate([0,0.5]) circle(1, $fn=10);
+                };
+    // smooth covers for knuckles
+    // compute individul offsets to place them nicely
+    cover_dx=[
+        [[-1,-4,-2.25],[-115,0,-3]],
+        [[0,-2,.75],[-125,0,0]],
+        [[1,-3,-0.25],[-120,0,3]],
+        [[1,-4,-2.35],[-115,0,3]]
+    ];
+                
+    if(include_knuckle_covers) for(idx=[0:3]) translate(cover_dx[idx][0]+slot_dx[idx][0]+[3.7,25,23]) {
+        rotate(cover_dx[idx][1]) difference() {
+            hull() {
+                scale([1,0.5,1]) cylinder(d=10, h=0.1, $fn=20);
+                translate([0,0,19]) cylinder(d=10,h=0.1, $fn=20);
+            }
+            hull() {
+                translate([0,0,-1]) scale([1,0.5,1]) cylinder(d=8, h=0.1, $fn=6);
+                translate([0,0,21]) cylinder(d=8,h=0.1, $fn=6);
+            }
+            translate([0,10,-1]) cube([20,20,50], center=true);
+        }
+    }
+}
+
 module main_palm() {
     difference() {
         union() {
@@ -178,9 +214,9 @@ module main_palm() {
             if(!main_ghost) supports();
             if(include_mesh==1) mesh();
             else if (include_mesh==2) phoenix_mesh();
-            if(!main_ghost) plug_old_channels();
+            if(!main_ghost && !quick_view) plug_old_channels();
         }
-        reborn_channels();
+        if(!quick_view) reborn_channels();
     }
 };
 
@@ -348,14 +384,9 @@ module scaled_palm(palm_scale=1, finger_scale=1,
                 pin_head_square=pin_head_square, pins=pins
             );
         }
-    // re-insert clean finger stops
-        for(dx=slot_dx) translate(dx[0]+[3.7,38.5,12.5]) 
-            rotate([90,0,-90+dx[1]]) linear_extrude(height=8, center=true)
-                hull() {
-                    translate([5,0]) square([0.1,4]);
-                    translate([0,0.5]) circle(1, $fn=10);
-                };
-
+    
+    knuckles(); // insert backstops and knuckle covers
+        
     // add cylindrical pin for thumb
         translate([30,-5,15]) 
         rotate([0,90,50]) 
