@@ -119,43 +119,43 @@ module reborn_channels() {
         [ [8.6,0,5.2], [5,30,3.2], [3,45,2.5], [1.8,55,1.5], [-1.5,70, -5], [-1.5,70,-18] ],
         cutout_position=[0,0,0], cutout_angle=[-5,0,8], cutout_length=0, 
         shapescale=string_channel_scale/overall_scale,
-        bendradius=5, bendsteps=10
+        bendradius=5, bendsteps=5
     );
     translate([-14.5,-43,24]) channel(
         [ [-1,0,2], [-1,40,3], [0,55,1], [0,71, -7], [0,71,-22] ],
         cutout_position=[0,-6,0], cutout_angle=[-5,0,-2], cutout_length=0, 
         shapescale=string_channel_scale/overall_scale,
-        bendradius=5, bendsteps=10   
+        bendradius=5, bendsteps=5   
     );
     translate([-14.5,-43,24]) channel(
         [ [2,0,2.5], [2.5,40,3], [2,55,2], [0,71, -7], [0,71,-22] ],
         cutout_position=[0,-6,0], cutout_angle=[-5,0,-2], cutout_length=0, 
         shapescale=string_channel_scale/overall_scale,
-        bendradius=5, bendsteps=10   
+        bendradius=5, bendsteps=5   
     );
     translate([-0.3,-39,25.5]) channel(
         [ [-4,0,1], [-0.5,40,1], [0,55,0], [0,71, -7], [0,71,-22] ],
         cutout_position=[-1.,-10,-1], cutout_angle=-6, cutout_length=0,         
         shapescale=string_channel_scale/overall_scale,
-        bendradius=5, bendsteps=10   
+        bendradius=5, bendsteps=5  
     );    
     translate([-0.3,-39,25.5]) channel(
         [ [-8,0,1], [-3.5,40,1], [-2,55,2], [0,71, -7], [0,71,-22] ],
         cutout_position=[-1.,-10,-1], cutout_angle=-6, cutout_length=0,         
         shapescale=string_channel_scale/overall_scale,
-        bendradius=5, bendsteps=10   
+        bendradius=5, bendsteps=5   
     );    
     translate([13.5,-39,23.5]) channel(
         [ [-13.5,6,3], [-8,30,3], [-5.5,40,2.5], [-2,55,0], [0,70, -7], [0,70,-20] ],
         cutout_position=[0,0,-1], cutout_angle=[-5,0,-10], cutout_length=0,         
         shapescale=string_channel_scale/overall_scale,
-        bendradius=5, bendsteps=10        
+        bendradius=5, bendsteps=5        
     );
     translate([13.5,-39,23.5]) channel(
         [ [-10.5,6,3], [-5,30,3], [-3,40,2.5], [-1,55,0], [0,71, -7.5], [0,71,-20] ],
         cutout_position=[0,0,-1], cutout_angle=[-5,0,-10], cutout_length=0,         
         shapescale=string_channel_scale/overall_scale,
-        bendradius=5, bendsteps=10        
+        bendradius=5, bendsteps=5        
     );
     //thumb plumbing
     translate([21.2,-39,22]) channel(
@@ -181,23 +181,26 @@ module knuckles() {
     // smooth covers for knuckles
     // compute individul offsets to place them nicely
     cover_dx=[
-        [[-1,-4,-2.25],[-115,0,-3]],
-        [[0,-2,.75],[-125,0,0]],
-        [[1,-3,-0.25],[-120,0,3]],
-        [[1,-4,-2.35],[-115,0,3]]
+        [[-1,-4,-2.25],[-115,0,-3],3],
+        [[0,-2,.75],[-125,0,0],2],
+        [[1,-3,-0.25],[-120,0,3],2],
+        [[1,-4,-2.35],[-115,0,3],3]
     ];
                 
     if(include_knuckle_covers) for(idx=[0:3]) translate(cover_dx[idx][0]+slot_dx[idx][0]+[3.7,25,23]) {
-        rotate(cover_dx[idx][1]) difference() {
-            hull() {
-                scale([1,0.5,1]) cylinder(d=10, h=0.1, $fn=20);
-                translate([0,0,19]) cylinder(d=10,h=0.1, $fn=20);
+        intersection() {
+            rotate(cover_dx[idx][1]) difference() {
+                hull() {
+                    scale([1,0.5,1]) cylinder(d=10, h=0.1, $fn=20);
+                    translate([0,0,19]) cylinder(d=10,h=0.1, $fn=20);
+                }
+                hull() {
+                    translate([0,0,-1]) scale([1,0.5,1]) cylinder(d=8, h=0.1, $fn=6);
+                    translate([0,0,21]) cylinder(d=8,h=0.1, $fn=6);
+                }
+                translate([0,10,-1]) cube([20,20,50], center=true);
             }
-            hull() {
-                translate([0,0,-1]) scale([1,0.5,1]) cylinder(d=8, h=0.1, $fn=6);
-                translate([0,0,21]) cylinder(d=8,h=0.1, $fn=6);
-            }
-            translate([0,10,-1]) cube([20,20,50], center=true);
+            translate([0,cover_dx[idx][2],0]) cube([15,30,20], center=true);
         }
     }
 }
