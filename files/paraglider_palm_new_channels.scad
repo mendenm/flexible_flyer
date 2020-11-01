@@ -55,6 +55,21 @@ module supports() {
     }
 }
 
+module test_supports() {
+    for(dy=[-29:5:10]) translate([0,dy+0.5,0]) {
+        translate([-7,0.5,21]) cube([52,2,0.5],  center=true);
+        translate([-7,0,21]) intersection() {
+            translate([0,1,0]) scale([1,1,0.15]) rotate([90,0,0]) 
+                cylinder(d=35, h=2, center=true, $fn=50);
+            translate([0,0,5.1]) cube([70,2,10], center=true);
+        }
+        translate([-7,0,21]) intersection() {
+            scale([1,1,0.20]) rotate([90,0,0]) cylinder(d=52, h=0.4, center=true, $fn=50);
+            translate([0,0,5.1]) cube([70,2,10], center=true);
+        }
+    }
+}
+
 module rounded_cutter(width=6, radius=1.5, height=20) {
     linear_extrude(height=height, center=false) 
     hull() {
@@ -106,7 +121,7 @@ module plug_old_channels() {
         }
         translate([9.8,0,12]) rotate([85,0,-5]) cylinder(d=30,h=20, $fn=50, center=true);
     }
-    translate([23,6.5,0.05]) cylinder(d=3.5, h=19, $fn=20); 
+    translate([23.5,6.5,0.05]) cylinder(d=4.5, h=18.5, $fn=20); 
  
     for(v=[[13.5,31,18], [-0.5,31,21.0], [-14.2,27,20],  [-28.5,21,18],
         
@@ -164,16 +179,24 @@ module reborn_channels() {
         bendradius=5, bendsteps=5        
     );
     //thumb plumbing
-    translate([21.2,-39,22]) channel(
+    *translate([21.2,-39,22]) channel(
         [ [-13.5,8,4], [-10,30,3], [-7.0,40,2.0], [-2,45,0,15] , [2,46,-3,30] ],
         cutout_length=0, cutout_position=[1,0,0], cutout_angle=[-5,0,-10],
         shapescale=1/overall_scale,
         bendradius=5, bendsteps=3        
     );
-    translate([23,6.5,-1]) cylinder(d=2.5, h=30, $fn=20); 
+    *translate([23,6.5,-1]) cylinder(d=2.5, h=30, $fn=20); 
     // horizontal hole for thumb return
-    translate([20,9,3]) rotate([90,0,50]) 
+    *translate([20,9,3]) rotate([90,0,50]) 
         cylinder(d=2, h=20, center=true, $fn=20);        
+
+    translate([21.2,-39,22]) channel(
+        [ [-13.5,8,4], [-10,25,3], [-7.0,34,2.0], [-2,39,-1.25,15]  ],
+        cutout_length=0, 
+        shapescale=1/overall_scale,
+        bendradius=5, bendsteps=3        
+    );
+    translate([18,-1,11]) rotate([90,0,30]) rotate_extrude(angle=80, $fn=16) translate([10,0]) circle(d=2, $fn=8);
     
 }
 
