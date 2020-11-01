@@ -196,7 +196,8 @@ module reborn_channels() {
         shapescale=1/overall_scale,
         bendradius=5, bendsteps=3        
     );
-    translate([18,-1,11]) rotate([90,0,30]) rotate_extrude(angle=80, $fn=16) translate([10,0]) circle(d=2, $fn=8);
+    translate([18,-1,11]) rotate([90,0,30]) rotate_extrude(angle=80, $fn=16) translate([10,0]) circle(d=2.5/overall_scale, $fn=8);
+    translate([18,-0.75,21]) sphere(d=4/overall_scale, $fn=8); // just to clean up joint
     
 }
 
