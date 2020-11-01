@@ -161,7 +161,7 @@ module reborn_channels() {
         bendradius=5, bendsteps=5  
     );    
     translate([-0.3,-39,25.5]) channel(
-        [ [-8,0,1], [-3.5,40,1], [-2,55,2], [0,71, -7], [0,71,-22] ],
+        [ [-8,0,1], [-3.5,40,1], [-2,55,0], [0,71, -7], [0,71,-22] ],
         cutout_position=[-1.,-10,-1], cutout_angle=-6, cutout_length=0,         
         shapescale=string_channel_scale/overall_scale,
         bendradius=5, bendsteps=5   
@@ -387,7 +387,6 @@ module drilling(palm_scale, finger_scale,
         rounded_cutter(width=base_slot_width*finger_scale/palm_scale, height=30);
         translate([0.55,-4,8]) cube([6,20,20], center=true);
     }
-    // must shift 'y' coordinates of filled holes forward to keep (6 mm * finger_scale) offset from front
 }
 
 module scaled_palm(palm_scale=1, finger_scale=1, 
@@ -425,6 +424,11 @@ module scaled_palm(palm_scale=1, finger_scale=1,
         rotate([0,90,50]) 
         translate([0,0,5]) cylinder(d=4, h=8, center=true, $fn=20);
     }
+    // small bar at top of thumb slot to fix hanging hole
+    translate([30,0,16.3]) rotate(49.5) translate([5,-0.8,0]) cube([10,1,1], center=true);
+    translate([30,0,16.6]) rotate(49.5) translate([3.9,1,0]) cube([1,4,1], center=true);
+    translate([30,0,16.6]) rotate(49.5) translate([6.8,1,0]) cube([1,4,1], center=true);
+
 }
 
 scaled_palm(palm_scale=overall_scale, finger_scale=overall_scale, 
