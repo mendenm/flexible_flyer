@@ -179,25 +179,15 @@ module reborn_channels() {
         bendradius=5, bendsteps=5        
     );
     //thumb plumbing
-    *translate([21.2,-39,22]) channel(
-        [ [-13.5,8,4], [-10,30,3], [-7.0,40,2.0], [-2,45,0,15] , [2,46,-3,30] ],
-        cutout_length=0, cutout_position=[1,0,0], cutout_angle=[-5,0,-10],
-        shapescale=1/overall_scale,
-        bendradius=5, bendsteps=3        
-    );
-    *translate([23,6.5,-1]) cylinder(d=2.5, h=30, $fn=20); 
-    // horizontal hole for thumb return
-    *translate([20,9,3]) rotate([90,0,50]) 
-        cylinder(d=2, h=20, center=true, $fn=20);        
-
+    // thia may get crowded around the bend, so we make this channel smaller than the others
     translate([21.2,-39,22]) channel(
-        [ [-13.5,8,4], [-10,25,3], [-7.0,34,2.0], [-2,39,-1.25,15]  ],
+        [ [-13.5,8,4], [-10,25,3], [-7.0,34,2.0], [-1.5,39,-1.25,15]  ],
         cutout_length=0, 
-        shapescale=1/overall_scale,
+        shapescale=0.7*string_channel_scale/overall_scale,
         bendradius=5, bendsteps=3        
     );
-    translate([18,-1,11]) rotate([90,0,30]) rotate_extrude(angle=80, $fn=16) translate([10,0]) circle(d=2.5/overall_scale, $fn=8);
-    translate([18,-1.0,21]) sphere(d=4/overall_scale, $fn=8); // just to clean up joint
+    translate([18,-1,11]) rotate([90,0,30]) rotate_extrude(angle=80, $fn=16) translate([10,0]) circle(d=2.2*string_channel_scale/overall_scale, $fn=8);
+    translate([19.7,-0.0,20.7]) sphere(d=2.8*string_channel_scale/overall_scale, $fn=12); // just to clean up joint
     
 }
 
