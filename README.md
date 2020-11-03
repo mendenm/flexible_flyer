@@ -56,7 +56,7 @@ Here is a list of sources I am using for the materials.  Variants of most of the
 	* for example, [Fastener USA](https://www.fastenerusa.com/nails/hand-drive-nails/finishing/1-1-2-x-15-gauge-304-stainless-4d-finishing-nails-1lb.html).  These can be cut to length.
    * tubing for bearings can be found at (for example) [Fluorostore](https://fluorostore.com/products/fractional-metric-ptfe-fluoropolymer-tubing).  
 
-* Side-load bearings to insert in joints if extra clearance is left in the phalanges can be obtained from [Igus](http://www.igus.com), part number A160T-5-100G.  This item, for about $13.00, is 1 meter of 100 mm wide, 0.5 mm thick, adhesive-backed self-lubricating plastic tape.  One spool should make between 50 and 100 hands, so it adds no significant cost.
+* Side-load bearings to insert in joints if extra clearance is left in the phalanges can be obtained from [Igus](http://www.igus.com), part number A160T-5-100-G.  This item, for about $13.00, is 1 meter of 100 mm wide, 0.5 mm thick, adhesive-backed self-lubricating plastic tape.  One spool should make between 50 and 100 hands, so it adds no significant cost.
  
 ## Progress Log
 ### October, 2020 update
@@ -68,7 +68,7 @@ The entire 'fingerator' module has been replaced. The original used a slice off 
 ![Rendered image of new fingers](images/fingerator.png) ![Rendered image of new fingers](images/fingerator_2.png)  They have the following improvements:
 
 * A 'keel' on the overhang to make it _really_ easy to print.  Even without very good cooling,  the distal segment overhang comes out smooth. The keel is easy to break off, and sand the stub away.
-* The entire path for the elastic is convered, resulting in better aesthetics. The elastic now passes through from the top if the finger to the bottom, where it gets tied.
+* The entire path for the elastic is convered, resulting in better aesthetics. The elastic now passes through from the top of the finger to the bottom, where it gets tied.
 * There is a channel to guide the elastic so that it can be inserted in most cases without any  sort of leader to push or pull it through.
 * There are two bars under each finger to tie things to, one for the string and one for the elastic.
 
