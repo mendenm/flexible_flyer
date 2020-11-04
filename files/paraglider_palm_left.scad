@@ -129,55 +129,70 @@ module plug_old_channels() {
 }
 
 module reborn_channels() {
-    // enlarge channels for reborn-style
+    // pinkie string
     translate([-29.6,-48.5,21]) channel(
-        [ [7.6,0,6], [4,40,3], [1.8,55,2.4], [1.5,70, -5], [1.5,70,-18] ],
+        [ [7.6,0,6], [3,40,3], [1.8,55,2.4], [1.0,70, -5], [1.0,70,-18] ],
         cutout_position=[0,0,0], cutout_angle=[-5,0,8], cutout_length=0, 
         shapescale=string_channel_scale/overall_scale,
         bendradius=5, bendsteps=5
     );
+    // pinkie elastic
     translate([-26.6,-48.5,22]) channel(
-        [ [8.6,0,5.2], [5,30,3.2], [3,45,2.5], [1.8,55,1.5], [-1.5,70, -5], [-1.5,70,-18] ],
+        [ [7.5,0,5.2], [4.4,30,3.2], [3,45,2.5], [1.8,55,1.5], [-1.0,70, -6], [-1.0,70,-19] ],
         cutout_position=[0,0,0], cutout_angle=[-5,0,8], cutout_length=0, 
         shapescale=string_channel_scale/overall_scale,
         bendradius=5, bendsteps=5
     );
+    // pinkie threading assist
+    translate([-28,23,15]) cube([3,3,5], center=true);
+    // ring elastic
     translate([-14.5,-43,24]) channel(
-        [ [-1,0,2], [-1,40,3], [0,55,1], [0,71, -7], [0,71,-22] ],
+        [ [-1,0,2], [-1,40,3], [-1,58,1], [-0.5,71, -7], [-0.5,71,-22] ],
         cutout_position=[0,-6,0], cutout_angle=[-5,0,-2], cutout_length=0, 
         shapescale=string_channel_scale/overall_scale,
         bendradius=5, bendsteps=5   
     );
+    // ring string
     translate([-14.5,-43,24]) channel(
-        [ [2,0,2.5], [2.5,40,3], [2,55,2], [0,71, -7], [0,71,-22] ],
+        [ [2,0,2.5], [2.5,38,4], [2,55,2], [0.5,71, -7], [0.5,71,-22] ],
         cutout_position=[0,-6,0], cutout_angle=[-5,0,-2], cutout_length=0, 
         shapescale=string_channel_scale/overall_scale,
         bendradius=5, bendsteps=5   
     );
+    // ring threading assist
+    translate([-14.5,29.5,15]) cube([3,3,5], center=true);
+    // middle string
     translate([-0.3,-39,25.5]) channel(
-        [ [-4,0,1], [-0.5,40,1], [0,55,0], [0,71, -7], [0,71,-22] ],
+        [ [-7,0,1], [-4,40,1], [-2.5,55,0], [-0.5,71, -7], [-0.5,71,-22] ],
+        cutout_position=[-1.,-10,-1], cutout_angle=-6, cutout_length=0,         
+        shapescale=string_channel_scale/overall_scale,
+        bendradius=5, bendsteps=5   
+    );  
+    // middle elastic  
+    translate([-0.3,-39,25.5]) channel(
+        [ [-4,0,1], [-0.5,40,1], [0,55,0], [0.5,71, -7], [0.5,71,-22] ],
         cutout_position=[-1.,-10,-1], cutout_angle=-6, cutout_length=0,         
         shapescale=string_channel_scale/overall_scale,
         bendradius=5, bendsteps=5  
-    );    
-    translate([-0.3,-39,25.5]) channel(
-        [ [-8,0,1], [-3.5,40,1], [-2,55,0], [0,71, -7], [0,71,-22] ],
-        cutout_position=[-1.,-10,-1], cutout_angle=-6, cutout_length=0,         
-        shapescale=string_channel_scale/overall_scale,
-        bendradius=5, bendsteps=5   
-    );    
+    );  
+    // ring threading assist
+    translate([-0.2,33,17]) cube([3,3,5], center=true);
+    // index elastic  
     translate([13.5,-39,23.5]) channel(
-        [ [-13.5,6,3], [-8,30,3], [-5.5,40,2.5], [-2,55,0], [0,70, -7], [0,70,-20] ],
+        [ [-13.5,6,3], [-8.5,30,3], [-6.5,40,2.5], [-4,55,0], [-0.5,71, -7], [-0.5,71,-20] ],
         cutout_position=[0,0,-1], cutout_angle=[-5,0,-10], cutout_length=0,         
         shapescale=string_channel_scale/overall_scale,
         bendradius=5, bendsteps=5        
     );
+    // index string
     translate([13.5,-39,23.5]) channel(
-        [ [-10.5,6,3], [-5,30,3], [-3,40,2.5], [-1,55,0], [0,71, -7.5], [0,71,-20] ],
+        [ [-10,6,3], [-5,30,3], [-3,40,2.5], [-1,55,0], [0.5,71, -7.5], [0.5,71,-20] ],
         cutout_position=[0,0,-1], cutout_angle=[-5,0,-10], cutout_length=0,         
         shapescale=string_channel_scale/overall_scale,
         bendradius=5, bendsteps=5        
     );
+    // ring threading assist
+    translate([13.6,33,15]) cube([3,3,5], center=true);
     //thumb plumbing
     // thia may get crowded around the bend, so we make this channel smaller than the others
     translate([21.2,-39,22]) channel(
@@ -196,7 +211,7 @@ module knuckles() {
         for(dx=slot_dx) translate(dx[0]+[3.7,38.5,12.5]) 
             rotate([90,0,-90+dx[1]]) linear_extrude(height=8, center=true)
                 hull() {
-                    translate([5,0]) square([0.1,4]);
+                    translate([5,0]) square([0.1,3]);
                     translate([0,0.5]) circle(1, $fn=10);
                 };
     // smooth covers for knuckles
@@ -393,7 +408,7 @@ module scaled_palm(palm_scale=1, finger_scale=1,
             }
             else {
                 if(!main_ghost) difference() {
-                    import(pre_solidified, convexity=10);
+                    !import(pre_solidified, convexity=10);
                     reborn_channels();
                 } else { %render() difference() {
                     import(pre_solidified, convexity=10);
