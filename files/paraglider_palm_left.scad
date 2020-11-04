@@ -27,7 +27,8 @@ elastic_channel_scale=0.9; // [0.5:0.05:1.5]
 old_style_wrist=true; // [1:old style, 0:steel wrist pins]
 use <pipe.scad>
 module channel(waypoints, cutout_length=20, 
-    cutout_position=[0,0,0], cutout_angle=0, shapescale=1, bendradius=2, bendsteps=5) {
+    cutout_position=[0,0,0], cutout_angle=0, shapescale=1, bendradius=2, bendsteps=5,
+    fix_translation=true) {
     // the bends work best if the primary length is along 'x' here,
     // but the hand is along 'y', 
     // so we will adjust the coordinates, 
@@ -41,7 +42,8 @@ module channel(waypoints, cutout_length=20,
     // note: do a translation so that the curved _bottom_ of the pipe is
     // invariant under scaling, relative to its position when scale=0.9.
     // This is for historical continuity
-    translate([0,0,1.5*(shapescale-0.9)]) rotate(90) multi_pipe([shape], smooth_bends(path, bendradius, bendsteps));
+    y_trans=fix_translation?1.5*(shapescale-0.9):0;
+    translate([0,0,y_trans]) rotate(90) multi_pipe([shape], smooth_bends(path, bendradius, bendsteps));
     if(cutout_length != 0) 
         translate(cutout_position+waypoints[1]+[0,0,5])
             rotate(cutout_angle)
@@ -92,27 +94,27 @@ slot_dx=[[[10,0,0],0],[[-4,0,0],0],[[-18,-4,0],0],
 module plug_old_channels() {
     translate([-28.6,-49.5,22]) channel(
         [ [6.2,19,4.1], [4,40,3.5],[2.9, 47.5, 3.1],  [1.9,55,1.4], [1.15, 62.5, -1.1],  [0.8,70, -4.7], ],
-        cutout_length=0, shapescale=1.2 
+        cutout_length=0, shapescale=1.2, fix_translation=false
     );
 
     translate([-14.5,-43,24.5]) channel(
         [ [-0.5,13,3], [0,40,3.2], [0,55,1], [0.8,68, -5.5] ],
-        cutout_length=0, shapescale=1.2   
+        cutout_length=0, shapescale=1.2, fix_translation=false   
     );
 
     translate([-0.3,-39,25.5]) channel(
         [ [-7,9,2.2], [-3.5,40,1.8], [-2.75, 47.5, 1.8],  [-2,55,1.0], [-1,62.5,-1], [0,69, -5],  ],
-        cutout_length=0, shapescale=1.1      
+        cutout_length=0, shapescale=1.1, fix_translation=false      
     );    
 
     translate([13.5,-39,23.5]) channel(
         [ [-13.,9,3.7], [-8.5,30,3.5], [-6.5,40,3], [-4.75, 47.5, 2.6], [-3,55,0.9], [-0.4,69, -5.5], ],
-        cutout_length=0, shapescale=1.1          
+        cutout_length=0, shapescale=1.1, fix_translation=false          
     );
 
     translate([21.2,-39,22]) channel(
         [ [-13.5,9.8,4], [-10.5,30,3,5], [-8.4,39,3.1,15], [-3,44,0,35], [2,46,-5,50]  ],
-        cutout_length=0, shapescale=1.2, bendradius=10          
+        cutout_length=0, shapescale=1.2, bendradius=10, fix_translation=false          
     );
 
     // fix ugly bend
@@ -120,7 +122,7 @@ module plug_old_channels() {
         union() {
             translate([21.2,-39,22]) channel(
                 [ [-13.5,9.8,4], [-10.5,30,3,5], [-8.4,39,3.1,15], [-1.7,44,0.5,35], [2,46,-5,50]  ],
-                cutout_length=0, shapescale=1.3, bendradius=10          
+                cutout_length=0, shapescale=1.3, bendradius=10, fix_translation=false          
             );
             translate([20,7,25]) rotate([30,-30,0]) translate([-2,-3,-2]) cylinder(d=5,h=12, $fn=20, center=true);
         }
