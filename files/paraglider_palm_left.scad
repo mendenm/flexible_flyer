@@ -218,7 +218,7 @@ module knuckles() {
         for(dx=slot_dx) translate(dx[0]+[3.7,38.5,12.5]) 
             rotate([90,0,-90+dx[1]]) linear_extrude(height=8, center=true)
                 hull() {
-                    translate([5,0]) square([0.1,3]);
+                    translate([3,0]) square([0.1,3]);
                     translate([0,0.5]) circle(1, $fn=10);
                 };
     // smooth covers for knuckles
