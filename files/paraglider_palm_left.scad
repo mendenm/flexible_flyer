@@ -21,6 +21,8 @@ pre_solidified=""; // ["solidified_palm.3mf": pre_solidified, "":recompute]
 main_ghost=false; // [1:ghost, 0:real]
 // set size of channels for strings
 string_channel_scale=0.9; // [0.5:0.05:1.0]
+// set size of channels for elastic
+elastic_channel_scale=0.9; // [0.5:0.05:1.5]
 // even if using steel pins on the fingers, use plastic pins on the wrist
 old_style_wrist=true; // [1:old style, 0:steel wrist pins]
 use <pipe.scad>
@@ -140,16 +142,16 @@ module reborn_channels() {
     translate([-26.6,-48.5,22]) channel(
         [ [7.5,0,5.2], [4.4,30,3.2], [3,45,2.5], [1.8,55,1.5], [-1.0,70, -6], [-1.0,70,-19] ],
         cutout_position=[0,0,0], cutout_angle=[-5,0,8], cutout_length=0, 
-        shapescale=string_channel_scale/overall_scale,
+        shapescale=elastic_channel_scale/overall_scale,
         bendradius=5, bendsteps=5
     );
     // pinkie threading assist
-    translate([-28,23,15]) cube([3,3,5], center=true);
+    translate([-28,22,15]) cube([3,3,5], center=true);
     // ring elastic
     translate([-14.5,-43,24]) channel(
         [ [-1,0,2], [-1,40,3], [-1,58,1], [-0.5,71, -7], [-0.5,71,-22] ],
         cutout_position=[0,-6,0], cutout_angle=[-5,0,-2], cutout_length=0, 
-        shapescale=string_channel_scale/overall_scale,
+        shapescale=elastic_channel_scale/overall_scale,
         bendradius=5, bendsteps=5   
     );
     // ring string
@@ -163,16 +165,16 @@ module reborn_channels() {
     translate([-14.5,29.5,15]) cube([3,3,5], center=true);
     // middle string
     translate([-0.3,-39,25.5]) channel(
-        [ [-7,0,1], [-4,40,1], [-2.5,55,0], [-0.5,71, -7], [-0.5,71,-22] ],
+        [ [-7,0,1], [-2,40,1], [-2.5,55,0], [-0.5,71, -7], [-0.5,71,-22] ],
         cutout_position=[-1.,-10,-1], cutout_angle=-6, cutout_length=0,         
         shapescale=string_channel_scale/overall_scale,
         bendradius=5, bendsteps=5   
     );  
     // middle elastic  
     translate([-0.3,-39,25.5]) channel(
-        [ [-4,0,1], [-0.5,40,1], [0,55,0], [0.5,71, -7], [0.5,71,-22] ],
+        [ [-4,0,1], [2,40,1], [1,55,0], [0.5,71, -7], [0.5,71,-22] ],
         cutout_position=[-1.,-10,-1], cutout_angle=-6, cutout_length=0,         
-        shapescale=string_channel_scale/overall_scale,
+        shapescale=elastic_channel_scale/overall_scale,
         bendradius=5, bendsteps=5  
     );  
     // ring threading assist
@@ -181,7 +183,7 @@ module reborn_channels() {
     translate([13.5,-39,23.5]) channel(
         [ [-13.5,6,3], [-8.5,30,3], [-6.5,40,2.5], [-4,55,0], [-0.5,71, -7], [-0.5,71,-20] ],
         cutout_position=[0,0,-1], cutout_angle=[-5,0,-10], cutout_length=0,         
-        shapescale=string_channel_scale/overall_scale,
+        shapescale=elastic_channel_scale/overall_scale,
         bendradius=5, bendsteps=5        
     );
     // index string
