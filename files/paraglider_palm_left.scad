@@ -38,7 +38,10 @@ module channel(waypoints, cutout_length=20,
     path=[for(w = waypoints) 
         [0,[w[1],-w[0],w[2]],1,
             -90+((len(w)==4)?w[3]:0)]];
-    rotate(90) multi_pipe([shape], smooth_bends(path, bendradius, bendsteps));
+    // note: do a translation so that the curved _bottom_ of the pipe is
+    // invariant under scaling, relative to its position when scale=0.9.
+    // This is for historical continuity
+    translate([0,0,1.5*(shapescale-0.9)]) rotate(90) multi_pipe([shape], smooth_bends(path, bendradius, bendsteps));
     if(cutout_length != 0) 
         translate(cutout_position+waypoints[1]+[0,0,5])
             rotate(cutout_angle)
@@ -109,7 +112,7 @@ module plug_old_channels() {
 
     translate([21.2,-39,22]) channel(
         [ [-13.5,9.8,4], [-10.5,30,3,5], [-8.4,39,3.1,15], [-3,44,0,35], [2,46,-5,50]  ],
-        cutout_length=0, shapescale=1.3, bendradius=10          
+        cutout_length=0, shapescale=1.2, bendradius=10          
     );
 
     // fix ugly bend
@@ -149,7 +152,7 @@ module reborn_channels() {
     translate([-28,22,15]) cube([3,3,5], center=true);
     // ring elastic
     translate([-14.5,-43,24]) channel(
-        [ [-1,0,2], [-1,40,3], [-1,58,1], [-0.5,71, -7], [-0.5,71,-22] ],
+        [ [-1,0,2.5], [-1,40,3], [-1,58,1], [-0.5,71, -7], [-0.5,71,-22] ],
         cutout_position=[0,-6,0], cutout_angle=[-5,0,-2], cutout_length=0, 
         shapescale=elastic_channel_scale/overall_scale,
         bendradius=5, bendsteps=5   
@@ -196,9 +199,9 @@ module reborn_channels() {
     // ring threading assist
     translate([13.6,33,15]) cube([3,3,5], center=true);
     //thumb plumbing
-    // thia may get crowded around the bend, so we make this channel smaller than the others
+    // this may get crowded around the bend, so we make this channel smaller than the others
     translate([21.2,-39,22]) channel(
-        [ [-13.5,8,4], [-10,25,3], [-7.0,34,2.0], [-1.5,39,-1.25,15]  ],
+        [ [-13.5,8,4], [-10,25,3], [-7.0,34,2.0], [-1.5,39,-0.5,5]  ],
         cutout_length=0, 
         shapescale=0.7*string_channel_scale/overall_scale,
         bendradius=5, bendsteps=3        
