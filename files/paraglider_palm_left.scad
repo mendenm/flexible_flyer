@@ -138,14 +138,14 @@ module plug_old_channels() {
 module reborn_channels() {
     // pinkie string
     translate([-29.6,-48.5,21]) channel(
-        [ [7.6,0,6], [3,40,3], [1.8,55,2.4], [1.0,70, -5], [1.0,70,-18] ],
+        [ [7.6,0,6], [3,40,3.5], [1.8,55,2.4], [1.0,70, -5], [1.0,70,-18] ],
         cutout_position=[0,0,0], cutout_angle=[-5,0,8], cutout_length=0, 
         shapescale=string_channel_scale/overall_scale,
         bendradius=5, bendsteps=5
     );
     // pinkie elastic
     translate([-26.6,-48.5,22]) channel(
-        [ [7.5,0,5.2], [4.4,30,3.2], [3,45,2.5], [1.8,55,1.5], [-1.0,70, -6], [-1.0,70,-19] ],
+        [ [7.5,0,5.2], [4.4,30,3.7], [3,45,2.8], [1.8,55,1.5], [-1.0,70, -6], [-1.0,70,-19] ],
         cutout_position=[0,0,0], cutout_angle=[-5,0,8], cutout_length=0, 
         shapescale=elastic_channel_scale/overall_scale,
         bendradius=5, bendsteps=5
@@ -379,7 +379,7 @@ module drilling(palm_scale, finger_scale,
     base_slot_width=6;
     base_rotation_offset=6; // distance of nominal pin center from front of hand, half of cylinder diameter of 12 mm
     // cut out finger slots
-    for(dx=slot_dx) translate(dx[0]+[3.7,43,-10]) 
+    if(!pre_solidified) for(dx=slot_dx) translate(dx[0]+[3.7,43,-10]) 
         rotate(dx[1]+180) translate([0,5,5]) 
             rounded_cutter(width=base_slot_width*finger_scale/palm_scale, height=40);
     // make holes for pins
@@ -415,14 +415,14 @@ module scaled_palm(palm_scale=1, finger_scale=1,
             }
             else {
                 if(!main_ghost) difference() {
-                    !import(pre_solidified, convexity=10);
+                    import(pre_solidified, convexity=10);
                     reborn_channels();
                 } else { %render() difference() {
                     import(pre_solidified, convexity=10);
                     reborn_channels(); }
                 }
             }
-            translate([0,-31.5,30]) cube([100,5,20], center=true); // shave end
+            if(!pre_solidified) translate([0,-31.5,30]) cube([100,5,20], center=true); // shave end
             drilling(
                 palm_scale=palm_scale, finger_scale=finger_scale, 
                 pin_dia=pin_dia, pin23_length=pin23_length, pin45_length=pin45_length, pin_1_length=pin_1_length,
@@ -430,7 +430,7 @@ module scaled_palm(palm_scale=1, finger_scale=1,
             );
         }
     
-    knuckles(); // insert backstops and knuckle covers
+    if(!pre_solidified) knuckles(); // insert backstops and knuckle covers
         
     // add cylindrical pin for thumb
         translate([30,-5,15]) 
