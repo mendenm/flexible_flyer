@@ -93,47 +93,34 @@ slot_dx=[[[10,0,0],0],[[-4,0,0],0],[[-18,-4,0],0],
 
 module plug_old_channels() {
     translate([-28.6,-49.5,22]) channel(
-        [ [6.2,19,4.1], [4,40,3.5],[2.9, 47.5, 3.1],  [1.9,55,1.4], [1.15, 62.5, -1.1],  [0.8,70, -4.7], ],
+        [ [6.2,19,4.1], [4,40,3.5],[2.9, 47.5, 3.1],  [1.9,55,1.4], 
+            [1.15, 62.5, 0],  [0.8,70, -4.7], ],
         cutout_length=0, shapescale=1.2, fix_translation=false
     );
 
     translate([-14.5,-43,24.5]) channel(
-        [ [-0.5,13,3], [0,40,3.2], [0,55,1], [0.8,68, -5.5] ],
-        cutout_length=0, shapescale=1.2, fix_translation=false   
+        [ [-0.5,13,3], [0,40,3.0], [0,55,1.0], [0,63, -1.0,-15], [0,67,-4,0] ],
+        cutout_length=0, shapescale=1.2, fix_translation=false,
+        bendradius=5, bendsteps=10   
     );
 
     translate([-0.3,-39,25.5]) channel(
-        [ [-7,9,2.2], [-3.5,40,1.8], [-2.75, 47.5, 1.8],  [-2,55,1.0], [-1,62.5,-1], [0,69, -5],  ],
+        [ [-7,9,2.2], [-3.5,40,1.8], [-2.75, 47.5, 1.6],  [-2,55,1.0], 
+            [-1,62.5,-0.7], [0,69, -3],  ],
         cutout_length=0, shapescale=1.1, fix_translation=false      
     );    
 
     translate([13.5,-39,23.5]) channel(
-        [ [-13.,9,3.7], [-8.5,30,3.5], [-6.5,40,3], [-4.75, 47.5, 2.6], [-3,55,0.9], [-0.4,69, -5.5], ],
+        [ [-13.5,9,3.7], [-8.5,30,3.0], [-6.8,40,3], [-5, 47.5, 2.6], [-3.5,55,0.9], [-0.4,69, -5.5], ],
         cutout_length=0, shapescale=1.1, fix_translation=false          
     );
 
     translate([21.2,-39,22]) channel(
-        [ [-13.5,9.8,4], [-10.5,30,3,5], [-8.4,39,3.1,15], [-3,44,0,35], [2,46,-5,50]  ],
+        [ [-13.5,9.8,4], [-13.5,33,4,5], [-6,38,2.5,15], [-3,40,0.5,30], [2,43,-4,50]  ],
         cutout_length=0, shapescale=1.2, bendradius=10, fix_translation=false          
     );
-
-    // fix ugly bend
-    // with extra offset for v3 palm
-    translate([-0.5,-5,0]) {
-        intersection() {
-            union() {
-                translate([21.2,-39,22]) channel(
-                    [ [-13.5,9.8,4], [-10.5,30,3,5], [-8.4,39,3.1,15], [-1.7,44,0.5,35], [2,46,-5,50]  ],
-                    cutout_length=0, shapescale=1.3, bendradius=10, fix_translation=false          
-                );
-                translate([20,7,25]) rotate([30,-30,0]) translate([-2,-3,-2]) cylinder(d=5,h=12, $fn=20, center=true);
-            }
-            translate([9.8,0,12]) rotate([85,0,-5]) cylinder(d=30,h=20, $fn=50, center=true);
-        }
-        translate([23.5,8,0.05]) cylinder(d=4.5, h=19.0, $fn=20); 
-    }
     
-    for(v=[[13.5,31,18], [-0.5,31,21.0], [-14.2,27,20],  [-28.5,21,18],
+    for(v=[[13.5,31,18], [-0.5,31.5,21.0], [-14.2,28,20],  [-28.5,21,18],
         
         ]) translate([v.x,v.y,0]) cylinder(d=4,h=v.z,$fn=20);
 }
@@ -206,15 +193,20 @@ module reborn_channels() {
     //thumb plumbing
     // this may get crowded around the bend, so we make this channel smaller than the others
     // extra translation for v3 palm 
-    translate([0,-6,0]) {
+    translate([1,-5,0]) {
         translate([21.2,-39,22]) channel(
-            [ [-13.5,8,4], [-10,25,3], [-7.0,34,2.0], [-1.5,39,-0.5,5]  ],
+            [ [-13.5,8,4], [-10,25,3], [-7.0,34,2.0], [19.2,2.2,20]-[21.2,-39,22]  ],
             cutout_length=0, 
             shapescale=0.7*string_channel_scale/overall_scale,
             bendradius=5, bendsteps=3        
         );
-        translate([18,-1,11]) rotate([90,0,30]) rotate_extrude(angle=80, $fn=16) translate([10,0]) circle(d=2.2*string_channel_scale/overall_scale, $fn=8);
-        translate([19.7,-0.0,20.7]) sphere(d=2.8*string_channel_scale/overall_scale, $fn=12); // just to clean up joint
+        // keep the bottom of the toroidal bend at a fixed location
+        // independent of azuimuth and arc angle and arc radius
+        radius=10;
+        translate([22,6,11]) rotate([90,0,55]) translate([-radius,0,0]) 
+            rotate_extrude(angle=60, $fn=32) 
+            translate([radius,0]) circle(d=2.2/overall_scale, $fn=8);
+        translate([19.2,2.2,19.4]) sphere(d=2.8*string_channel_scale/overall_scale, $fn=12); // just to clean up joint
     }
     
 }
@@ -264,9 +256,7 @@ module main_palm() {
                 %import("palm_v3.3mf", convexity=10);
                 
             if(!main_ghost) supports();
-            if(include_mesh==1) mesh();
-            else if (include_mesh==2) phoenix_mesh();
-            if(1 || (!main_ghost && !quick_view)) translate([0,-2,0]) plug_old_channels();
+            if(0 || (!main_ghost && !quick_view)) translate([0,-2,0]) plug_old_channels();
         }
         if(!quick_view) reborn_channels();
     }
@@ -289,7 +279,7 @@ pin_coordinates=[
     [[6.6,39.5,6.0],[0,90,0]], // index and middle finger
     [[-16,35.5,6.0],[0,90,0]], // ring finger
     [[-29.5,29.5,6.0],[0,90,0]], // pinky
-    [[31,-5,6.0],[0,90,50]], // thumb
+    [[32.2,-5.9,5.6],[0,90,50]], // thumb
 
 ];
 
@@ -425,12 +415,15 @@ module scaled_palm(palm_scale=1, finger_scale=1,
         translate(pin_coordinates[5][0]+[0,0,7]) 
         rotate(pin_coordinates[5][1]) 
         translate([-1,-2,0]) cylinder(d=4, h=8, center=true, $fn=20);
-    }
     // small bar at top of thumb slot to fix hanging hole
-    translate([30,0,16.3]) rotate(49.5) translate([5,-0.8,0]) cube([10,1,1], center=true);
-    translate([30,0,16.6]) rotate(49.5) translate([3.9,1,0]) cube([1,4,1], center=true);
-    translate([30,0,16.6]) rotate(49.5) translate([6.8,1,0]) cube([1,4,1], center=true);
-
+    // translated back to v3 thumb
+        *translate(pin_coordinates[5][0]) 
+            rotate(pin_coordinates[5][1]) rotate([0,-90,0]) translate([0,5,7.2]){
+                translate([0,0,0]) cube([10,1,1], center=true);
+                translate([-1,1.5,0.5]) cube([1,4,1], center=true);
+                translate([ 1,1.5,0.5]) cube([1,4,1], center=true);
+        }
+    }
 }
 
 scaled_palm(palm_scale=overall_scale, finger_scale=overall_scale, 
