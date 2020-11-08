@@ -174,7 +174,7 @@ module reborn_channels() {
     translate([-0.2,33,17]) cube([3,3,5], center=true);
     // index elastic  
     translate([13.5,-39,23.5]) channel(
-        [ [-13.5,6,3.5], [-8.5,30,3.2], [-6.5,40,2.5], [-4,55,0], [-0.5,71, -7], [-0.5,71,-20] ],
+        [ [-13.5,6,3.5], [-8.5,30,3.2], [-6.5,40,2.5], [-4,55,0.5], [-0.5,71, -7], [-0.5,71,-20] ],
         cutout_position=[0,0,-1], cutout_angle=[-5,0,-10], cutout_length=0,         
         shapescale=elastic_channel_scale/overall_scale,
         bendradius=5, bendsteps=5        
@@ -223,7 +223,7 @@ module knuckles() {
         [[-1,-4,-2.5],[-113,0,-3],3],
         [[0,-2,0],[-120,0,0],2],
         [[1,-3,-1],[-115,0,3],2],
-        [[1,-4,-2.35],[-115,0,3],3]
+        [[1,-4,-2.35],[-113,0,3],3]
     ];
                 
     if(include_knuckle_covers) for(idx=[0:3]) translate(cover_dx[idx][0]+slot_dx[idx][0]+[3.7,25,23]) {
