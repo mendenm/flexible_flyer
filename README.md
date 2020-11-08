@@ -2,6 +2,9 @@
 
 See the [progress log](progress_log.md) to see what is happening.
 
+## NEWS!  
+This project has finalized on the name "paraglider" instead of "flexible flyer".  It's the same project! I can't change the name of the git repository.
+
 ## Overview
 
 This repository contains a couple of different but closely related, projects.  It is derived from a mix of the [Phoenix v2](https://www.thingiverse.com/thing:1453190), the [Unlimbited Phoenix v3](https://www.thingiverse.com/thing:1674320), and the [Phoenix Reborn](https://www.thingiverse.com/thing:2217431) hands.
