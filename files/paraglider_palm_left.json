@@ -12,20 +12,6 @@
             "pre_solidified": "",
             "string_channel_scale": "0.9"
         },
-        "design default values": {
-            "include_knuckle_covers": "true",
-            "include_mesh": "1",
-            "main_ghost": "false",
-            "old_style_wrist": "true",
-            "overall_scale": "1.25",
-            "pins": "true",
-            "pivot_extra_clearance": "0",
-            "pivot_size": "1.5875",
-            "plugs": "true",
-            "pre_solidified": "",
-            "quick_view": "false",
-            "string_channel_scale": "0.9"
-        },
         "test 100um bigger pins": {
             "elastic_channel_scale": "0.9",
             "include_knuckle_covers": "true",
@@ -53,6 +39,21 @@
             "pivot_size": "1.5875",
             "plugs": "true",
             "pre_solidified": "",
+            "quick_view": "false",
+            "string_channel_scale": "0.9"
+        },
+        "use solidified": {
+            "elastic_channel_scale": "0.9",
+            "include_knuckle_covers": "true",
+            "include_mesh": "1",
+            "main_ghost": "false",
+            "old_style_wrist": "true",
+            "overall_scale": "1.25",
+            "pins": "true",
+            "pivot_extra_clearance": "0",
+            "pivot_size": "1.5875",
+            "plugs": "true",
+            "pre_solidified": "solidified_palm.3mf",
             "quick_view": "false",
             "string_channel_scale": "0.9"
         }

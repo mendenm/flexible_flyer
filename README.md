@@ -1,4 +1,4 @@
-# The Flexible Flyer
+# The Paraglider a.k.a. Flexible Flyer
 
 See the [progress log](progress_log.md) to see what is happening.
 
