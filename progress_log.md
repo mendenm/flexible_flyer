@@ -1,8 +1,15 @@
 # The Paraglider Progress Log
 
-## October, 2020 update
-There is a new OpenSCAD file, paraglider\_palm\_new\_channels.scad.  This file has a better mechanism for filling in the old string channels to get rid if various voids, etc.  It then implements an entirely new system for the channels.  There are two channels for each digit (except the thumb): one for the string and one for the elastic return band.  This should make it easier to thread, using a piece of wire as a leader to puller the strings through. It should also eliminate drag bwtween the two lines. 
-![Rendered image of new channels](images/paraglider_palm_new_channels.png)
+## Early November, 2020
+
+### Name change (sort of) to "paraglider"
+It has been decided that this project will adopt the "paraglider" name, since "flexible flyer" makes it appear it might be a flexure-joint based project.  Some files and materials will keep the old name, though.
+
+### New!  Unlimbited V3 palm 
+It is now also possible to build the parametric palm against the [Unlimbited Phoenix V3](https://www.thingiverse.com/thing:1674320)  palm, which is somewhat different.  Everything works almost the same, but the passages (especially the thumb string) are quite different. Everything should be compatible, although I have not yet tested the thumb.  The positioning of the thumb socket is different on this palm, and it may require a slightly different parametric scaling of the thumb. Use paraglider_palm_unlimbited_v3.scad and its customizer script to use this.
+
+### Reborn palm progress
+Much cleanup has been carried out on the palm based on the Phoenix Reborn project.  
 
 ## Later October, 2020
 The entire 'fingerator' module has been replaced. The original used a slice off of the Phoenix finger meshes to start with, and edited from there.  The new fingers are entirely OpenSCAD objects.  
@@ -18,15 +25,7 @@ The goal of these efforts is to produce a hand which gives as stronger grip with
 Here is a picture of an assembled finger, showing the blue Igus self-lubricating tape, the off-white bearing tubing inside a joint, and the assembled joint with a 1/16" steel pin.
 ![picture](images/assembled_finger.jpg) 
 
-## Early November, 2020
-
-### Name change (sort of) to "paraglider"
-It has been decided that this project will adopt the "paraglider" name, since "flexible flyer" makes it appear it might be a flexure-joint based project.  Some files and materials will keep the old name, though.
-
-### New!  Unlimbited V3 palm 
-It is now also possible to build the parametric palm against the [Unlimbited Phoenix V3](https://www.thingiverse.com/thing:1674320)  palm, which is somewhat different.  Everything works almost the same, but the passages (especially the thumb string) are quite different. Everything should be compatible, although I have not yet tested the thumb.  The positioning of the thumb socket is different on this palm, and it may require a slightly different parametric scaling of the thumb. Use paraglider_palm_unlimbited_v3.scad and its customizer script to use this.
-
-### Reborn palm progress
-Much cleanup has been carried out on the palm based on the Phoenix Reborn project.  
-
+## October, 2020 update
+There is a new OpenSCAD file, paraglider\_palm\_new\_channels.scad.  This file has a better mechanism for filling in the old string channels to get rid if various voids, etc.  It then implements an entirely new system for the channels.  There are two channels for each digit (except the thumb): one for the string and one for the elastic return band.  This should make it easier to thread, using a piece of wire as a leader to puller the strings through. It should also eliminate drag bwtween the two lines. 
+![Rendered image of new channels](images/paraglider_palm_new_channels.png)
 
