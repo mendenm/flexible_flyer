@@ -8,7 +8,7 @@ pivot_size=1.5875; // [1.5:metric 1.5, 1.5875:16th inch, 3.0:3mm screw]
 // extra clearance for pivots to adjust for printer tolerances
 pivot_extra_clearance=0; // [-0.5:0.01:0.5]
 // include fused-in palm mesh?
-include_mesh=1; // [0:separate mesh, 1:simplified mesh, 2: phoenix mesh]
+include_mesh=1; // [0:standard mesh, 1:simplified mesh]
 // include nice covers for knuckles
 include_knuckle_covers=true;
 // drill holes for steel pins
@@ -244,16 +244,30 @@ module knuckles() {
     }
 }
 
+module mesh_cutout() {
+    union() { // chop out old mesh
+        translate([12,-65,0]) cube([50,50,5], center=true);
+        translate([17,-42,0]) scale([1,0.8,1]) cylinder(d=40, h=5, center=true);
+        translate([-2,-42,0]) cylinder(d=20, h=5, center=true);
+        translate([25,-32,0]) rotate(-20) scale([1,0.6,1]) 
+            cylinder(d=25, h=5, center=true);        
+    } 
+}
+
 module main_palm() {
     difference() {
         union() {
             translate([-19.6,50.5,2.17]) 
             if(!main_ghost) 
+                difference() {
                 import("palm_v3.3mf", convexity=10);
-            else
-                %import("palm_v3.3mf", convexity=10);
-                
+                if(include_mesh==1) mesh_cutout();
+            }   else %difference() {
+                import("palm_v3.3mf", convexity=10);
+                if(include_mesh==1) mesh_cutout();
+            }   
             if(!main_ghost) supports();
+            if(include_mesh==1) mesh();
             if( 1 || (!main_ghost && !quick_view)) translate([0,-2,0]) plug_old_channels();
         }
         if(!quick_view) reborn_channels();
