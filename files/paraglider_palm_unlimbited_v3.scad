@@ -84,15 +84,16 @@ module plug_old_channels() {
     );
 
     translate([-14.5,-43,24.5]) channel(
-        [ [-0.5,13,3], [0,40,3.2], [0,55,1.4], [0,63, -1.0,-15], [0,67,-4,0] ],
+        [ [-0.5,13,3], [0,40,3.2], [0,55,1.4], [0,63, -1.0,-15], [0,67,-4,-15] ],
         cutout_length=0, shapescale=1.2, fix_translation=false,
-        bendradius=2, bendsteps=5  
+        bendradius=5, bendsteps=5  
     );
 
     translate([-0.3,-39,25.5]) channel(
         [ [-7.2,9,2.4], [-3.5,40,1.8], [-2.75, 47.5, 1.6],  [-2,55,1.0], 
             [-1,62.5,-0.7], [0,69, -3.5],  ],
-        cutout_length=0, shapescale=1.1, fix_translation=false      
+        cutout_length=0, shapescale=1.1, fix_translation=false ,
+        bendradius=2, bendsteps=3    
     );    
 
     translate([13.5,-39,23.5]) channel(
@@ -118,76 +119,82 @@ module plug_old_channels() {
             cylinder(d=4, h=10, $fn=8, center=false);
             translate([0,4,0]) rotate([45,0,0]) cube(15, center=true);
         }
-    for(v=[[13.5,31,18], [-0.5,31.5,21.0], [-14.2,28,20],  [-28.5,21,18],
+    for(v=[[13.5,31,18], [-0.5,31.5,21.0], [-14.2,28,20],  [-28.5,22,18],
         
         ]) translate([v.x,v.y,0]) cylinder(d=4,h=v.z,$fn=20);
+}
+
+module final_bend(angle=90) {
+    translate([0,-3.5,0]) rotate([90,0,90]) rotate_extrude(angle=angle, $fn=40, convexity=10)
+        translate([5,0]) square([3,3], center=true);
 }
 
 module reborn_channels() {
     // pinkie string
     translate([-29.6,-48.5,21]) channel(
-        [ [7.6,0,6], [3,40,3.5], [1.8,55,2.4], [1.0,70, -5], [1.0,70,-18] ],
+        [ [7.6,0,6], [3,40,3.5], [1.8,55,2.4], [1.0,70, -5] ],
         cutout_position=[0,0,0], cutout_angle=[-5,0,8], cutout_length=0, 
         shapescale=string_channel_scale/overall_scale,
         bendradius=5, bendsteps=5
     );
     // pinkie elastic
     translate([-26.6,-48.5,22]) channel(
-        [ [7.5,0,5.4], [4.4,30,3.7], [3,45,2.8], [1.8,55,1.5], [-1.0,70, -6], [-1.0,70,-19] ],
+        [ [7.5,0,5.4], [4.4,30,3.7], [3,45,2.8], [1.8,55,1.5], [-1.0,70, -6] ],
         cutout_position=[0,0,0], cutout_angle=[-5,0,8], cutout_length=0, 
         shapescale=elastic_channel_scale/overall_scale,
         bendradius=5, bendsteps=5
     );
     // pinkie threading assist
-    translate([-28,22,15]) cube([3,3,5], center=true);
+    *translate([-28,21.75,15]) cube([3,3,5], center=true);
+    translate([-28,21,12.6]) final_bend(75);
     // ring elastic
     translate([-14.5,-43,24]) channel(
-        [ [-1,0,2.7], [-1,40,3], [-1,58,1], [-0.5,71, -7], [-0.5,71,-22] ],
+        [ [-1,0,2.7], [-1,40,3], [-1,58,1], [-0.5,71, -7]],
         cutout_position=[0,-6,0], cutout_angle=[-5,0,-2], cutout_length=0, 
         shapescale=elastic_channel_scale/overall_scale,
         bendradius=5, bendsteps=5   
     );
     // ring string
     translate([-14.5,-43,24]) channel(
-        [ [2,0,2.8], [2.5,38,3], [2,55,2], [0.5,71, -7], [0.5,71,-22] ],
+        [ [2,0,2.8], [2.5,38,3], [2,55,2], [0.5,71, -7]],
         cutout_position=[0,-6,0], cutout_angle=[-5,0,-2], cutout_length=0, 
         shapescale=string_channel_scale/overall_scale,
         bendradius=5, bendsteps=5   
     );
     // ring threading assist
-    translate([-14.5,29.5,15]) cube([3,3,5], center=true);
+    translate([-14.5,27.5,14.25]) final_bend(65);
     // middle string
     translate([-0.3,-39,25.5]) channel(
-        [ [-7,0,1.5], [-2,40,1.5], [-2.5,55,0], [-0.5,71, -7], [-0.5,71,-22] ],
+        [ [-7,0,1.5], [-2,40,1.5], [-2.5,55,0], [-0.5,71, -7]],
         cutout_position=[-1.,-10,-1], cutout_angle=-6, cutout_length=0,         
         shapescale=string_channel_scale/overall_scale,
         bendradius=5, bendsteps=5   
     );  
     // middle elastic  
     translate([-0.3,-39,25.5]) channel(
-        [ [-4,0,1.5], [2,40,1.3], [1,55,0], [0.5,71, -7], [0.5,71,-22] ],
+        [ [-4,0,1.5], [2,40,1.3], [1,55,0], [0.5,71, -7]],
         cutout_position=[-1.,-10,-1], cutout_angle=-6, cutout_length=0,         
         shapescale=elastic_channel_scale/overall_scale,
         bendradius=5, bendsteps=5  
     );  
-    // ring threading assist
-    translate([-0.2,33,17]) cube([3,3,5], center=true);
+    // middle threading assist
+    translate([-0.2,31.25,15.25]) final_bend(65);
     // index elastic  
     translate([13.5,-39,23.5]) channel(
-        [ [-13.5,6,3.5], [-8.5,30,3.2], [-6.5,40,2.5], [-4,55,0.5], [-0.5,71, -7], [-0.5,71,-20] ],
+        [ [-13.5,6,3.5], [-8.5,30,3.2], [-6.5,40,2.5], [-4,55,0.5], [-0.5,71, -7.5]],
         cutout_position=[0,0,-1], cutout_angle=[-5,0,-10], cutout_length=0,         
         shapescale=elastic_channel_scale/overall_scale,
         bendradius=5, bendsteps=5        
     );
     // index string
     translate([13.5,-39,23.5]) channel(
-        [ [-10,6,3.5], [-5,30,3.2], [-3,40,2.5], [-1,55,0], [0.5,71, -7.5], [0.5,71,-20] ],
+        [ [-10,6,3.5], [-5,30,3.2], [-3,40,2.5], [-1,55,0], [0.5,71, -7.5]],
         cutout_position=[0,0,-1], cutout_angle=[-5,0,-10], cutout_length=0,         
         shapescale=string_channel_scale/overall_scale,
         bendradius=5, bendsteps=5        
     );
-    // ring threading assist
-    translate([13.6,33,15]) cube([3,3,5], center=true);
+    // index threading assist
+    translate([13.6,30.5,13.25]) final_bend(65);
     //thumb plumbing
     // this may get crowded around the bend, so we make this channel smaller than the others
     // extra translation for v3 palm 
