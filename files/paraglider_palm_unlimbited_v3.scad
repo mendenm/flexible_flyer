@@ -342,9 +342,10 @@ module m3_wrist_plug() {
 
 module m3_wrist_drill() {
     rotate([0,90,0]) {
-        cylinder(d=2,h=20, center=true, $fn=20);
-        translate([0,0,-(4.99-2)/2-0.1]) 
-            cylinder(d=5.6/cos(30), h=2, center=true, $fn=6);
+        cylinder(d=3.5/overall_scale,h=20, center=true, $fn=20);
+        translate([0,0,-(4.99-2/overall_scale)/2-0.1]) 
+            rotate(30) cylinder(d=5.6/cos(30)/overall_scale, h=2/overall_scale, 
+                center=true, $fn=6);
         translate([0,0,(4.99-1)/2+0.2])
             cylinder(d1=9, d2=10, h=1, center=true, $fn=50);
     }
