@@ -52,7 +52,8 @@ module channel(waypoints, cutout_length=20,
 
 // channel([[0,0,0],[5,30,-2],[5,40,-5],[5,40,-20]]);
 
-module supports() {
+module do_supports() {
+    children(); 
     for(dy=[-29:5:10]) translate([0,dy,0]) {
         translate([-7,0.5,21]) cube([52,2,0.5],  center=true);
         translate([-7,0,22]) cube([52,0.4,2],  center=true);
@@ -216,14 +217,26 @@ module reborn_channels() {
     
 }
 
+// try a module to handle both plugging and drilling channels()
+module do_channels() {
+    difference() {
+        union() {
+            children();
+            translate([0,-2,0]) plug_old_channels();
+        }
+        reborn_channels();
+        translate([0,-32.8,30]) cube([100,5,20], center=true); // shave end
+    }
+}
+
 module knuckles() {
     // re-insert clean finger stops
-        for(dx=slot_dx) translate(dx[0]+[3.7,38.5,12.5]) 
-            rotate([90,0,-90+dx[1]]) linear_extrude(height=8, center=true)
-                hull() {
-                    translate([3,0]) square([0.1,3]);
-                    translate([0,0.5]) circle(1, $fn=10);
-                };
+    for(dx=slot_dx) translate(dx[0]+[3.7,38.5,12.5]) 
+        rotate([90,0,-90+dx[1]]) linear_extrude(height=8, center=true)
+            hull() {
+                translate([3,0]) square([0.1,3]);
+                translate([0,0.5]) circle(1, $fn=10);
+            };
     // smooth covers for knuckles
     // compute individul offsets to place them nicely
     cover_dx=[
@@ -233,7 +246,8 @@ module knuckles() {
         [[1,-4,-2.35],[-113,0,3],3]
     ];
                 
-    if(include_knuckle_covers) for(idx=[0:3]) translate(cover_dx[idx][0]+slot_dx[idx][0]+[3.7,25,23]) {
+    if(include_knuckle_covers) for(idx=[0:3]) 
+        translate(cover_dx[idx][0]+slot_dx[idx][0]+[3.7,25,23]) {
         intersection() {
             rotate(cover_dx[idx][1]) difference() {
                 hull() {
@@ -252,7 +266,7 @@ module knuckles() {
 }
 
 module mesh_cutout() {
-    union() { // chop out old mesh
+    translate([-19.6,50.5,2.17]) union() { // chop out old mesh
         translate([12,-65,0]) cube([50,50,5], center=true);
         translate([17,-42,0]) scale([1,0.8,1]) cylinder(d=40, h=5, center=true);
         translate([-2,-42,0]) cylinder(d=20, h=5, center=true);
@@ -261,26 +275,17 @@ module mesh_cutout() {
     } 
 }
 
-module main_palm() {
-    difference() {
+module do_mesh() {
+    if(include_mesh==1) 
         union() {
-            translate([-19.6,50.5,2.17]) 
-            if(!main_ghost) 
-                difference() {
-                import("palm_v3.3mf", convexity=10);
-                if(include_mesh==1) mesh_cutout();
-            }   else %difference() {
-                import("palm_v3.3mf", convexity=10);
-                if(include_mesh==1) mesh_cutout();
-            }   
-            if(!main_ghost) supports();
-            if(include_mesh==1) mesh();
-            if( 1 || (!main_ghost && !quick_view)) translate([0,-2,0]) plug_old_channels();
+            difference() {
+                children();
+                mesh_cutout();
+            }
+            mesh();
         }
-        if(!quick_view) reborn_channels();
-    }
-};
-
+    else children();
+}
 
 // plug up all holes and slots which need to be parametric
 module chamfered_cylinder(d=20, h=20, center=true)
@@ -293,8 +298,8 @@ module chamfered_cylinder(d=20, h=20, center=true)
 }
 
 pin_coordinates=[
-    [[-35.4,-38,8],[0,90,0]], //left wrist
-    [[20.68,-38,8],,[0,90,0]], // right wrist
+    [[-35.6,-38,8],[0,90,0]], //left wrist
+    [[20.9,-38,8],,[0,90,0]], // right wrist
     [[6.6,39.5,6.0],[0,90,0]], // index and middle finger
     [[-16,35.5,6.0],[0,90,0]], // ring finger
     [[-29.5,29.5,6.0],[0,90,0]], // pinky
@@ -303,15 +308,8 @@ pin_coordinates=[
 ];
 
 module plugs(size_scale=1, chop=false) {
-    // wrist pins, maybe these aren't parametric for now
     chopper=[13,13,30];
     
-    if(!old_style_wrist) {
-        translate(pin_coordinates[0][0]) rotate(pin_coordinates[0][1]) 
-            cylinder(d=10,h=4.99, center=true);
-        translate(pin_coordinates[1][0]) rotate(pin_coordinates[1][1]) 
-            cylinder(d=10,h=4.99, center=true);
-    }
     // index and middle combined pin
     translate(pin_coordinates[2][0]) rotate(pin_coordinates[2][1]) 
         scale(size_scale) intersection() {
@@ -338,6 +336,33 @@ module plugs(size_scale=1, chop=false) {
         }
  }
 
+module m3_wrist_plug() {
+    rotate([0,90,0]) cylinder(d=10,h=4.99, center=true);            
+}
+
+module m3_wrist_drill() {
+    rotate([0,90,0]) {
+        cylinder(d=2,h=20, center=true, $fn=20);
+        translate([0,0,-(4.99-2)/2-0.1]) 
+            cylinder(d=5.6/cos(30), h=2, center=true, $fn=6);
+        translate([0,0,(4.99-1)/2+0.2])
+            cylinder(d1=9, d2=10, h=1, center=true, $fn=50);
+    }
+}
+
+module do_wrist() {
+    if(!old_style_wrist) 
+        difference() {
+            union() {
+                children();                
+                translate(pin_coordinates[0][0]) m3_wrist_plug();
+                translate(pin_coordinates[1][0]) scale([-1,1,1]) m3_wrist_plug();
+            }
+            translate(pin_coordinates[0][0]) m3_wrist_drill();
+            translate(pin_coordinates[1][0]) scale([-1,1,1]) m3_wrist_drill();
+       } else children();
+}
+
 module mesh(mesh_thickness=2) {
     holes=[ // plug all screw holes
             [8.7,62.6], [7.7,51.7], [6.5,40.6], [6.9,28.4],
@@ -359,7 +384,7 @@ module mesh(mesh_thickness=2) {
         for(xy=holes) translate([each xy, 0.001]) cylinder(d=3.5, h=13, $fn=16);
 }
 
-module drilling(palm_scale, finger_scale, 
+module drilling(palm_scale, 
     pin_dia, pin23_length, pin45_length, pin_1_length,
     pin_head_square, pins=true)
 // drill out everything that needs to be done to attach fingers and wrist pins
@@ -369,10 +394,11 @@ module drilling(palm_scale, finger_scale,
 // they come out the expected size.
 // this assumes the 1x-scaled finger has a slot width of 6 mm
 {
+    finger_scale=palm_scale;
     base_slot_width=6;
     base_rotation_offset=6; // distance of nominal pin center from front of hand, half of cylinder diameter of 12 mm
     // cut out finger slots
-    if(!pre_solidified) for(dx=slot_dx) translate(dx[0]+[3.7,43,-10]) 
+    for(dx=slot_dx) translate(dx[0]+[3.7,43,-10]) 
         rotate(dx[1]+180) translate([0,5,5]) 
             rounded_cutter(width=base_slot_width*finger_scale/palm_scale, height=40);
     // make holes for pins
@@ -395,47 +421,46 @@ module drilling(palm_scale, finger_scale,
     }
 }
 
-module scaled_palm(palm_scale=1, finger_scale=1, 
-    pin_dia=3, pin23_length=25, pin45_length=10, pin_1_length=15,
-    pin_head_square=[6,4], pins=true
-) {
-    scale(palm_scale) 
-    union() {
-        difference() {
-            if (len(pre_solidified)==0) union() {
-                main_palm(); 
-                if(plugs) plugs();
-            }
-            else {
-                if(!main_ghost) difference() {
-                    union() {
-                        import(pre_solidified, convexity=10);
-                        if(include_mesh==1) mesh();
-                        else if (include_mesh==2) phoenix_mesh();
-                        translate([0,0.5,0]) supports();
-                        }
-                    reborn_channels();
-                } else { %render() difference() {
-                    import(pre_solidified, convexity=10);
-                    reborn_channels(); }
-                }
-            }
-            if(!pre_solidified) translate([0,-32.8,30]) cube([100,5,20], center=true); // shave end
-            drilling(
-                palm_scale=palm_scale, finger_scale=finger_scale, 
-                pin_dia=pin_dia, pin23_length=pin23_length, pin45_length=pin45_length, pin_1_length=pin_1_length,
-                pin_head_square=pin_head_square, pins=pins
-            );
+module do_pins() {
+    difference() {
+        union() {
+            children();
+            plugs();
         }
-    
-    if(!pre_solidified) knuckles(); // insert backstops and knuckle covers
-        
-    // add cylindrical pin for thumb
+        drilling(
+            palm_scale=overall_scale, 
+            pin_dia=pivot_size/overall_scale, pin23_length=25, pin45_length=10, 
+            pin_1_length=15
+        );
+    }
+}
+
+module do_knuckles() {
+    union() {
+        children();
+        knuckles(); // insert backstops and knuckle cover
+        // add cylindrical pin for thumb
         translate(pin_coordinates[5][0]+[0,0,7]) 
         rotate(pin_coordinates[5][1]) 
         translate([-1,-2,0]) cylinder(d=4, h=8, center=true, $fn=20);
     }
 }
 
-scaled_palm(palm_scale=overall_scale, finger_scale=overall_scale, 
-    pin_dia=pivot_size/overall_scale, pins=pins);
+// collect everything together as concatenated funcvitonal operators
+module scaled_palm() 
+{
+    scale(overall_scale)
+    do_wrist() 
+    do_knuckles()
+    do_pins() 
+    do_mesh() 
+    do_channels() 
+    do_supports()
+    translate([-19.6,50.5,2.17]) 
+    if(!main_ghost) 
+        import("palm_v3.3mf", convexity=10);
+    else 
+        %import("palm_v3.3mf", convexity=10);
+}
+
+scaled_palm();
