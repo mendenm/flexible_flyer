@@ -346,8 +346,8 @@ module m3_wrist_drill() {
         translate([0,0,-(4.99-2/overall_scale)/2-0.1]) 
             rotate(30) cylinder(d=5.6/cos(30)/overall_scale, h=2/overall_scale, 
                 center=true, $fn=6);
-        translate([0,0,(4.99-1)/2+0.2])
-            cylinder(d1=9, d2=10, h=1, center=true, $fn=50);
+        translate([0,0,(4.99-2)/2+0.2])
+            cylinder(d1=8, d2=10, h=2, center=true, $fn=50);
     }
 }
 
@@ -361,7 +361,7 @@ module do_wrist() {
             }
             translate(pin_coordinates[0][0]) m3_wrist_drill();
             translate(pin_coordinates[1][0]) scale([-1,1,1]) m3_wrist_drill();
-       } else children();
+    } else children();
 }
 
 module mesh(mesh_thickness=2) {

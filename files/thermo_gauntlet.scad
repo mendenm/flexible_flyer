@@ -15,6 +15,12 @@ echo(theta1);
 front_curve_dia=150;
 bearing_washer_dia=16;
 
+bearing_big_dia=10;
+bearing_little_dia=8;
+bearing_plastic_thickness=0.5;
+
+bearing_depth=2;
+
 strap_block_center=[(base_back_width+base_front_width)/4,0,0];
 
 pin_center=[base_front_width/2-bearing_washer_dia/2-1, base_length/2+bearing_washer_dia/2+1];
@@ -58,10 +64,11 @@ module solid_base() {
         translate([-5,-2,0]) 
         racetrack(length=65, bottom_width=10, top_width=8, thickness=gauntlet_thickness);
 
-    for(s=[-1,1]) scale([s,1]) translate(pin_center+[0,0,gauntlet_thickness-0.1]) {
+    for(s=[-1,1]) scale([s,1]) translate([each pin_center,0]+[0,0,gauntlet_thickness-0.01]) {
         $fn=50;
-        cylinder(d1=bearing_washer_dia, d2=bearing_washer_dia-1, h=3.01);
-        translate([0,0,3]) cylinder(d1=bearing_washer_dia-1, d2=bearing_washer_dia-3, h=1);
+        cylinder(d1=bearing_big_dia, d2=bearing_big_dia, h=bearing_plastic_thickness);
+        translate([0,0,bearing_plastic_thickness-0.02]) 
+            cylinder(d1=bearing_big_dia, d2=bearing_little_dia, h=2);
     }
 
 }
