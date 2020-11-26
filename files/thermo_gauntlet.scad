@@ -3,7 +3,7 @@
 
 overall_scale=1.25;
 
-bearing_only=false;
+bearing_only=true;
 
 hole_clearance=0.5; // printer tolerance
 
@@ -131,8 +131,6 @@ module do_track() {
 
 module do_3mm_bearing() {
     sthick=bearing_plastic_thickness/overall_scale;
-    sbig=bearing_big_dia-2*sthick;
-    slit=bearing_little_dia-2*sthick;
     
     difference() {
         union() {
@@ -140,9 +138,8 @@ module do_3mm_bearing() {
             for(s=[-1,1]) scale([s,1,1])
                 translate([each pin_center,0]+[0,0,gauntlet_thickness-0.01]) {
                 $fn=50;
-                cylinder(d1=sbig, d2=sbig, h=sthick);
-                translate([0,0,sthick-0.02]) 
-                    cylinder(d1=sbig, d2=slit, h=2-sthick);
+                translate([0,0,-sthick/0.5]) // cylinder wall slope is 0.5
+                    cylinder(d1=bearing_big_dia, d2=bearing_little_dia, h=2);
             }
         }
         for(s=[-1,1]) scale([s,1,1])
