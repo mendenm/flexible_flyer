@@ -464,4 +464,12 @@ module scaled_palm()
         %import("palm_v3.3mf", convexity=10);
 }
 
+module test_bearing() {
+    intersection() {
+        children();
+        translate(pin_coordinates[0][0]*overall_scale) cube(20, center=true);
+    }
+}
+
+// test_bearing() 
 scaled_palm();

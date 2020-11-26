@@ -1,7 +1,11 @@
 // flexible flyer short gauntlet
 // based very closely on Phoenix v2 thermo gauntlet
 
-*translate([2.5,-1,0]) import("thermo_gauntlet_two_strap_one_row.stl", convexity=10);
+overall_scale=1.25;
+
+bearing_only=true;
+
+hole_clearance=0.5; // printer tolerance
 
 gauntlet_thickness = 2;
 
@@ -18,6 +22,9 @@ bearing_washer_dia=16;
 bearing_big_dia=10;
 bearing_little_dia=8;
 bearing_plastic_thickness=0.5;
+bearing_screw_dia=3 + hole_clearance;  // 3mm screw with clearance
+bearing_screw_head_dia=5.8 + hole_clearance; // 5.6mm screw head, 5.8mm washer, with clearance
+bearing_screw_head_depth=2.5;
 
 bearing_depth=2;
 
@@ -63,23 +70,11 @@ module solid_base() {
         rotate(theta1) 
         translate([-5,-2,0]) 
         racetrack(length=65, bottom_width=10, top_width=8, thickness=gauntlet_thickness);
-
-    for(s=[-1,1]) scale([s,1]) translate([each pin_center,0]+[0,0,gauntlet_thickness-0.01]) {
-        $fn=50;
-        cylinder(d1=bearing_big_dia, d2=bearing_big_dia, h=bearing_plastic_thickness);
-        translate([0,0,bearing_plastic_thickness-0.02]) 
-            cylinder(d1=bearing_big_dia, d2=bearing_little_dia, h=2);
-    }
-
 }
 
-module cut_base() {
+module do_straps() {
     difference() {
-        solid_base();
-        // cut grooves for bending
-        for(dx=[-1,1]*(track_outer_width/2+1)) translate([dx,0,gauntlet_thickness])
-            rotate([90,0,0]) cylinder(d=1.5, h=200, center=true, $fn=8);
-        
+        children();
         // cut strap slots
         for(s=[1,-1]) scale([s,1]) translate(strap_block_center) rotate(theta1) {
             $fn=20;
@@ -94,9 +89,6 @@ module cut_base() {
         }
     }
 }
-
-
-cut_base();
 
 module track_block() {
     translate([0,-(base_length-track_length)/2,gauntlet_thickness-0.01]) 
@@ -127,4 +119,48 @@ module track_block() {
         }
 }
 
-track_block();
+module do_track() {
+    difference() {
+        children();
+        // cut grooves for bending
+        for(dx=[-1,1]*(track_outer_width/2+1)) translate([dx,0,gauntlet_thickness])
+            rotate([90,0,0]) cylinder(d=1.5, h=200, center=true, $fn=8);
+    }
+    track_block();    
+}
+
+module do_3mm_bearing() {
+    sthick=bearing_plastic_thickness/overall_scale;
+    sbig=bearing_big_dia-2*sthick;
+    slit=bearing_little_dia-2*sthick;
+    
+    difference() {
+        union() {
+            children();
+            for(s=[-1,1]) scale([s,1,1])
+                translate([each pin_center,0]+[0,0,gauntlet_thickness-0.01]) {
+                $fn=50;
+                cylinder(d1=sbig, d2=sbig, h=sthick);
+                translate([0,0,sthick-0.02]) 
+                    cylinder(d1=sbig, d2=slit, h=2);
+            }
+        }
+        for(s=[-1,1]) scale([s,1,1])
+            translate([each pin_center,-0.01]) scale(1/overall_scale) {
+            $fn=20;
+            cylinder(d=bearing_screw_dia, h=20);
+            cylinder(d=bearing_screw_head_dia, h=bearing_screw_head_depth);
+        }
+    }
+    // supports for flying hole
+    for(s=[-1,1]) scale([s,1,1])
+        translate([each pin_center,0]) scale(1/overall_scale) {
+        $fn=20;
+        cylinder(d=bearing_screw_head_dia-1, h=bearing_screw_head_depth-0.25);
+    }
+}
+
+scale(overall_scale) intersection() {
+    do_track() do_3mm_bearing() do_straps() solid_base();
+    translate([each pin_center,-0.01]) cube(bearing_only?20:1000, center=true);
+}
