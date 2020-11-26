@@ -3,7 +3,7 @@
 
 overall_scale=1.25;
 
-bearing_only=true;
+bearing_only=false;
 
 hole_clearance=0.5; // printer tolerance
 
@@ -142,7 +142,7 @@ module do_3mm_bearing() {
                 $fn=50;
                 cylinder(d1=sbig, d2=sbig, h=sthick);
                 translate([0,0,sthick-0.02]) 
-                    cylinder(d1=sbig, d2=slit, h=2);
+                    cylinder(d1=sbig, d2=slit, h=2-sthick);
             }
         }
         for(s=[-1,1]) scale([s,1,1])
