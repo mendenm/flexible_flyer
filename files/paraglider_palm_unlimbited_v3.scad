@@ -23,8 +23,8 @@ main_ghost=false; // [1:ghost, 0:real]
 string_channel_scale=0.9; // [0.5:0.05:1.0]
 // set size of channels for elastic
 elastic_channel_scale=0.9; // [0.5:0.05:1.5]
-// even if using steel pins on the fingers, use plastic pins on the wrist
-old_style_wrist=true; // [1:old style, 0:steel wrist pins]
+// even if using steel pins on the fingers, use plastic pins on the wrist if old-style
+old_style_wrist=false; // [1:old style, 0:m3 wrist screws]
 use <pipe.scad>
 module channel(waypoints, cutout_length=20, 
     cutout_position=[0,0,0], cutout_angle=0, shapescale=1, bendradius=2, bendsteps=5,
@@ -361,6 +361,8 @@ module do_wrist() {
             }
             translate(pin_coordinates[0][0]) m3_wrist_drill();
             translate(pin_coordinates[1][0]) scale([-1,1,1]) m3_wrist_drill();
+            translate((pin_coordinates[0][0]+pin_coordinates[1][0])/2)
+                rotate([0,90,0]) cylinder(h=52, d=17.5, center=true, $fn=16);
     } else children();
 }
 
