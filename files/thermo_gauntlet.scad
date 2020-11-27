@@ -1,12 +1,19 @@
 // flexible flyer short gauntlet
 // based very closely on Phoenix v2 thermo gauntlet
 
-overall_scale=1.25;
+use <gripper_box_pieces.scad>
 
-bearing_only=true;
+// This should match the scale of the hand and gripper box pieces.
+global_scale=1.25; // [1:0.01:2]
+// Clearance around screw holes to adjust for printer behavior. Screws should be fairly loose-fitting.
+hole_clearance=0.5; // [0:0.01:1]
 
-hole_clearance=0.5; // printer tolerance
+// Print only the wrist bearing tab, to make a thermoforming jig for the bearing plastic.
+bearing_only=false;
+// Print only the track for the tensioner box, to test the fit.
+slide_only=false;
 
+/* [Hidden] */ 
 gauntlet_thickness = 2;
 
 base_back_width=95;
@@ -106,13 +113,7 @@ module track_block() {
                 translate([0,0,3]) cylinder(d1=50, d2=60, h=5);
             }
             rotate([90,0,0]) translate([0,0,6])
-            linear_extrude(track_length-5, center=true) hull() {
-                translate([0,0.01]) 
-                    square([track_cut_width, 0.02], center=true);
-                translate([0,10])
-                    square([track_cut_width-2*tan(track_cut_angle)*10,
-                        0.01], center=true);
-                }
+            linear_extrude(track_length-5, center=true) translate([0,8]) rotate(180) slide(grow=0);
             translate([0,-6,(track_cut_thickness+track_base_thickness)])
                 cube([track_cut_width-2*tan(track_cut_angle)*(track_cut_thickness+track_base_thickness)+1,track_length-5, 5],
                 center=true);
@@ -130,7 +131,7 @@ module do_track() {
 }
 
 module do_3mm_bearing() {
-    sthick=bearing_plastic_thickness/overall_scale;
+    sthick=bearing_plastic_thickness/global_scale;
     
     difference() {
         union() {
@@ -143,7 +144,7 @@ module do_3mm_bearing() {
             }
         }
         for(s=[-1,1]) scale([s,1,1])
-            translate([each pin_center,-0.01]) scale(1/overall_scale) {
+            translate([each pin_center,-0.01]) scale(1/global_scale) {
             $fn=20;
             cylinder(d=bearing_screw_dia, h=20);
             cylinder(d=bearing_screw_head_dia, h=bearing_screw_head_depth);
@@ -151,13 +152,14 @@ module do_3mm_bearing() {
     }
     // supports for flying hole
     for(s=[-1,1]) scale([s,1,1])
-        translate([each pin_center,0]) scale(1/overall_scale) {
+        translate([each pin_center,0]) scale(1/global_scale) {
         $fn=20;
         cylinder(d=bearing_screw_head_dia-1, h=bearing_screw_head_depth-0.25);
     }
 }
 
-scale(overall_scale) intersection() {
+scale(global_scale) intersection() {
     do_track() do_3mm_bearing() do_straps() solid_base();
-    translate([each pin_center,-0.01]) cube(bearing_only?20:1000, center=true);
+    if(bearing_only) translate([each pin_center,-0.01]) cube(20, center=true);
+    if(slide_only) translate([0,-20,0]) cube(30, center=true);
 }
