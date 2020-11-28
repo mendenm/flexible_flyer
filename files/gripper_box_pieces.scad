@@ -1,7 +1,7 @@
 // parts for flexible-flyer parametric variant of Phoenix Reborn
 
 // this should match the scale of the hand and gauntlet
-global_scale=1.3; // [1:0.02:2]
+global_scale=1.25; // [1:0.01:2]
 
 // this sets how much clearance is on the dovetail.  It shouldn't depend on the scale
 slide_clearance=0.2; // [0:0.01:0.5]
@@ -57,7 +57,7 @@ module box() {
 
 module thumb_tensioner() {
     // translate([-15.0,69.8,-25.5]) import("thumb_v2_tensioner_pin.stl", convexity=10);
-    difference() {
+    translate([0,0,2.4]) difference() {
         rotate([-90,0,0]) intersection() {
             cube([4.8,4.8,20.5], center=true);
             rotate(45) cube([4.8*sqrt(2)-0.5, 4.8*sqrt(2)-0.5, 45], center=true);
@@ -74,8 +74,6 @@ module thumb_tensioner() {
 }
 
 module pivot() {
-    *translate([-5.1,-10,2]) 
-        rotate([0,90,0]) import("swivel_pin_left_JD1.stl", convexity=10);
     translate([0,0,1.55]) {
         difference() {
             translate([0,0,0.2]) cube([10,20,3.5], center=true);
@@ -89,9 +87,31 @@ module pivot() {
     }
 }
 
+module whipple_tree() {
+    // %import("whippletree_JD3.stl", convexity=10); 
+    thickness=5-slide_clearance/global_scale;
+    ht=thickness/2;
+    difference() {
+        linear_extrude(height=thickness) hull() {
+            $fn=20;
+            translate([0,-3.8,0]) circle(d=7);
+            translate([6.3,1,0]) circle(d=8);
+            translate([-6.3,1,0]) circle(d=8);
+        }
+        difference() {
+            translate([0,-1,-1]) cylinder(d=10,h=10);
+            translate([0,-9,-1]) rotate(45) cube([5,5,20]);
+        }
+        for(dx=[-1,1]*5.3) translate([dx,5.2,ht]) scale([0.7,1,1])
+            rotate_extrude(angle=360, $fn=50) translate([5,0]) 
+                scale([1/0.7,1]) circle(d=2, $fn=16);
+    }
+}
+
 scale(global_scale) translate([-5,-15,0]) rotate(0) pivot();
 
 scale(global_scale) translate([5,-15,0]) rotate(0) thumb_tensioner();
 
 scale(global_scale) box();
 
+translate([0,25,0]) scale(global_scale) whipple_tree();
