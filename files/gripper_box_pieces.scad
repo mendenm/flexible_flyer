@@ -116,4 +116,4 @@ scale(global_scale) translate([5,-15,0]) rotate(0) thumb_tensioner();
 
 scale(global_scale) box();
 
-translate([0,25,0]) scale(global_scale) whipple_tree();
+translate([0,20*global_scale,0]) rotate(180) scale(global_scale) whipple_tree();
