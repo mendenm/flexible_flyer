@@ -81,7 +81,7 @@ module pivot() {
                 cylinder(d=screw_thread_dia/global_scale, h=50, center=true, $fn=20);
         }
         translate([-1.1,3,1.94]) difference() {
-            cylinder(d=6.5, h=3.6, $fn=20);
+            cylinder(d=6.5, h=5, $fn=20);
             scale([1,0.3,1]) translate([0, -10*sqrt(2)/2,0]) rotate(45) cube([10,10,12], center=true);
         }
     }
@@ -89,18 +89,20 @@ module pivot() {
 
 module whipple_tree() {
     // %import("whippletree_JD3.stl", convexity=10); 
-    thickness=5-slide_clearance/global_scale;
+    thickness=5.4-slide_clearance/global_scale;
     ht=thickness/2;
     difference() {
-        linear_extrude(height=thickness) hull() {
-            $fn=20;
-            translate([0,-3.8,0]) circle(d=7);
-            translate([6.3,1,0]) circle(d=8);
-            translate([-6.3,1,0]) circle(d=8);
-        }
-        difference() {
-            translate([0,-1,-1]) cylinder(d=10,h=10);
-            translate([0,-9,-1]) rotate(45) cube([5,5,20]);
+        linear_extrude(height=thickness) difference() {
+            hull() {
+                $fn=20;
+                translate([0,-3.8,0]) circle(d=7);
+                translate([6.3,1,0]) circle(d=8);
+                translate([-6.3,1,0]) circle(d=8);
+            }
+            difference() {
+                translate([0,-1]) circle(d=9);
+                translate([0,-9]) rotate(45) square(5);
+            }
         }
         for(dx=[-1,1]*5.3) translate([dx,5.2,ht]) scale([0.7,1,1])
             rotate_extrude(angle=360, $fn=50) translate([5,0]) 
