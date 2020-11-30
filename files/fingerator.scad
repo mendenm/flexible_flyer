@@ -32,7 +32,7 @@ Marcus Mendenhall, 5 June, 2020, Germantown, Maryland, USA
 */
 
 // size of fingers. should match scale of hand they are being printed for.
-global_scale=1.3; // [1.0:0.01:2.0]
+global_scale=1.25; // [1.0:0.01:2.0]
 // Clearance on sides of tabs.  increase for looser fit. This only affects the phalanges, so a bad fit does not require reprinting  anything else.
 nominal_clearance=0.5; // [0.1:0.01:3]
 
@@ -48,8 +48,11 @@ bearing_pocket_diameter=0; // [0,5,7,9,11,13,15]
 bearing_pocket_depth=0.4; // [0.2:0.05:0.6]
 
 /* [Pin Style Selection -- select one] */
+// choose the type of steel pin for the joints
 pin_index=1; // [0: 3mm screws, 1: 1/16 inch pins, 2: 13ga finishing nails] 
-
+// tie string onto another steel pin if true, otherwise use plastic bars
+pins_for_string=false; // [false:plastic  bars for string, true: steel pins for string]
+    
 // Extra clearance for pins to adjust for printer differences to make pins reasonably tight fits. Note that this affects all joints, so it should be pre-tested on something small like a finger in advance.
 pin_diameter_clearance = 0; // [-1:0.01:1]
 
@@ -165,15 +168,23 @@ module finger(slotwidth, thumb=false, keel=true) {
                 cylinder(d=2.99, h=15, center=true, $fn=16);
         }
         
+        if (pins_for_string) {
+            // make a hole for another steel pin to tie the string onto
+            translate([0,-3,10]) rotate([0,90,0])
+                cylinder(d=(pivot_pin_dia+pin_diameter_clearance)/global_scale, h=15, 
+                    center=true, $fn=8);
+        }
         // hollow the finger out to leave room to stuff ends of string and elastic
         // this was a bad idea; it made terrible prints since the hanging edge was too thin
         // may improve it later
         *rotate([-90+initial_rotation,0,0]) translate([0,-5,7]) 
             cylinder(d1=7, d2=6, h=12, $fn=20, center=true);
     }
-    // bars to attach string and elastic
-    translate([0,-3,11]) cube([slotwidth+0.5,2,1.5], center=true);
-    translate([0,-8,10]) cube([slotwidth+0.5,2,1.5], center=true);
+    // bars to attach string and elastic, uless we are using steel pins
+    if (!pins_for_string) {
+        translate([0,-3,11]) cube([slotwidth+0.5,2,1.5], center=true);
+        translate([0,-8,10]) cube([slotwidth+0.5,2,1.5], center=true);
+    }
     if(keel) {
         // make a support for the bad overhang
         hull() {
