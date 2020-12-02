@@ -49,7 +49,7 @@ bearing_pocket_depth=0.4; // [0.2:0.05:0.6]
 
 /* [Pin Style Selection -- select one] */
 // choose the type of steel pin for the joints
-pin_index=1; // [0: 3mm screws, 1: 1/16 inch pins, 2: 13ga finishing nails] 
+pin_index=1; // [0: 3mm screws, 1: 1/16 inch pins with bearing, 2: 13ga finishing nails, 3: 1/16 pins with no bearing] 
 // tie string onto another steel pin if true, otherwise use plastic bars
 pins_for_string=false; // [false:plastic  bars for string, true: steel pins for string]
     
@@ -66,6 +66,8 @@ pivot_pin_dia_3mm_screw=3+0.1; // 3 mm screws
 // 1/16" pins with 1/8" OD delrin rod
 pivot_dia_8th_delrin=25.4*(1/8)+0.25; // 1/8" OD delrin tubing with a little clearance since they were too small otherwise
 pivot_pin_dia_16th_pin=25.4*(1/16)+pin_diameter_clearance; // 1/16" steel pin
+// with no delrin tubing, leave extra clearance for holes in phalanges for pins
+pivot_pin_dia_16th_pin_clearance=pivot_pin_dia_16th_pin+0.3;
 
 // 13-gauge nails
 // https://www.fastenerusa.com/nails/hand-drive-nails/finishing/2-x-13-gauge-304-stainless-6d-finishing-nails-1lb.html
@@ -75,8 +77,10 @@ pivot_pin_dia_16th_pin=25.4*(1/16)+pin_diameter_clearance; // 1/16" steel pin
 pivot_dia_13ga_nail=25.4*(5/32)+0.25; // 5/32"" OD PTFE tubing with a little clearance since they were too small otherwise
 pivot_pin_dia_13ga_nail=25.4*0.095+pin_diameter_clearance; // 13 ga nail
 
-pivot_array=[pivot_dia_3mm_screw, pivot_dia_8th_delrin, pivot_dia_13ga_nail, ];
-pin_array=[pivot_pin_dia_3mm_screw, pivot_pin_dia_16th_pin, pivot_pin_dia_13ga_nail, ];
+pivot_array=[pivot_dia_3mm_screw, pivot_dia_8th_delrin, 
+    pivot_dia_13ga_nail, pivot_pin_dia_16th_pin_clearance, ];
+pin_array=[pivot_pin_dia_3mm_screw, pivot_pin_dia_16th_pin, 
+    pivot_pin_dia_13ga_nail, pivot_pin_dia_16th_pin,  ];
 
 
 pivot_size_index=pin_index;
