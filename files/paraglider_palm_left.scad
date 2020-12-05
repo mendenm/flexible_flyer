@@ -124,9 +124,9 @@ module knuckles() {
 
 module mesh(mesh_thickness=2) {
     holes=[ // plug all screw holes
-            [8.7,62.6], [7.7,51.7], [6.5,40.6], [6.9,28.4],
-            [10.1,19.4], [22.7,13], [36.6,7.4], [50.6,6.1], [62.5,10], 
-            [65.6, 17.3], [66.5,26.6], [66.0,47.4], [64.7, 60.2], 
+            [8.7,62.6], [7.7,51.5], [6.5,40.5], [6.9,28.4],
+            [10.1,19.3], [22.3,13], [36.2,7.4], [50.4,5.9], [62.3,9.6], 
+            [65.6, 17.1], [66.4,26.4], [66.0,47.1], [64.7, 60.0], 
         ];
     
     // convenient aliases
@@ -140,7 +140,7 @@ module mesh(mesh_thickness=2) {
         cube([5,62,m2], center=true);
 
     translate([-43.6,37.1,0]) scale([1,-1,1]) // flip chirality 
-        for(xy=holes) translate([each xy, 0.001]) cylinder(d=3.5, h=13, $fn=16);
+        for(xy=holes) translate([each xy, 0.001]) cylinder(d=3.5, h=8, $fn=16);
 }
 
 module do_supports() {
@@ -477,11 +477,11 @@ if(include_wrist_stamping_die) scale(overall_scale) {
                 translate([5,0,0]) cube([10,20,20], center=true);
             }
         }
-    translate([-21,-50,0]) intersection() {
-        translate([0,0,4.99/2]) rotate([0,90,0]) union() {
+    translate([-21,-50,4.99/2]) rotate([0,90,0]) union() {
             scale([1,2.5,2.5]) m3_wrist_plug();
-            translate([-5.2+0.5,0,0]) m3_wrist_drill();
-        }
-        translate([0,0,6.6/2]) cube([30,30,6.6], center=true);
+            translate([-5.1+0.5,0,0]) intersection() {
+                m3_wrist_drill();
+                translate([2.5,0,0]) cube([4,20,20], center=true);
+            }
     }
 }
