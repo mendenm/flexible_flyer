@@ -74,13 +74,13 @@ module thumb_tensioner() {
 }
 
 module pivot() {
-    translate([0,0,1.55]) {
+    translate([0,0,3.5/2]) {
         difference() {
-            translate([0,0,0.2]) cube([10,20,3.5], center=true);
+            translate([0,0,0]) cube([11,20,3.5], center=true);
             for(dx=[-2.8,2.8]) translate([dx,0,0]) rotate([90,0,0]) 
                 cylinder(d=screw_thread_dia/global_scale, h=50, center=true, $fn=20);
         }
-        translate([-1.1,3,1.94]) difference() {
+        translate([-1.1,3,1.74]) difference() {
             cylinder(d=6.5, h=5, $fn=20);
             scale([1,0.3,1]) translate([0, -10*sqrt(2)/2,0]) rotate(45) cube([10,10,12], center=true);
         }
