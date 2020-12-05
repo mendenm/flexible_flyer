@@ -17,8 +17,6 @@ include_knuckle_covers=true;
 pins=true; // [1:steel pins, 0: plastic pins]
 // create plugs for steel pins, or leave old holes for plastic pins 
 plugs=true; // [1:steel pins, 0: plastic pins]
-// use pre-solidified palm to save computation
-pre_solidified=""; // ["solidified_palm.3mf": pre_solidified, "":recompute]
 // make main object a ghost for debugging
 main_ghost=false; // [1:ghost, 0:real]
 // set size of channels for strings
@@ -26,7 +24,10 @@ string_channel_scale=0.9; // [0.5:0.05:1.0]
 // set size of channels for elastic
 elastic_channel_scale=0.9; // [0.5:0.05:1.5]
 // even if using steel pins on the fingers, use plastic pins on the wrist if old-style
-old_style_wrist=false; // [1:old style, 0:m3 wrist screws]
+old_style_wrist=false; // [true:old style, false:m3 wrist screws]
+// include a stamping die for thermoforming 0.5mm thick Igus bearing plastic for wrist
+include_wrist_stamping_die=true; // [true: die included, false: no die]
+
 use <pipe.scad>
 module channel(waypoints, cutout_length=20, 
     cutout_position=[0,0,0], cutout_angle=0, shapescale=1, bendradius=2, bendsteps=5,
@@ -465,13 +466,22 @@ module scaled_palm()
     else 
         %import("palm_left_v2_nobox.stl", convexity=10);
 }
+ 
+scaled_palm();
 
-module test_bearing() {
-    intersection() {
-        children();
-        translate(pin_coordinates[0][0]*overall_scale) cube(20, center=true);
+if(include_wrist_stamping_die) scale(overall_scale) {
+    translate([5,-50,4.99/2]) rotate([0,-90,0]) difference() {
+        scale([1,2.5,2.5]) m3_wrist_plug();
+        intersection() {
+                m3_wrist_drill();
+                translate([5,0,0]) cube([10,20,20], center=true);
+            }
+        }
+    translate([-21,-50,0]) intersection() {
+        translate([0,0,4.99/2]) rotate([0,90,0]) union() {
+            scale([1,2.5,2.5]) m3_wrist_plug();
+            translate([-5.2+0.5,0,0]) m3_wrist_drill();
+        }
+        translate([0,0,6.6/2]) cube([30,30,6.6], center=true);
     }
 }
-
-// test_bearing() 
-scaled_palm();
