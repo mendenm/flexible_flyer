@@ -230,14 +230,14 @@ module final_bend(angle=90) {
 module reborn_channels() {
     // pinkie string
     translate([-29.6,-48.5,21]) channel(
-        [ [7.6,0,5.8], [3,40,3.5], [1.8,55,2.4], [1.0,70, -5] ],
+        [ [6.0,15,5.0], [3,40,4], [1.8,55,2.8], [1.0,70, -5] ],
         cutout_position=[0,0,0], cutout_angle=[-5,0,8], cutout_length=0, 
         shapescale=string_channel_scale/overall_scale,
         bendradius=5, bendsteps=5
     );
     // pinkie elastic
     translate([-26.6,-48.5,22]) channel(
-        [ [7.5,0,5.4], [4.4,30,3.7], [3,45,2.8], [1.8,55,1.5], [-1.0,70, -6] ],
+        [ [6.8,15,4.8], [4.6,30,4.5], [3,45,3], [1.8,55,1.5], [-1.0,70, -6] ],
         cutout_position=[0,0,0], cutout_angle=[-5,0,8], cutout_length=0, 
         shapescale=elastic_channel_scale/overall_scale,
         bendradius=5, bendsteps=5
@@ -246,14 +246,14 @@ module reborn_channels() {
     translate([-28,21,12.6]) final_bend(75);
     // ring elastic
     translate([-14.5,-43,24]) channel(
-        [ [-1,0,2.9], [-1,40,3], [-1,58,1], [-0.5,71, -7]],
+        [ [-1,10,2.9], [-1,40,3], [-1,58,1], [-0.5,71, -7]],
         cutout_position=[0,-6,0], cutout_angle=[-5,0,-2], cutout_length=0, 
         shapescale=elastic_channel_scale/overall_scale,
         bendradius=5, bendsteps=5   
     );
     // ring string
     translate([-14.5,-43,24]) channel(
-        [ [2,0,3], [2.5,38,3], [2,55,2], [0.5,71, -7]],
+        [ [3,10,3], [2.5,38,3], [2,55,2], [0.5,71, -7]],
         cutout_position=[0,-6,0], cutout_angle=[-5,0,-2], cutout_length=0, 
         shapescale=string_channel_scale/overall_scale,
         bendradius=5, bendsteps=5   
@@ -262,14 +262,14 @@ module reborn_channels() {
     translate([-14.5,27.5,14.25]) final_bend(65);
     // middle string
     translate([-0.3,-39,25.5]) channel(
-        [ [-7,0,2], [-2,40,1.7], [-2.5,55,0.3], [-0.5,71, -7]],
+        [ [-6,10,2], [-2,40,1.7], [-2.5,55,0.3], [-0.5,71, -7]],
         cutout_position=[-1.,-10,-1], cutout_angle=-6, cutout_length=0,         
         shapescale=string_channel_scale/overall_scale,
         bendradius=5, bendsteps=5   
     );  
     // middle elastic  
     translate([-0.3,-39,25.5]) channel(
-        [ [-4,0,1.8], [2,40,1.8], [1,55,0.3], [0.5,71, -7]],
+        [ [-2.5,10,1.8], [2,40,1.8], [1,55,0.3], [0.5,71, -7]],
         cutout_position=[-1.,-10,-1], cutout_angle=-6, cutout_length=0,         
         shapescale=elastic_channel_scale/overall_scale,
         bendradius=5, bendsteps=5  
@@ -278,7 +278,7 @@ module reborn_channels() {
     translate([-0.2,31.25,15.25]) final_bend(65);
     // index elastic  
     translate([13.5,-39,23.5]) channel(
-        [ [-13.5,6,3.5], [-8.5,30,3.2], [-6.5,40,2.5], [-4,55,0.5], [-0.5,71, -7.5]],
+        [ [-13.5,6,3.5], [-8.5,30,3.2], [-6.5,40,3.0], [-4,55,1], [-0.5,71, -7.5]],
         cutout_position=[0,0,-1], cutout_angle=[-5,0,-10], cutout_length=0,         
         shapescale=elastic_channel_scale/overall_scale,
         bendradius=5, bendsteps=5        
@@ -297,10 +297,10 @@ module reborn_channels() {
     // extra translation for v3 palm 
     translate([1,-5,0]) {
         translate([21.2,-39,22]) channel(
-            [ [-13.5,8,4.5], [-10,25,3], [-7.0,34,2.0], [19.2,8.2,20]-[21.2,-39,22]  ],
+            [ [-13.5,10,4.5], [-10,25,4], [-7.0,34,2.8], [19.2,8.2,20]-[21.2,-39,22]  ],
             cutout_length=0, 
             shapescale=0.7*string_channel_scale/overall_scale,
-            bendradius=5, bendsteps=3        
+            bendradius=3, bendsteps=3        
         );
         // keep the bottom of the toroidal bend at a fixed location
         // independent of azuimuth and arc angle and arc radius
@@ -322,10 +322,10 @@ module do_channels() {
     difference() {
         union() {
             children();
-            plug_old_channels();
-            *reborn_channels();
+            if(!main_ghost) plug_old_channels();
+            if(main_ghost) reborn_channels();
         }
-        reborn_channels();
+        if (!main_ghost) reborn_channels();
         translate([0,-31.9,30]) cube([100,5,20], center=true); // shave end
     }
 }
