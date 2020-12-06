@@ -262,14 +262,14 @@ module reborn_channels() {
     translate([-14.5,27.5,14.25]) final_bend(65);
     // middle string
     translate([-0.3,-39,25.5]) channel(
-        [ [-6,10,2], [-2,40,1.7], [-2.5,55,0.3], [-0.5,71, -7]],
+        [ [-6,9,2], [-2,40,1.7], [-2.5,55,0.3], [-0.5,71, -7]],
         cutout_position=[-1.,-10,-1], cutout_angle=-6, cutout_length=0,         
         shapescale=string_channel_scale/overall_scale,
         bendradius=5, bendsteps=5   
     );  
     // middle elastic  
     translate([-0.3,-39,25.5]) channel(
-        [ [-2.5,10,1.8], [2,40,1.8], [1,55,0.3], [0.5,71, -7]],
+        [ [-2.5,9,1.8], [2,40,1.8], [1,55,0.3], [0.5,71, -7]],
         cutout_position=[-1.,-10,-1], cutout_angle=-6, cutout_length=0,         
         shapescale=elastic_channel_scale/overall_scale,
         bendradius=5, bendsteps=5  
