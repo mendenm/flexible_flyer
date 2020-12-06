@@ -85,28 +85,28 @@ module plug_old_channels() {
     );
 
     translate([-14.5,-43,24.5]) channel(
-        [ [-0.5,13,3], [0,40,3.2], [0,55,1.4], [0,63, -1.0,-15], [0,67,-4,-15] ],
-        cutout_length=0, shapescale=1.2, fix_translation=false,
+        [ [-0.5,13,3], [0,40,3.1], [0,55,1.4], [0,63, -1.0,-15], [0,67,-4,-15] ],
+        cutout_length=0, shapescale=1.3, fix_translation=false,
         bendradius=5, bendsteps=5  
     );
 
     translate([-0.3,-39,25.5]) channel(
-        [ [-7.2,9,2.4], [-3.5,40,1.8], [-2.75, 47.5, 1.6],  [-2,55,1.0], 
+        [ [-7.2,9,2.4], [-3.5,40,1.8], [-2.75, 47.5, 1.7],  [-2,55,1.0], 
             [-1,62.5,-0.7], [0,69, -3.5],  ],
-        cutout_length=0, shapescale=1.1, fix_translation=false ,
+        cutout_length=0, shapescale=1.2, fix_translation=false ,
         bendradius=2, bendsteps=3    
     );    
 
     translate([13.5,-39,23.5]) channel(
-        [ [-13.5,9,3.9], [-8.5,30,3.2], [-6.8,40,3.2], [-5, 47.5, 2.9], [-3.5,55,1.2], 
-        [-0.4,69, -3.7], ],
-        cutout_length=0, shapescale=1.1, fix_translation=false          
+        [ [-13.5,9,3.9], [-8.5,30,3.2], [-6.8,40,3.0], [-5, 47.5, 2.7], [-3.5,55,1.0,5], 
+        [-2, 62, -0.9, 15], [-0.4,69, -4.4,20], ],
+        cutout_length=0, bendradius=5, bendsteps=3, shapescale=1.3, fix_translation=false          
     );
 
     //thumb channel
     translate([21.2,-39,22]) channel(
-        [ [-13.5,9.8,4], [-13.5,33,4,5], [-6,37,2.3,25],  [2,43,-3.5,50]  ],
-        cutout_length=0, shapescale=1.2, bendradius=3, fix_translation=false          
+        [ [-13.5,9.8,4], [-13.5,32,4.0,10], [-10.5,35.5,3.7,25], [-6,37.3,2.5,30],  [2,43,-3.5,50]  ],
+        cutout_length=0, shapescale=1.3, bendradius=1, bendsteps=3, fix_translation=false          
     );
     // extra button to plug top of down-pipe
     translate([23,4,19.2]) rotate([-5,25,0]) scale([1,1,0.4]) sphere(d=6, $fn=20);
