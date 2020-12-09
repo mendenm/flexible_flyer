@@ -24,7 +24,10 @@ string_channel_scale=0.9; // [0.5:0.05:1.0]
 // set size of channels for elastic
 elastic_channel_scale=0.9; // [0.5:0.05:1.5]
 // even if using steel pins on the fingers, use plastic pins on the wrist if old-style
-old_style_wrist=false; // [1:old style, 0:m3 wrist screws]
+old_style_wrist=false; // [true:old style, false:m3 wrist screws]
+// include a stamping die for thermoforming 0.5mm thick Igus bearing plastic for wrist
+include_wrist_stamping_die=true; // [true: die included, false: no die]
+
 use <pipe.scad>
 module channel(waypoints, cutout_length=20, 
     cutout_position=[0,0,0], cutout_angle=0, shapescale=1, bendradius=2, bendsteps=5,
@@ -473,5 +476,21 @@ module test_bearing() {
     }
 }
 
-// test_bearing() 
 scaled_palm();
+
+if(include_wrist_stamping_die) scale(overall_scale) {
+    translate([5,-50,4.99/2]) rotate([0,-90,0]) difference() {
+        scale([1,2.5,2.5]) m3_wrist_plug();
+        intersection() {
+                m3_wrist_drill();
+                translate([5,0,0]) cube([10,20,20], center=true);
+            }
+        }
+    translate([-21,-50,4.99/2]) rotate([0,90,0]) union() {
+            scale([1,2.5,2.5]) m3_wrist_plug();
+            translate([-5.1+0.5,0,0]) intersection() {
+                m3_wrist_drill();
+                translate([2.5,0,0]) cube([4,20,20], center=true);
+            }
+    }
+}
