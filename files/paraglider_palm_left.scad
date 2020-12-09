@@ -470,18 +470,25 @@ module scaled_palm()
 scaled_palm();
 
 if(include_wrist_stamping_die) scale(overall_scale) {
-    translate([5,-50,4.99/2]) rotate([0,-90,0]) difference() {
-        scale([1,2.5,2.5]) m3_wrist_plug();
-        intersection() {
-                m3_wrist_drill();
-                translate([5,0,0]) cube([10,20,20], center=true);
+    translate([5,-50,4.99/2]) difference() {
+        rotate([0,-90,0]) difference() {
+            scale([1,2.5,2.5]) m3_wrist_plug();
+            intersection() {
+                    m3_wrist_drill();
+                    translate([5,0,0]) cube([10,20,20], center=true);
+                }
             }
-        }
-    translate([-21,-50,4.99/2]) rotate([0,90,0]) union() {
+        cylinder(d=3.6/overall_scale, h=50, center=true, $fn=20);  // drilling guide hole
+    }       
+    translate([-21,-50,4.99/2]) difference() {
+        rotate([0,90,0]) union() {
             scale([1,2.5,2.5]) m3_wrist_plug();
             translate([-5.1+0.5,0,0]) intersection() {
                 m3_wrist_drill();
                 translate([2.5,0,0]) cube([4,20,20], center=true);
             }
+        }
+        cylinder(d=3.6/overall_scale, h=50, center=true, $fn=20); // drilling guide hole
     }
 }
+
