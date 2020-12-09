@@ -49,9 +49,9 @@ bearing_pocket_depth=0.4; // [0.2:0.05:0.6]
 
 /* [Pin Style Selection -- select one] */
 // choose the type of steel pin for the joints
-pin_index=1; // [0: 3mm screws, 1: 1/16 inch pins with bearing, 2: 13ga finishing nails, 3: 1/16 pins with no bearing] 
+pin_index=1; // [0: 3mm screws, 1: 1/16 inch pins with bearing, 3: 1/16 pins with no bearing, 2: 13ga finishing nails] 
 // tie string onto another steel pin if true, otherwise use plastic bars
-pins_for_string=false; // [false:plastic  bars for string, true: steel pins for string]
+pins_for_string=false; // [false:plastic bars for string, true: steel pins for string]
     
 // Extra clearance for pins to adjust for printer differences to make pins reasonably tight fits. Note that this affects all joints, so it should be pre-tested on something small like a finger in advance.
 pin_diameter_clearance = 0; // [-1:0.01:1]
@@ -81,7 +81,6 @@ pivot_array=[pivot_dia_3mm_screw, pivot_dia_8th_delrin,
     pivot_dia_13ga_nail, pivot_pin_dia_16th_pin_clearance, ];
 pin_array=[pivot_pin_dia_3mm_screw, pivot_pin_dia_16th_pin, 
     pivot_pin_dia_13ga_nail, pivot_pin_dia_16th_pin,  ];
-
 
 pivot_size_index=pin_index;
 
@@ -199,15 +198,6 @@ module finger(slotwidth, thumb=false, keel=true) {
     }
 }
 
-module pin_plug(pin_style, dia)
-{
-    if(pin_style==0) { 
-        rotate([0,90,0]) #cylinder(d=5.5, h=5, $fn=20, center=true);
-    } else if (pin_style==1) group() {
-        rotate([0,90,0]) #translate([0,0,4]) cylinder(d=6, h=1.8, $fn=20, center=true);
-        rotate([0,90,0]) #translate([0,0,-4.1]) cube([5,8,1.8], center=true);
-    }
-}
 module adjusted_holes(scale_size, offsets, dia) {
     scale(scale_size) difference() {
         children();
