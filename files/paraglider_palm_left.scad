@@ -469,7 +469,7 @@ module scaled_palm()
  
 scaled_palm();
 
-if(include_wrist_stamping_die) scale(overall_scale) {
+if(include_wrist_stamping_die) scale(overall_scale) {  $fn=50; 
     translate([5,-50,4.99/2]) difference() {
         rotate([0,-90,0]) difference() {
             scale([1,2.5,2.5]) m3_wrist_plug();
@@ -489,6 +489,8 @@ if(include_wrist_stamping_die) scale(overall_scale) {
             }
         }
         cylinder(d=3.6/overall_scale, h=50, center=true, $fn=20); // drilling guide hole
+        translate([0,3,-4.99/2-0.01]) linear_extrude(slices=1, height=1) 
+            scale([-1,1]) text(str(overall_scale*100), size=4, halign="center");
     }
 }
 
