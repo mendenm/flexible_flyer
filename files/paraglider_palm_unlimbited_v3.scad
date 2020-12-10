@@ -4,7 +4,7 @@ quick_view=false; // [0:full model, 1:leave out slow bits]
 // an identifying string for this hand, i.e. build date, builder, serial, etc. (15 characters/line max)
 serial_line1="paraglider"; // 15
 serial_line2="serial 1234"; // 15
-serial_line3="github/mendenm"; // 15
+serial_line3="2020-12-10"; // 15
 // size of hand relative to tiny 100% model
 overall_scale=1.25; // [1.0:0.01:2.0]
 // size of pivot pins
@@ -459,20 +459,22 @@ module do_knuckles() {
 module do_labels() {
     difference() {
         children();
-        translate([-19.6,48,2.17]) { // fix coordinates...
-            translate([40.5, -50, 5]) rotate([90,0,-90])
-                linear_extrude(slices=1, height=1) 
-                text(str(overall_scale*100), size=4, halign="center");
-            translate([-16.5, -52, 8]) rotate([90,0,90])
-                linear_extrude(slices=1, height=1.5) 
-                text(serial_line1, size=2, halign="center");
-            translate([-16.0, -52, 5]) rotate([90,0,90])
-                linear_extrude(slices=1, height=1.5) 
-                text(serial_line2, size=2, halign="center");
-            translate([-16.0, -52, 2]) rotate([90,0,90])
-                linear_extrude(slices=1, height=1.5) 
-                text(serial_line3, size=2, halign="center");
+        translate([21.2, 3, 6]) rotate([90,0,-90])
+            linear_extrude(slices=1, height=1) 
+            text(str(overall_scale*100), size=4, halign="center");
+        translate([-35.5,-19,2]) hull() { // flat plate for text
+            cube([0.1,30,12]);
+            translate([5,-4,0]) cube([3,38,14]);
         }
+        translate([-36.5, -4, 11]) rotate([90,0,90])
+            linear_extrude(slices=1, height=1.5) intersection() {
+                group() {
+                    text(serial_line1, size=3.5, halign="center");
+                    translate([0,-4])text(serial_line2, size=3.5, halign="center");
+                    translate([0,-8])text(serial_line3, size=3.5, halign="center");
+                }
+                translate([0,-3]) square([29,12], center=true);
+            }
     }
 }
 
