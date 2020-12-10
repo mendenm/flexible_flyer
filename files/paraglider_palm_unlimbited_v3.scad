@@ -1,6 +1,9 @@
 inch=25.4*1; // hidden from customizer by equation, useful for pins
 // quick_view renders an incomplete hand for development.
 quick_view=false; // [0:full model, 1:leave out slow bits]
+// an identifying string for this hand, i.e. build date, builder, serial, etc.
+serial_line1="paraglider"; // 12
+serial_line2="serial 1234"; // 12
 // size of hand relative to tiny 100% model
 overall_scale=1.25; // [1.0:0.01:2.0]
 // size of pivot pins
@@ -452,6 +455,21 @@ module do_knuckles() {
     }
 }
 
+module do_labels() {
+    difference() {
+        children();
+        translate([40.5, -50, 5]) rotate([90,0,-90])
+            linear_extrude(slices=1, height=1) 
+            text(str(overall_scale*100), size=4, halign="center");
+        translate([-16.0, -52, 5]) rotate([90,0,90])
+            linear_extrude(slices=1, height=1.5) 
+            text(serial_line1, size=2, halign="center");
+        translate([-16.0, -52, 2]) rotate([90,0,90])
+            linear_extrude(slices=1, height=1.5) 
+            text(serial_line2, size=2, halign="center");
+    }
+}
+
 // collect everything together as concatenated funcvitonal operators
 module scaled_palm() 
 {
@@ -464,16 +482,9 @@ module scaled_palm()
     do_supports()
     translate([-19.6,50.5,2.17]) 
     if(!main_ghost) 
+        do_labels() import("palm_v3.3mf", convexity=10);      
+    else
         import("palm_v3.3mf", convexity=10);
-    else 
-        %import("palm_v3.3mf", convexity=10);
-}
-
-module test_bearing() {
-    intersection() {
-        children();
-        translate(pin_coordinates[0][0]*overall_scale) cube(20, center=true);
-    }
 }
 
 scaled_palm();
@@ -498,7 +509,7 @@ if(include_wrist_stamping_die) scale(overall_scale) {  $fn=50;
             }
         }
         cylinder(d=3.6/overall_scale, h=50, center=true, $fn=20); // drilling guide hole
-        translate([0,3,-4.99/2-0.01]) linear_extrude(slices=1, height=1) 
+        translate([0,3,-4.99/2-0.01]) linear_extrude(slices=1, height=0.5) 
             scale([-1,1]) text(str(overall_scale*100), size=4, halign="center");
     }
 }
