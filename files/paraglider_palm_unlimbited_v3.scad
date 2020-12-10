@@ -1,10 +1,10 @@
 inch=25.4*1; // hidden from customizer by equation, useful for pins
 // quick_view renders an incomplete hand for development.
 quick_view=false; // [0:full model, 1:leave out slow bits]
-// an identifying string for this hand, i.e. build date, builder, serial, etc. (12 characters/line max)
-serial_line1="paraglider"; // 12
-serial_line2="serial 1234"; // 12
-serial_line3="github/mendenm"; // 12
+// an identifying string for this hand, i.e. build date, builder, serial, etc. (15 characters/line max)
+serial_line1="paraglider"; // 15
+serial_line2="serial 1234"; // 15
+serial_line3="github/mendenm"; // 15
 // size of hand relative to tiny 100% model
 overall_scale=1.25; // [1.0:0.01:2.0]
 // size of pivot pins
