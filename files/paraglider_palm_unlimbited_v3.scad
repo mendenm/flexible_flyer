@@ -481,7 +481,7 @@ module do_labels() {
 }
 
 act_scale=[mirrored?-overall_scale:overall_scale, overall_scale, overall_scale];
-// collect everything together as concatenated funcvitonal operators
+// collect everything together as concatenated functional operators
 module scaled_palm() 
 {
     scale(act_scale)
