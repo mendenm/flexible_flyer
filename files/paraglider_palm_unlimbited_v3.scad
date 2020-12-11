@@ -1,36 +1,37 @@
 inch=25.4*1; // hidden from customizer by equation, useful for pins
-// quick_view renders an incomplete hand for development.
-quick_view=false; // [0:full model, 1:leave out slow bits]
+/* [Main setup] */
+// size of hand relative to tiny 100% model
+overall_scale=1.25; // [1.0:0.01:2.0]
+// mirrored for right-hand?
+mirrored=false; // [false:left, true:right]
 // an identifying string for this hand, i.e. build date, builder, serial, etc. (15 characters/line max)
 serial_line1="paraglider"; // 15
 serial_line2="serial 1234"; // 15
 serial_line3="2020-12-10"; // 15
-// size of hand relative to tiny 100% model
-overall_scale=1.25; // [1.0:0.01:2.0]
+// include a stamping die for thermoforming 0.5mm thick Igus bearing plastic for wrist
+include_wrist_stamping_die=true; // [true: die included, false: no die]
+/* [Structural parameters] */
 // size of pivot pins
 pivot_size=1.5875; // [1.5:metric 1.5, 1.5875:16th inch, 3.0:3mm screw]
 // extra clearance for pivots to adjust for printer tolerances
 pivot_extra_clearance=0; // [-0.5:0.01:0.5]
-// include fused-in palm mesh?
-include_mesh=1; // [0:standard mesh, 1:simplified mesh]
-// include nice covers for knuckles
-include_knuckle_covers=true;
 // drill holes for steel pins
 pins=true; // [1:steel pins, 0: plastic pins]
 // create plugs for steel pins, or leave old holes for plastic pins 
 plugs=true; // [1:steel pins, 0: plastic pins]
-// use pre-solidified palm to save computation
-pre_solidified=""; // ["solidified_palm.3mf": pre_solidified, "":recompute]
-// make main object a ghost for debugging
-main_ghost=false; // [1:ghost, 0:real]
+// include fused-in palm mesh?
+include_mesh=1; // [0:standard mesh, 1:simplified mesh]
+// include nice covers for knuckles
+include_knuckle_covers=true;
 // set size of channels for strings
 string_channel_scale=0.9; // [0.5:0.05:1.0]
 // set size of channels for elastic
 elastic_channel_scale=0.9; // [0.5:0.05:1.5]
 // even if using steel pins on the fingers, use plastic pins on the wrist if old-style
 old_style_wrist=false; // [true:old style, false:m3 wrist screws]
-// include a stamping die for thermoforming 0.5mm thick Igus bearing plastic for wrist
-include_wrist_stamping_die=true; // [true: die included, false: no die]
+/* [Development] */
+// make main object a ghost for debugging
+main_ghost=false; // [1:ghost, 0:real]
 
 use <pipe.scad>
 module channel(waypoints, cutout_length=20, 
@@ -424,7 +425,7 @@ module drilling(palm_scale,
         cylinder(d=pin_dia, h=17, $fn=20, center=true);
     }
     // block to mill out old rubber-band attachment for thumb
-    if(!pre_solidified) translate([30,-5,-5]) rotate(49.5) {
+    translate([30,-5,-5]) rotate(49.5) {
         translate([0.55,-6,0]) 
         rounded_cutter(width=base_slot_width*finger_scale/palm_scale, height=30);
         translate([0.55,-4,8]) cube([6,20,20], center=true);
@@ -457,17 +458,18 @@ module do_knuckles() {
 }
 
 module do_labels() {
+    textscale=[mirrored?-1:1,1];
     difference() {
         children();
         translate([21.2, 3, 6]) rotate([90,0,-90])
-            linear_extrude(slices=1, height=1) 
+            linear_extrude(slices=1, height=1) scale(textscale) 
             text(str(overall_scale*100), size=4, halign="center");
-        translate([-35.5,-19,2]) hull() { // flat plate for text
+        translate([-35.5,-19,2.001]) hull() { // flat plate for text
             cube([0.1,30,12]);
             translate([5,-4,0]) cube([3,38,14]);
         }
         translate([-36.5, -4, 11]) rotate([90,0,90])
-            linear_extrude(slices=1, height=1.5) intersection() {
+            linear_extrude(slices=1, height=1.5) scale(textscale) intersection() {
                 group() {
                     text(serial_line1, size=3.5, halign="center");
                     translate([0,-4])text(serial_line2, size=3.5, halign="center");
@@ -478,10 +480,11 @@ module do_labels() {
     }
 }
 
+act_scale=[mirrored?-overall_scale:overall_scale, overall_scale, overall_scale];
 // collect everything together as concatenated funcvitonal operators
 module scaled_palm() 
 {
-    scale(overall_scale)
+    scale(act_scale)
     do_labels() 
     do_wrist() 
     do_knuckles()
@@ -499,7 +502,7 @@ module scaled_palm()
 scaled_palm();
 
 if(include_wrist_stamping_die) scale(overall_scale) {  $fn=50; 
-    translate([5,-50,4.99/2]) difference() {
+    translate(mirrored?[20,-50,4.99/2]:[5,-50,4.99/2]) difference() {
         rotate([0,-90,0]) difference() {
             scale([1,2.5,2.5]) m3_wrist_plug();
             intersection() {
@@ -509,7 +512,7 @@ if(include_wrist_stamping_die) scale(overall_scale) {  $fn=50;
             }
         cylinder(d=3.6/overall_scale, h=50, center=true, $fn=20);  // drilling guide hole
     }       
-    translate([-21,-50,4.99/2]) difference() {
+    translate(mirrored?[-6,-50,4.99/2]:[-21,-50,4.99/2]) difference() {
         rotate([0,90,0]) union() {
             scale([1,2.5,2.5]) m3_wrist_plug();
             translate([-5.1+0.5,0,0]) intersection() {
