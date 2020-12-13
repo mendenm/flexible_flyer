@@ -6,7 +6,7 @@ is complete.  The joint has a conical thrust/axial bearing printed
 in, so the screw is not the actual bearing.  It can be assembled
 without any bearing material, or can either have something like
 polypropylene sheet inserted to lower friction, or it can use the
-non-adhesive Igus plastic I have described elsewhere.  If using the
+non-adhesive Igus A160T-5-100 plastic, described in the materials list.  If using the
 Igus plastic, I have included an option to print a thermoforming jig
 which allows the plastic to be heated, and then stamped and drilled
 using the jig.

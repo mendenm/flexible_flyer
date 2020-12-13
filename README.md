@@ -59,7 +59,7 @@ Here is a list of sources I am using for the materials.  Variants of most of the
 	* for example, [Fastener USA](https://www.fastenerusa.com/nails/hand-drive-nails/finishing/1-1-2-x-15-gauge-304-stainless-4d-finishing-nails-1lb.html).  These can be cut to length.
    * tubing for bearings can be found at (for example) [Fluorostore](https://fluorostore.com/products/fractional-metric-ptfe-fluoropolymer-tubing).  
 
-* Side-load bearings to insert in joints if extra clearance is left in the phalanges can be obtained from [Igus](http://www.igus.com), part number A160T-5-100-G.  This item, for about $13.00, is 1 meter of 100 mm wide, 0.5 mm thick, adhesive-backed self-lubricating plastic tape.  One spool should make between 50 and 100 hands, so it adds no significant cost.
+* Side-load bearings to insert in joints if extra clearance is left in the phalanges can be obtained from [Igus](http://www.igus.com), part number A160T-5-100-G.  This item, for about $13.00, is 1 meter of 100 mm wide, 0.5 mm thick, adhesive-backed self-lubricating plastic tape.  One spool should make between 50 and 100 hands, so it adds no significant cost. Also, part number A160T-5-100 is the non-adhesive variety of bearing material, which is useful for the thermoformed wrist bearing, where there is no need for the adhesive. Use their 'search' field at the top of the page; there is almost no other way to find these on their web store.
 
 ## New support system
 
