@@ -1,10 +1,21 @@
 # The Paraglider Progress Log
 ## Mid-December 2020
 ### Wrist joint
-The work on a wrist joint using an m3 screw instead of a plastic pin is complete.  The joint has a conical thrust/axial bearing printed in, so the scre is not the actual axle.  It can be assembled without any bearing material, or can either have something like polypropylene sheet inserted to lower friction, or it can use the non-adhesive Igus plastic I have described elsewhere.  If using the Igus plastic, I have included an option to print a thermoforming jig which allows the plastic to be heated, and then stamped and drilled using the jig.
+The work on a wrist joint using an m3 screw instead of a plastic pin
+is complete.  The joint has a conical thrust/axial bearing printed
+in, so the screw is not the actual bearing.  It can be assembled
+without any bearing material, or can either have something like
+polypropylene sheet inserted to lower friction, or it can use the
+non-adhesive Igus plastic I have described elsewhere.  If using the
+Igus plastic, I have included an option to print a thermoforming jig
+which allows the plastic to be heated, and then stamped and drilled
+using the jig.
 
 ### Labeling text
-To allow hands to be traced and recorded, I have added the ability to print 3 lines of text on the inside of the hand.  These might include the maker name, a serial number, and a date.  Whatever you wa t...
+To allow hands to be traced and recorded, I have added the ability
+to print 3 lines of text on the inside of the hand. These might
+include the maker name, a serial number, and a date.
+Whatever you want...
 
 ### Here it is
 ![Hand with new bearings and text](images/december2020palm.png)
