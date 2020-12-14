@@ -32,6 +32,8 @@ old_style_wrist=false; // [true:old style, false:m3 wrist screws]
 /* [Development] */
 // make main object a ghost for debugging
 main_ghost=false; // [1:ghost, 0:real]
+// leave out string channels in preview, for much faster viewing
+fast_preview=false;
 
 use <pipe.scad>
 module channel(waypoints, cutout_length=20, 
@@ -330,7 +332,7 @@ module do_channels() {
             if(!main_ghost) plug_old_channels();
             if(main_ghost) reborn_channels();
         }
-        if (!main_ghost) reborn_channels();
+        if (!main_ghost && !(fast_preview && $preview)) reborn_channels();
         translate([0,-31.9,30]) cube([100,5,20], center=true); // shave end
     }
 }
