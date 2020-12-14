@@ -114,7 +114,7 @@ module multi_pipe(polygon_point_sets, path_points,
     // rather than create triangles,
     // but just do it explicitly here.
     nn=len(polygon_point_sets[0]);
-    t1=[for (j=[0:np-1]) for(i=[0:nn-1]) 
+    t1=[for (j=[0:np-2]) for(i=[0:nn-1]) 
         let(b=j*nn, bp1=(j+1)*nn, ip1=(i+1) % nn) 
         each [
             [b+ip1, b+i, bp1+i], //bottom triangles
