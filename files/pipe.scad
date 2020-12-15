@@ -11,24 +11,27 @@
 // It wraps the polygon_points in a deeper list 
 // and adds the polygon index 0 to all the path_points
 module pipe(polygon_points, path_points, 
-    join_ends=false, untwist=true)
+    join_ends=false, untwist=true, triangularize_ends=true)
 {
     multi_pipe(
         [polygon_points],
         [for(xx=path_points) [0, each xx]],
-        join_ends=join_ends, untwist=untwist
+        join_ends=join_ends, untwist=untwist,
+        triangularize_ends=triangularize_ends
     );
 }
 
 
 // simple_pipe has no scale-per-step or phi-per-step
 // it just takes a polygon and a list of xyz
-module simple_pipe(polygon_points, path_points, join_ends=false )
+module simple_pipe(polygon_points, path_points, join_ends=false,
+    triangularize_ends=true)
 {
     multi_pipe(
         [polygon_points],
         [for(xx=path_points) [0, xx, 1, 0]],
-        join_ends=join_ends
+        join_ends=join_ends, 
+        triangularize_ends=triangularize_ends
     );
 }
 
@@ -51,7 +54,8 @@ function preen(transforms, idx) = (
 // rotation from the phi rotation, resulting in straighter pipes.
 // this tends to break threading, and some other things.
 module multi_pipe(polygon_point_sets, path_points, 
-    join_ends=false, untwist=true)
+    join_ends=false, untwist=true,
+    triangularize_ends=true)
 {
     np=len(path_points);
     connections=[];
@@ -122,8 +126,37 @@ module multi_pipe(polygon_point_sets, path_points,
         ]
     ];
     
-    //create end caps
-    caps=[[for(i=[0:nn-1]) i],  [for(i=[np*nn-1:-1:(np-1)*nn]) i]];
+    //create triangularized end caps (works for convex polys)
+    // find bounding boxes for both ends
+    pl0=[for(i=[0:nn-1]) vertices[i]]; // first transformed polygon
+    pl1=[for(i=[0:nn-1]) vertices[(np-1)*nn+i]]; // last transformed polygon
+    
+    bboxx0=(min([for(aa=pl0) aa.x])+max([for(aa=pl0) aa.x]))/2;
+    bboxy0=(min([for(aa=pl0) aa.y])+max([for(aa=pl0) aa.y]))/2;
+    bboxz0=(min([for(aa=pl0) aa.z])+max([for(aa=pl0) aa.z]))/2;
+    bboxx1=(min([for(aa=pl1) aa.x])+max([for(aa=pl1) aa.x]))/2;
+    bboxy1=(min([for(aa=pl1) aa.y])+max([for(aa=pl1) aa.y]))/2;
+    bboxz1=(min([for(aa=pl1) aa.z])+max([for(aa=pl1) aa.z]))/2;
+
+    extra_verts_tri_caps=[
+        [bboxx0, bboxy0, bboxz0],
+        [bboxx1, bboxy1, bboxz1]
+    ];
+    
+    tri_caps=[
+        each [for(i=[0:nn-2]) [i,i+1,np*nn]], 
+        [nn-1,0,np*nn],
+        each [for(i=[np*nn-2:-1:(np-1)*nn]) [i+1,i,np*nn+1]],
+        [(np-1)*nn, np*nn-1, np*nn+1]
+    ];
+    
+    // simple end caps (not triangularized)
+    plain_caps=[[for(i=[0:nn-1]) i],  [for(i=[np*nn-1:-1:(np-1)*nn]) i]];
+    extra_verts_plain_caps=[];
+    
+    caps=triangularize_ends?tri_caps:plain_caps;
+    extra_verts_cap=triangularize_ends?extra_verts_tri_caps:extra_verts_plain_caps;
+    
     // create end join
     join=[for(i=[0:nn-1])
         let(b=(np-1)*nn, bp1=0, ip1=(i+1) % nn) 
@@ -132,9 +165,13 @@ module multi_pipe(polygon_point_sets, path_points,
             [bp1+i,  bp1+ip1, b+ip1], // top triangles
         ]
     ];
+    extra_verts_join=[];
+    
+    allverts=[each vertices, each (join_ends?extra_verts_join:extra_verts_cap)];
     
     t2=[each t1, each (join_ends?join:caps)];
-    polyhedron(points=vertices, faces=t2, convexity=10);
+    
+    polyhedron(points=allverts, faces=t2, convexity=10);
 }
 
 // take a set of path_points, and if a bend is more than the specified 
@@ -196,7 +233,7 @@ module tests() {
         [for(th=[0:5:719]) 
             [[10*cos(th), 10*sin(th), 0.02*th], 
                 (1-0.0005*th)*(1+0.5*cos(th*2)), 0]
-        ], untwist=false
+        ], untwist=false, triangularize_ends=false
       );
      
     // demonstrate lumpy torus
