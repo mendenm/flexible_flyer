@@ -36,8 +36,7 @@ main_ghost=false; // [1:ghost, 0:real]
 fast_preview=false;
 
 use <pipe.scad>
-module channel(waypoints, cutout_length=20, 
-    cutout_position=[0,0,0], cutout_angle=0, shapescale=1, bendradius=2, bendsteps=5,
+module channel(waypoints, shapescale=1, bendradius=5,
     fix_translation=true) {
     // the bends work best if the primary length is along 'x' here,
     // but the hand is along 'y', 
@@ -53,11 +52,7 @@ module channel(waypoints, cutout_length=20,
     // invariant under scaling, relative to its position when scale=0.9.
     // This is for historical continuity
     y_trans=fix_translation?1.5*(shapescale-0.9):0;
-    translate([0,0,y_trans]) rotate(90) multi_pipe([shape], smooth_bends(path, bendradius, bendsteps));
-    if(cutout_length != 0) 
-        translate(cutout_position+waypoints[1]+[0,0,5])
-            rotate(cutout_angle)
-            cube([3,cutout_length,10],center=true);
+    translate([0,0,y_trans]) rotate(90) multi_pipe([shape], smooth_bends(path, 2, bendradius));
 }
 
 // channel([[0,0,0],[5,30,-2],[5,40,-5],[5,40,-20]]);
@@ -91,32 +86,30 @@ module plug_old_channels() {
     translate([-28.6,-49.5,22]) channel(
         [ [6.8,19,4.1], [4.2,40,3.5],[3.1, 47.5, 3.3],  [1.9,55,1.4], 
             [1.15, 62.5, 0],  [0.8,70, -4.7], ],
-        cutout_length=0, shapescale=1.3, fix_translation=false
+        shapescale=1.3, fix_translation=false
     );
 
     translate([-14.5,-43,24.5]) channel(
         [ [-0.5,13,3], [0,40,3.1], [0,55,1.4], [0,63, -1.0,-15], [0,67,-4,-15] ],
-        cutout_length=0, shapescale=1.3, fix_translation=false,
-        bendradius=5, bendsteps=5  
+        shapescale=1.3, fix_translation=false
     );
 
     translate([-0.3,-39,25.5]) channel(
         [ [-7.2,9,2.4], [-3.5,40,1.8], [-2.75, 47.5, 1.7],  [-2,55,1.0], 
             [-1,62.5,-0.7], [0,69, -3.5],  ],
-        cutout_length=0, shapescale=1.2, fix_translation=false ,
-        bendradius=2, bendsteps=3    
+        shapescale=1.2, fix_translation=false
     );    
 
     translate([13.5,-39,23.5]) channel(
         [ [-13.5,9,3.9], [-8.5,30,3.2], [-6.8,40,3.0], [-5, 47.5, 2.7], [-3.5,55,1.0,5], 
         [-2, 62, -0.9, 15], [-0.4,69, -4.4,20], ],
-        cutout_length=0, bendradius=5, bendsteps=3, shapescale=1.3, fix_translation=false          
+        shapescale=1.3, fix_translation=false          
     );
 
     //thumb channel
     translate([21.2,-39,22]) channel(
         [ [-13.5,9.8,4], [-13.5,32,4.0,10], [-10.5,35.5,3.7,25], [-6,37.3,2.5,30],  [2,43,-3.5,50]  ],
-        cutout_length=0, shapescale=1.3, bendradius=1, bendsteps=3, fix_translation=false          
+        shapescale=1.3,  fix_translation=false          
     );
     // extra button to plug top of down-pipe
     translate([23,4,19.2]) rotate([-5,25,0]) scale([1,1,0.4]) sphere(d=6, $fn=20);
@@ -144,65 +137,48 @@ module reborn_channels() {
     // pinkie string
     translate([-29.6,-48.5,21]) channel(
         [ [7.6,0,6], [3,40,3.5], [1.8,55,2.4], [1.0,70, -5] ],
-        cutout_position=[0,0,0], cutout_angle=[-5,0,8], cutout_length=0, 
-        shapescale=string_channel_scale/overall_scale,
-        bendradius=5, bendsteps=5
+        shapescale=string_channel_scale/overall_scale
     );
     // pinkie elastic
     translate([-26.6,-48.5,22]) channel(
         [ [7.5,0,5.4], [4.4,30,3.7], [3,45,2.8], [1.8,55,1.5], [-1.0,70, -6] ],
-        cutout_position=[0,0,0], cutout_angle=[-5,0,8], cutout_length=0, 
-        shapescale=elastic_channel_scale/overall_scale,
-        bendradius=5, bendsteps=5
+        shapescale=elastic_channel_scale/overall_scale
     );
     // pinkie threading assist
-    *translate([-28,21.75,15]) cube([3,3,5], center=true);
     translate([-28,21,12.6]) final_bend(75);
     // ring elastic
     translate([-14.5,-43,24]) channel(
         [ [-1,0,2.7], [-1,40,3], [-1,58,1], [-0.5,71, -7]],
-        cutout_position=[0,-6,0], cutout_angle=[-5,0,-2], cutout_length=0, 
-        shapescale=elastic_channel_scale/overall_scale,
-        bendradius=5, bendsteps=5   
+        shapescale=elastic_channel_scale/overall_scale
     );
     // ring string
     translate([-14.5,-43,24]) channel(
         [ [2,0,2.8], [2.5,38,3], [2,55,2], [0.5,71, -7]],
-        cutout_position=[0,-6,0], cutout_angle=[-5,0,-2], cutout_length=0, 
-        shapescale=string_channel_scale/overall_scale,
-        bendradius=5, bendsteps=5   
+        shapescale=string_channel_scale/overall_scale
     );
     // ring threading assist
     translate([-14.5,27.5,14.25]) final_bend(65);
     // middle string
     translate([-0.3,-39,25.5]) channel(
         [ [-7,0,1.5], [-2,40,1.5], [-2.5,55,0], [-0.5,71, -7]],
-        cutout_position=[-1.,-10,-1], cutout_angle=-6, cutout_length=0,         
-        shapescale=string_channel_scale/overall_scale,
-        bendradius=5, bendsteps=5   
+        shapescale=string_channel_scale/overall_scale
     );  
     // middle elastic  
     translate([-0.3,-39,25.5]) channel(
         [ [-4,0,1.5], [2,40,1.3], [1,55,0], [0.5,71, -7]],
-        cutout_position=[-1.,-10,-1], cutout_angle=-6, cutout_length=0,         
-        shapescale=elastic_channel_scale/overall_scale,
-        bendradius=5, bendsteps=5  
+        shapescale=elastic_channel_scale/overall_scale
     );  
     // middle threading assist
     translate([-0.2,31.25,15.25]) final_bend(65);
     // index elastic  
     translate([13.5,-39,23.5]) channel(
         [ [-13.5,6,3.5], [-8.5,30,3.2], [-6.5,40,2.5], [-4,55,0.5], [-0.5,71, -7.5]],
-        cutout_position=[0,0,-1], cutout_angle=[-5,0,-10], cutout_length=0,         
-        shapescale=elastic_channel_scale/overall_scale,
-        bendradius=5, bendsteps=5        
+        shapescale=elastic_channel_scale/overall_scale
     );
     // index string
     translate([13.5,-39,23.5]) channel(
         [ [-10,6,3.5], [-5,30,3.2], [-3,40,2.5], [-1,55,0], [0.5,71, -7.5]],
-        cutout_position=[0,0,-1], cutout_angle=[-5,0,-10], cutout_length=0,         
-        shapescale=string_channel_scale/overall_scale,
-        bendradius=5, bendsteps=5        
+        shapescale=string_channel_scale/overall_scale
     );
     // index threading assist
     translate([13.6,30.5,13.25]) final_bend(65);
@@ -212,9 +188,7 @@ module reborn_channels() {
     translate([1,-5,0]) {
         translate([21.2,-39,22]) channel(
             [ [-13.5,8,4], [-10,25,3], [-7.0,34,2.0], [19.2,2.2,20]-[21.2,-39,22]  ],
-            cutout_length=0, 
-            shapescale=0.7*string_channel_scale/overall_scale,
-            bendradius=5, bendsteps=3        
+            shapescale=0.7*string_channel_scale/overall_scale
         );
         // keep the bottom of the toroidal bend at a fixed location
         // independent of azuimuth and arc angle and arc radius
