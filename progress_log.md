@@ -1,4 +1,20 @@
 # The Paraglider Progress Log
+## Summer 2022
+Wow! Just Wow.  In Eagle Scout project was developed to  produce detailed documentation for this, in the form of a PDF user manual, and a brief video to show how to work with OpenSCAD on these files.  Thanks to Peter Ilyin and his crew!  See the [manual](Instruction\_manual\_rev2.pdf) and [video](images/Instructional\_Video\_Trim.mp4).
+
+* *Peter Ilyin* - Project Lead, Eagle Scout Candidate
+* *Jackson Rodgers* - General Volunteer, Volunteer Coordinator, Technical Support Volunteer, Technical Writer, and Illustrator.
+* *Leonard Katowitz* - General Volunteer, Printer Assistance, Photographer, and Illustrator
+* *Dean DeSeve* - General Volunteer, Technical Writer, Photographer, and Illustrator
+* *Mark Dorazelski* - General Volunteer, Technical Writer,  and Technical Consultant
+* *Jasper Mosely* - Technical Consultant, and Digital Design Consultant
+* *Albert Z* - General Volunteer, Instructions Tester
+* *Thomas H* - General Volunteer, Instructions Tester
+* *Dalton S* - General Volunteer, Instructions Tester
+* *Indigo S* - General Volunteer, Instructions Tester
+* *Chris S* - General Volunteer, Instructions Tester
+* *Rick Y* - General Volunteer, Instructions Tester
+ 
 ## Mid-December 2020
 ### Wrist joint
 The work on a wrist joint using an m3 screw instead of a plastic pin
