@@ -306,12 +306,14 @@ module reborn_channels() {
     
     // index elastic  
     translate([13.5,-39,23.5]) channel(
-        [ [-13.5,6,3.5], [-8.5,30,3.2], [-6.5,40,3.0], [-4,55,1], [-0.5,71, -7.5]],
+        [ [-13.5,6,3.5], [-8.5,30,3.2], [-6.5,40,3.0], 
+        [-4,55,1], [-0.5,71, -7.5]],
         shapescale=elastic_channel_scale/overall_scale
     );
     // index string
     translate([13.5,-39,23.5]) channel(
-        [ [-10,6,3.0], [-5,30,3.2], [-3,40,2.5], [-1,55,0], [0.5,71, -7.5]],
+        [ [-10,6,3.0], [-5,30,3.2], [-3,40,2.5], 
+        [-1,55,0], [0.5,71, -7.5]],
         shapescale=string_channel_scale/overall_scale
     );
     // index threading assist
