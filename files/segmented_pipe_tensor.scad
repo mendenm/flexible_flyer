@@ -45,7 +45,7 @@ function transpose(m) = [
     [m[0][2],m[1][2],m[2][2]]
     ];
 
-function rotations(path_points, bend_perp_guess) = let(
+function rotations(path_points, bend_perp_guess, force_perp) = let(
     np=len(path_points),
     xyz =[for(x=path_points) x[1] ],
     bpgu = bend_perp_guess/norm(bend_perp_guess), // unit guess
@@ -61,7 +61,7 @@ function rotations(path_points, bend_perp_guess) = let(
         up_sine_vec = cross(dx10_u, dx21_u),
         bendsine = norm(up_sine_vec),
         ok = bendsine > 1e-6,
-        up_a = ok? up_sine_vec/bendsine : old_up,
+        up_a = (ok && !force_perp)? up_sine_vec/bendsine : old_up,
         up_u = up_a * ((up_a*old_up < 0) ? -1:1), 
         bendcos = ((i==0) || (i==(np-1))) ? 1 : dx10_u * dx21_u, // cos of full bend angle
         halfbendcos = sqrt((1+bendcos)/2), // cos of half bend angle
@@ -114,7 +114,7 @@ function minimize_twist(mat0, mat1, phi0=-190, phi1=190) = let (
 // rotation from the phi rotation, resulting in straighter pipes.
 // this tends to break threading, and some other things.
 function multi_pipe_vertices(polygon_point_sets, path_points, 
-    untwist, bend_perp_guess, accumulate_phi) = let(
+    untwist, bend_perp_guess, force_perp, accumulate_phi) = let(
     np=len(path_points),
     psel=[for(x=path_points) x[0] ],
     xyz =[for(x=path_points) x[1] ],
@@ -123,7 +123,7 @@ function multi_pipe_vertices(polygon_point_sets, path_points,
     // make 3d points from 2d polygons for full rotations
     v3=[for(pp=polygon_point_sets) [for(v=pp) [v.x,v.y,0]]],
     
-    xf = rotations(path_points, bend_perp_guess), 
+    xf = rotations(path_points, bend_perp_guess, force_perp), 
     
     transforms=[for(i=[0:np-1]) 
         [v3[psel[i]]*scl[i], 
@@ -242,13 +242,15 @@ module multi_pipe_segment(polygon_point_sets, vertices,
 // this tends to break threading, and some other things.
 // bend_perp_guess is used in the case of colinear segments,
 // to set the perpendicular to the bend plane.
+// setting force_perp to true makes it use the specified perp
+// in the orientation of the first facet, even if not colinear
 module multi_pipe(polygon_point_sets, path_points, 
     join_ends=false, untwist=false,
     triangularize_ends=true,
     maximum_segment_length = undef,
     show_segment_breaks = false, 
     accumulate_phi = false, 
-    bend_perp_guess = [0,0,1])
+    bend_perp_guess = [0,0,1], force_perp = false)
 {
     segmenting = !is_undef(maximum_segment_length);
 
@@ -263,7 +265,7 @@ module multi_pipe(polygon_point_sets, path_points,
 
     vertices=multi_pipe_vertices(
         polygon_point_sets, xpath, untwist=untwist,
-        bend_perp_guess = bend_perp_guess,
+        bend_perp_guess = bend_perp_guess, force_perp=force_perp, 
         accumulate_phi = accumulate_phi
     );
     np = len(xpath);

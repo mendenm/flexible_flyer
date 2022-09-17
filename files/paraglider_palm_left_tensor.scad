@@ -45,17 +45,10 @@ module channel(waypoints, shapescale=1, bendradius=5,
     
     // insert 0 'phi' values, if only 3 coordinates were given
     // otherwise, copy 4'th coordinate to phi
-    path1=[for(w = waypoints) 
+    path=[for(w = waypoints) 
         [0,[w[0],w[1],w[2]],1,
             ((len(w)==4)?w[3]:0)]];
-    
-    // force a colinearity at the beginning so the up vector is frozen
-    // to the 'z' direction by 'bend_perp_guess', below
-    path = [path1[0], 
-        0.9*path1[0]+0.1*path1[1], 
-        0.8*path1[0]+0.2*path1[1], 
-        each [for(i=[1:len(path1)-1]) path1[i]]];
-            
+                
     // note: do a translation so that the curved _bottom_ of the pipe is
     // invariant under scaling, relative to its position when scale=0.9.
     // This is for historical continuity
@@ -64,7 +57,7 @@ module channel(waypoints, shapescale=1, bendradius=5,
         smooth_bends(path, 2, bendradius),
         maximum_segment_length=3, untwist=true,
         accumulate_phi=true,
-        bend_perp_guess = [0,0,-1]
+        bend_perp_guess = [0,0,-1], force_perp = true
         );
 }
 
