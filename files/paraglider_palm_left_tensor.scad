@@ -38,25 +38,34 @@ fast_preview=false;
 use <segmented_pipe_tensor.scad>
 module channel(waypoints, shapescale=1, bendradius=5, 
     fix_translation=true, phi=0) {
-    // the bends work best if the primary length is along 'x' here,
-    // but the hand is along 'y', 
-    // so we will adjust the coordinates, 
-    // and then re-rotate the whole thing
     rot=[[cos(phi),-sin(phi)],[sin(phi),cos(phi)]];
     shape=[[-1.5,-1]*rot,[1.5,-1]*rot,
         each 1.5*[for(th=[0:30:179]) [cos(th), sin(th)]*rot]
     ]*shapescale;
-    path=[for(w = waypoints) 
-        [0,[w[1],-w[0],w[2]],1,
+    
+    // insert 0 'phi' values, if only 3 coordinates were given
+    // otherwise, copy 4'th coordinate to phi
+    path1=[for(w = waypoints) 
+        [0,[w[0],w[1],w[2]],1,
             ((len(w)==4)?w[3]:0)]];
+    
+    // force a colinearity at the beginning so the up vector is frozen
+    // to the 'z' direction by 'bend_perp_guess', below
+    path = [path1[0], 
+        0.9*path1[0]+0.1*path1[1], 
+        0.8*path1[0]+0.2*path1[1], 
+        each [for(i=[1:len(path1)-1]) path1[i]]];
+            
     // note: do a translation so that the curved _bottom_ of the pipe is
     // invariant under scaling, relative to its position when scale=0.9.
     // This is for historical continuity
     y_trans=fix_translation?1.5*(shapescale-0.9):0;
-    translate([0,0,y_trans]) rotate(90) multi_pipe([shape], 
+    translate([0,0,y_trans]) multi_pipe([shape], 
         smooth_bends(path, 2, bendradius),
         maximum_segment_length=3, untwist=true,
-        accumulate_phi=true);
+        accumulate_phi=true,
+        bend_perp_guess = [0,0,-1]
+        );
 }
 
 module supports() {
@@ -208,37 +217,32 @@ module plug_old_channels() {
         [ [6.2,19,4.1], [4,40,3.5],[2.9, 47.5, 3.1],  [1.9,55,1.4], 
         [1.15, 62.5, -0.4,0],  
         [0.8,70, -4.4,10], ],
-        shapescale=1.2, fix_translation=false,
-        phi=150
+        shapescale=1.2, fix_translation=false
     );
 
     translate([-14.5,-43,24.5]) channel(
         [ [-0.5,13,3], [0,40,3.1], [0,55,1.2],
         [0.4, 63, -0.9],  [0.8,68, -4.5,10] ],
-        shapescale=1.2, fix_translation=false,
-        phi=100
+        shapescale=1.2, fix_translation=false
     );
 
     translate([-0.3,-39,25.5]) channel(
         [ [-7,9,2.2], [-3.5,40,1.8], [-2.75, 47.5, 1.8],  
-        [-2,55,1.0], [-1,64,-1.2], [0,69, -5,20],  ],
-        shapescale=1.1, fix_translation=false,
-        phi=-135
+        [-2,55,1.0], [-1,64,-1.2], [0,69, -5,20] ],
+        shapescale=1.1, fix_translation=false
     );    
 
     translate([13.5,-39,23.5]) channel(
         [ [-13.2,9,3.7], [-8.5,30,3.5], [-6.5,40,3], 
         [-4.75, 47.5, 2.7], [-2.3,60,-0.5], 
-        [-0.2,69, -5.5], ],
-        shapescale=1.1, fix_translation=false,
-        phi=120
+        [-0.2,69, -5.5] ],
+        shapescale=1.1, fix_translation=false
     );
 
     translate([21.2,-39,22]) channel(
         [ [-13.5,9.3,4], [-10.5,30,3], [-8.4,39,3.1], 
         [-3,44,0], [2,46,-5]  ],
-        shapescale=1.2, bendradius=10, fix_translation=false,
-        phi=145
+        shapescale=1.2, bendradius=10, fix_translation=false
     );
 
     // fix ugly bend
@@ -248,8 +252,7 @@ module plug_old_channels() {
                 [ [-13.5,9.8,4], [-10.5,30,3], 
                 [-8.4,39,3.1], [-1.7,44,0.5], [2,46,-5]  ],
                 shapescale=1.3, bendradius=10, 
-                fix_translation=false,
-                phi=145
+                fix_translation=false
             );
             translate([20,7,25]) rotate([30,-30,0]) 
             translate([-2,-3,-2]) cylinder(d=5,h=12, $fn=20, center=true);
@@ -272,14 +275,12 @@ module reborn_channels() {
     // pinkie string
     translate([-29.6,-48.5,21]) channel(
         [ [6.0,15,5.0], [3,40,4], [1.8,55,2.8], [1.0,70, -5] ],
-        shapescale=string_channel_scale/overall_scale,
-        phi=-130
+        shapescale=string_channel_scale/overall_scale
     );
     // pinkie elastic
     translate([-26.6,-48.5,22]) channel(
         [ [6.8,15,4.8], [4.6,30,4.5], [3,45,3], [1.8,55,1.5], [-1.0,70, -6] ],
-        shapescale=elastic_channel_scale/overall_scale,
-        phi=-110
+        shapescale=elastic_channel_scale/overall_scale
     );
     // pinkie threading assist
     translate([-28,21,12.6]) final_bend(75);
@@ -287,14 +288,12 @@ module reborn_channels() {
     // ring elastic
     translate([-14.5,-43,24]) channel(
         [ [-1,10,2.9], [-1,40,3], [-1,58,1], [-0.5,71, -7]],
-        shapescale=elastic_channel_scale/overall_scale,
-        phi=90
+        shapescale=elastic_channel_scale/overall_scale
     );
     // ring string
     translate([-14.5,-43,24]) channel(
         [ [3,10,3], [2.5,38,3], [2,55,2], [0.5,71, -7]],
-        shapescale=string_channel_scale/overall_scale,
-        phi=100
+        shapescale=string_channel_scale/overall_scale
     );
     // ring threading assist
     translate([-14.5,27.5,14.25]) final_bend(65);
@@ -302,14 +301,12 @@ module reborn_channels() {
     // middle string
     translate([-0.3,-39,25.5]) channel(
         [ [-6,9,2], [-2,40,1.7], [-2.5,55,0.3], [-0.5,71, -7]],
-        shapescale=string_channel_scale/overall_scale,
-        phi=150
+        shapescale=string_channel_scale/overall_scale
     );  
     // middle elastic  
     translate([-0.3,-39,25.5]) channel(
         [ [-2.5,9,1.8], [2,40,1.8], [1,55,0.3], [0.5,71, -7]],
-        shapescale=elastic_channel_scale/overall_scale,
-        phi=160
+        shapescale=elastic_channel_scale/overall_scale
     );  
     // middle threading assist
     translate([-0.2,31.25,15.25]) final_bend(65);
@@ -317,14 +314,12 @@ module reborn_channels() {
     // index elastic  
     translate([13.5,-39,23.5]) channel(
         [ [-13.5,6,3.5], [-8.5,30,3.2], [-6.5,40,3.0], [-4,55,1], [-0.5,71, -7.5]],
-        shapescale=elastic_channel_scale/overall_scale,
-        phi=140
+        shapescale=elastic_channel_scale/overall_scale
     );
     // index string
     translate([13.5,-39,23.5]) channel(
         [ [-10,6,3.0], [-5,30,3.2], [-3,40,2.5], [-1,55,0], [0.5,71, -7.5]],
-        shapescale=string_channel_scale/overall_scale,
-        phi=100
+        shapescale=string_channel_scale/overall_scale
     );
     // index threading assist
     translate([13.6,30.5,13.25]) final_bend(65);
@@ -334,9 +329,9 @@ module reborn_channels() {
     // extra translation for v3 palm 
     translate([1,-5,0]) {
         translate([21.2,-39,22]) channel(
-            [ [-13.5,10,4.5], [-10,25,4], [-7.0,34,2.8], [19.2,8.2,20]-[21.2,-39,22]  ],
-            shapescale=0.7*string_channel_scale/overall_scale,
-            phi=-140
+            [ [-13.5,10,4.5], [-10,25,4], [-7.0,34,2.8], 
+            [19.2,8.2,20]-[21.2,-39,22]  ],
+            shapescale=0.7*string_channel_scale/overall_scale
         );
         // keep the bottom of the toroidal bend at a fixed location
         // independent of azuimuth and arc angle and arc radius
