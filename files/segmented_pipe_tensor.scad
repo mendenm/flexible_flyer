@@ -50,7 +50,7 @@ function rotations(path_points, initial_bend_perp) = let(
     xyz =[for(x=path_points) x[1] ],
     has_perp = !is_undef(initial_bend_perp), 
     bpgu = has_perp ? 
-        initial_bend_perp/norm(initial_bend_perp) :
+        initial_bend_perp/norm(initial_bend_perp) : 
         undef, // unit vector or undef
     
     // create a nameless function to handle geometry, 
@@ -64,6 +64,8 @@ function rotations(path_points, initial_bend_perp) = let(
         up_sine_vec = cross(dx10_u, dx21_u),
         bendsine = norm(up_sine_vec),
         use_bend = (bendsine > 1e-6) && (i!=0 || !has_perp),
+        xx = assert(use_bend || !is_undef(old_up), 
+            "segmented_pipe has colinear initial segments and no initial bend vector"), 
         up_a = use_bend ? up_sine_vec/bendsine : old_up,
         up_u = up_a * ((i != 0 && up_a*old_up < 0) ? -1:1), 
         bendcos = ((i==0) || (i==(np-1))) ? 1 : dx10_u * dx21_u, // cos of full bend angle
