@@ -45,10 +45,13 @@ function transpose(m) = [
     [m[0][2],m[1][2],m[2][2]]
     ];
 
-function rotations(path_points, bend_perp_guess, force_perp) = let(
+function rotations(path_points, initial_bend_perp) = let(
     np=len(path_points),
     xyz =[for(x=path_points) x[1] ],
-    bpgu = bend_perp_guess/norm(bend_perp_guess), // unit guess
+    has_perp = !is_undef(initial_bend_perp), 
+    bpgu = has_perp ? 
+        initial_bend_perp/norm(initial_bend_perp) :
+        undef, // unit vector or undef
     
     // create a nameless function to handle geometry, 
     // to make for loop list comprehension less messy
@@ -60,9 +63,9 @@ function rotations(path_points, bend_perp_guess, force_perp) = let(
         dx10_u = (x1-x0) / norm(x1-x0), dx21_u = (x2-x1) / norm(x2-x1),
         up_sine_vec = cross(dx10_u, dx21_u),
         bendsine = norm(up_sine_vec),
-        ok = bendsine > 1e-6,
-        up_a = (ok && !force_perp)? up_sine_vec/bendsine : old_up,
-        up_u = up_a * ((up_a*old_up < 0) ? -1:1), 
+        use_bend = (bendsine > 1e-6) && (i!=0 || !has_perp),
+        up_a = use_bend ? up_sine_vec/bendsine : old_up,
+        up_u = up_a * ((i != 0 && up_a*old_up < 0) ? -1:1), 
         bendcos = ((i==0) || (i==(np-1))) ? 1 : dx10_u * dx21_u, // cos of full bend angle
         halfbendcos = sqrt((1+bendcos)/2), // cos of half bend angle
         path_vec_a = (i==0) ? dx10_u : (
@@ -114,7 +117,7 @@ function minimize_twist(mat0, mat1, phi0=-190, phi1=190) = let (
 // rotation from the phi rotation, resulting in straighter pipes.
 // this tends to break threading, and some other things.
 function multi_pipe_vertices(polygon_point_sets, path_points, 
-    untwist, bend_perp_guess, force_perp, accumulate_phi) = let(
+    untwist, initial_bend_perp, accumulate_phi) = let(
     np=len(path_points),
     psel=[for(x=path_points) x[0] ],
     xyz =[for(x=path_points) x[1] ],
@@ -123,7 +126,7 @@ function multi_pipe_vertices(polygon_point_sets, path_points,
     // make 3d points from 2d polygons for full rotations
     v3=[for(pp=polygon_point_sets) [for(v=pp) [v.x,v.y,0]]],
     
-    xf = rotations(path_points, bend_perp_guess, force_perp), 
+    xf = rotations(path_points, initial_bend_perp), 
     
     transforms=[for(i=[0:np-1]) 
         [v3[psel[i]]*scl[i], 
@@ -240,17 +243,16 @@ module multi_pipe_segment(polygon_point_sets, vertices,
 // if untwist is true, it attempts to remove the azimuthal
 // rotation from the phi rotation, resulting in straighter pipes.
 // this tends to break threading, and some other things.
-// bend_perp_guess is used in the case of colinear segments,
+// initial_bend_perp is used on the first step,
 // to set the perpendicular to the bend plane.
-// setting force_perp to true makes it use the specified perp
-// in the orientation of the first facet, even if not colinear
+// If it is undef, the first three steps cannot be colinear.
 module multi_pipe(polygon_point_sets, path_points, 
     join_ends=false, untwist=false,
     triangularize_ends=true,
     maximum_segment_length = undef,
     show_segment_breaks = false, 
     accumulate_phi = false, 
-    bend_perp_guess = [0,0,1], force_perp = false)
+    initial_bend_perp = undef)
 {
     segmenting = !is_undef(maximum_segment_length);
 
@@ -265,7 +267,7 @@ module multi_pipe(polygon_point_sets, path_points,
 
     vertices=multi_pipe_vertices(
         polygon_point_sets, xpath, untwist=untwist,
-        bend_perp_guess = bend_perp_guess, force_perp=force_perp, 
+        initial_bend_perp = initial_bend_perp, 
         accumulate_phi = accumulate_phi
     );
     np = len(xpath);
@@ -406,7 +408,7 @@ module tests() {
             ]
         ],
         [ [0,[0,0,0],10,0], [1,[0,0,20],10,0], [0,[0,0,40],5,0] ],
-        bend_perp_guess = [0,1,0]
+        initial_bend_perp = [0,1,0]
     );
 
     // test azimuthal preening and smoothed bends
@@ -420,14 +422,12 @@ module tests() {
     translate([20,20,0]) multi_pipe(
         [ [for(th=[0:10:359]) [cos(th), sin(th)]]]/2,
         smooth_bends(notweaks, 5, 3), untwist=true,
-        accumulate_phi = true, 
-        bend_perp_guess = [1,1,0]
+        accumulate_phi = true
     );
     translate([20,25,0]) multi_pipe(
         [ [for(th=[0:10:359]) [cos(th), sin(th)]]]/2,
         straw, untwist=false,
-        accumulate_phi = true, 
-        bend_perp_guess = [1,1,0]
+        accumulate_phi = true
     );
 }
 
