@@ -57,7 +57,7 @@ module channel(waypoints, shapescale=1, bendradius=5,
         smooth_bends(path, 2, bendradius),
         maximum_segment_length=3, untwist=true,
         accumulate_phi=true,
-        bend_perp_guess = [0,0,-1], force_perp = true
+        initial_bend_perp = [0,0,-1]
         );
 }
 
