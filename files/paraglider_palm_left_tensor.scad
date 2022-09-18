@@ -37,10 +37,9 @@ fast_preview=false;
 
 use <segmented_pipe_tensor.scad>
 module channel(waypoints, shapescale=1, bendradius=5, 
-    fix_translation=true, phi=0) {
-    rot=[[cos(phi),-sin(phi)],[sin(phi),cos(phi)]];
-    shape=[[-1.5,-1]*rot,[1.5,-1]*rot,
-        each 1.5*[for(th=[0:30:179]) [cos(th), sin(th)]*rot]
+    fix_translation=true) {
+    shape=[[-1.5,-0.7],[-1.2,-1],[1.2,-1],[1.5,-0.7],
+        each 1.5*[for(th=[0:30:180]) [cos(th), sin(th)]]
     ]*shapescale;
     
     // insert 0 'phi' values, if only 3 coordinates were given
@@ -214,7 +213,7 @@ module plug_old_channels() {
     );
 
     translate([-14.5,-43,24.5]) channel(
-        [ [-0.5,13,3], [0,40,3.1], [0,55,1.2],
+        [ [-0.5,13,3], [0,40,3.1], [0,55,1.2,2],
         [0.4, 63, -0.9],  [0.8,68, -4.5,10] ],
         shapescale=1.2, fix_translation=false
     );
@@ -227,7 +226,7 @@ module plug_old_channels() {
 
     translate([13.5,-39,23.5]) channel(
         [ [-13.2,9,3.7], [-8.5,30,3.5], [-6.5,40,3], 
-        [-4.75, 47.5, 2.7], [-2.3,60,-0.5], 
+        [-4.75, 47.5, 2.7, -2], [-2.3,60,-0.5], 
         [-0.2,69, -5.5] ],
         shapescale=1.1, fix_translation=false
     );
